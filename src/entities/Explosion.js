@@ -25,16 +25,16 @@ export class Explosion {
 
     // فريمات انفجار اللاعب
     this.frameEXplayer = [
-      "/assets/explotionFrame/Explosion_1.png",
-      "/assets/explotionFrame/Explosion_2.png",
-      "/assets/explotionFrame/Explosion_3.png",
-      "/assets/explotionFrame/Explosion_4.png",
-      "/assets/explotionFrame/Explosion_5.png",
-      "/assets/explotionFrame/Explosion_6.png",
-      "/assets/explotionFrame/Explosion_7.png",
-      "/assets/explotionFrame/Explosion_8.png",
-      "/assets/explotionFrame/Explosion_9.png",
-      "/assets/explotionFrame/Explosion_10.png",
+     "/assets/explotionFrame/enemyExFrame/Explosion_1.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_2.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_3.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_4.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_5.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_6.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_7.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_8.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_9.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_10.png",
     ].map((src) => {
       let img = new Image();
       img.src = src;
