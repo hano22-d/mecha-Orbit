@@ -2,7 +2,7 @@ import { PowerUp } from "../PowerUp";
 
 //تحميل الصورة مرة واحدة
 const healthImage = new Image();
-healthImage.src = "src/assets/powerUp/powerupGreen_bolt.png";
+healthImage.src = "/assets/powerUp/powerupGreen_bolt.png";
 
 export class HealthPowerUp extends PowerUp {
   constructor(canvas,x, y) {

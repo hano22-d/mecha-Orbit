@@ -25,16 +25,16 @@ export class Explosion {
 
     // فريمات انفجار اللاعب
     this.frameEXplayer = [
-      "src/assets/explotionFrame/Explosion_1.png",
-      "src/assets/explotionFrame/Explosion_2.png",
-      "src/assets/explotionFrame/Explosion_3.png",
-      "src/assets/explotionFrame/Explosion_4.png",
-      "src/assets/explotionFrame/Explosion_5.png",
-      "src/assets/explotionFrame/Explosion_6.png",
-      "src/assets/explotionFrame/Explosion_7.png",
-      "src/assets/explotionFrame/Explosion_8.png",
-      "src/assets/explotionFrame/Explosion_9.png",
-      "src/assets/explotionFrame/Explosion_10.png",
+      "/assets/explotionFrame/Explosion_1.png",
+      "/assets/explotionFrame/Explosion_2.png",
+      "/assets/explotionFrame/Explosion_3.png",
+      "/assets/explotionFrame/Explosion_4.png",
+      "/assets/explotionFrame/Explosion_5.png",
+      "/assets/explotionFrame/Explosion_6.png",
+      "/assets/explotionFrame/Explosion_7.png",
+      "/assets/explotionFrame/Explosion_8.png",
+      "/assets/explotionFrame/Explosion_9.png",
+      "/assets/explotionFrame/Explosion_10.png",
     ].map((src) => {
       let img = new Image();
       img.src = src;
@@ -43,16 +43,16 @@ export class Explosion {
 
     // فريمات انفجار الاعداء
     this.frameEXenemy = [
-      "src/assets/explotionFrame/enemyExFrame/Explosion_1.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_2.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_3.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_4.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_5.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_6.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_7.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_8.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_9.png",
-      "src/assets/explotionFrame/enemyExFrame/Explosion_10.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_1.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_2.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_3.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_4.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_5.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_6.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_7.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_8.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_9.png",
+      "/assets/explotionFrame/enemyExFrame/Explosion_10.png",
     ].map((src) => {
       let img = new Image();
       img.src = src;
@@ -60,25 +60,25 @@ export class Explosion {
     });
 
     this.xilosFrame = [
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0005.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0007.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0009.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0011.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0013.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0015.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0017.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0019.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0020.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0022.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0024.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0026.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0028.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0030.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0032.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0034.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0036.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0038.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0040.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0005.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0007.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0009.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0011.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0013.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0015.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0017.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0019.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0020.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0022.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0024.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0026.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0028.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0030.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0032.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0034.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0036.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0038.png",
+      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0040.png",
     ].map((src) => {
       let img = new Image();
       img.src = src;

@@ -40,7 +40,7 @@ this.htiBox = [
 ];
 
     this.imgBullet = new Image();
-    this.imgBullet.src = "src/assets/weapon/laserRed08.png";
+    this.imgBullet.src = "/assets/weapon/laserRed08.png";
     this.color = "red";
     this.speed = 0.06;
     this.health = 300;
@@ -49,8 +49,8 @@ this.htiBox = [
 
     //صور فريمات اللهب
     this.bossFrame = [
-      "src/assets/bossFrame1.png",
-      "src/assets/bossFrame2.png",
+      "/assets/bossFrame1.png",
+      "/assets/bossFrame2.png",
     ].map((src) => {
       const image = new Image();
       image.src = src;
@@ -59,30 +59,30 @@ this.htiBox = [
 
     //فريمات زايلوس بعد التضرر
     this.bossFrameDamage = [
-      "src/assets/explotionFrame/xilosexplotionFrame/0009.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0010.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0011.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0012.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0013.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0014.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0015.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0017.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0019.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0021.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0023.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0025.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0026.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0028.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0030.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0032.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0033.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0035.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0037.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0039.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0041.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0043.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0045.png",
-      "src/assets/explotionFrame/xilosexplotionFrame/0046.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0009.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0010.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0011.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0012.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0013.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0014.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0015.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0017.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0019.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0021.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0023.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0025.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0026.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0028.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0030.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0032.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0033.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0035.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0037.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0039.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0041.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0043.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0045.png",
+      "/assets/explotionFrame/xilosexplotionFrame/0046.png",
     ].map((src) => {
       const image = new Image();
       image.src = src;

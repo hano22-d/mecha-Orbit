@@ -1,7 +1,7 @@
 import { PowerUp } from "../PowerUp";
 
 const shieldImage = new Image();
-shieldImage.src = "src/assets/powerUp/shield_bronze.png";
+shieldImage.src = "/assets/powerUp/shield_bronze.png";
 
 const SHIELD_DURATION = 5000; // مدة الدرع
 

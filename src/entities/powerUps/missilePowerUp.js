@@ -1,7 +1,7 @@
 import { PowerUp } from "../PowerUp";
 
 const missilePowerUpImage = new Image();
-missilePowerUpImage.src = "src/assets/powerUp/missilePowerUp.png";
+missilePowerUpImage.src = "/assets/powerUp/missilePowerUp.png";
 
 export class MissilePowerUp extends PowerUp {
   constructor(canvas, x, y) {

@@ -5,7 +5,7 @@ export class FastWeapon extends Weapon {
   constructor(...arg) {
     super(...arg);
     this.image = new Image();
-    this.image.src = "src/assets/weapon/laserGreen13.png";
+    this.image.src = "/assets/weapon/laserGreen13.png";
   }
 
   shoot(bullets, canvas) {

@@ -3,7 +3,7 @@ import { FastWeapon } from "../../weapons/FastWeapon";
 import { HeavyWeapon } from "../../weapons/HeavyWeapon";
 
 const weaponPowerUpImage = new Image();
-weaponPowerUpImage.src = "src/assets/powerUp/things_gold.png";
+weaponPowerUpImage.src = "/assets/powerUp/things_gold.png";
 
 const WEAPON_DURATION = 5000; // مدة السلاح الخارق
 

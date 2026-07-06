@@ -5,7 +5,7 @@ export class HeavyWeapon extends Weapon {
   constructor(...arg) {
     super(...arg);
     this.image = new Image();
-    this.image.src = "src/assets/weapon/laserRed16.png";
+    this.image.src = "/assets/weapon/laserRed16.png";
   }
 
   shoot(bullets, canvas) {

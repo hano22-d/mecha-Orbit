@@ -12,9 +12,9 @@ export class Debris {
 
     this.alpha = 1;
     this.debrisFrame = [
-      "src/assets/playerShip1_damage3.png",
-      "src/assets/playerShip1_damage2.png",
-      "src/assets/playerShip1_damage1.png",
+      "/assets/playerShip1_damage3.png",
+      "/assets/playerShip1_damage2.png",
+      "/assets/playerShip1_damage1.png",
     ].map((src) => {
       let img = new Image();
       img.src = src;

@@ -25,7 +25,7 @@ export class Missile {
 
     this.image = new Image();
     this.image.src =
-      "src/assets/weapon/5c9c6832-b15e-4cab-8c4c-ed2ad41ec331.png";
+      "/assets/weapon/5c9c6832-b15e-4cab-8c4c-ed2ad41ec331.png";
 
     this.target = null;
     this.speed = 0;

@@ -2,10 +2,10 @@ import { Enemy } from "./Enemy";
 
 const SHOOTER_IMAGE = new Image();
 SHOOTER_IMAGE.src =
-  "src/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_t_0_ccce8f49-3b08-455f-8f89-cb68881b31db_0.png";
+  "/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_t_0_ccce8f49-3b08-455f-8f89-cb68881b31db_0.png";
 
 const SHOOTER_BULLET_IMAGE = new Image();
-SHOOTER_BULLET_IMAGE.src = "src/assets/weapon/02.png";
+SHOOTER_BULLET_IMAGE.src = "/assets/weapon/02.png";
 
 //shooter Enemy class
 export class Shooter extends Enemy {

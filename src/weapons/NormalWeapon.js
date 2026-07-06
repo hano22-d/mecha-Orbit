@@ -5,7 +5,7 @@ export class NormalWeapon extends Weapon {
   constructor(...arg) {
     super(...arg);
     this.image = new Image();
-    this.image.src = "src/assets/weapon/laserBlue06.png";
+    this.image.src = "/assets/weapon/laserBlue06.png";
   }
 
   shoot(bullets, canvas) {

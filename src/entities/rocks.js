@@ -1,5 +1,5 @@
 const ROCK_IMAGE = new Image();
-ROCK_IMAGE.src = "src/assets/rock2.png"; // تحميل الصورة مرة واحدة في الذاكرة العالمية
+ROCK_IMAGE.src = "/assets/rock2.png"; // تحميل الصورة مرة واحدة في الذاكرة العالمية
 
 export class Rocks {
   constructor(canvas, x, y) {

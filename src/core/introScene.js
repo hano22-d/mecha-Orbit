@@ -20,13 +20,13 @@ export class IntroScene {
 
     this.playerImage = new Image();
     this.playerImage.src =
-      "src/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_h_0_f9c8efea-de69-412a-8cb1-d8a94ba66635_0.png"; // نفس مسار طائرتك الحالية
+      "/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_h_0_f9c8efea-de69-412a-8cb1-d8a94ba66635_0.png"; // نفس مسار طائرتك الحالية
 
     //صور فريمات اللهب
     this.fireFrames = [
-      "src/assets/fire01.png",
-      "src/assets/fire02.png",
-      "src/assets/fire03.png",
+      "/assets/fire01.png",
+      "/assets/fire02.png",
+      "/assets/fire03.png",
     ].map((src) => {
       const image = new Image();
       image.src = src;

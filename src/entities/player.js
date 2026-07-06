@@ -102,13 +102,13 @@ export class Player {
     // صورة الصاروخ
     this.missileImage = new Image();
     this.missileImage.src =
-      "src/assets/weapon/5c9c6832-b15e-4cab-8c4c-ed2ad41ec331.png";
+      "/assets/weapon/5c9c6832-b15e-4cab-8c4c-ed2ad41ec331.png";
     this.missileCount = 0;
 
     // صورة الطائرة الأساسية
     this.planeImg = new Image();
     this.planeImg.src =
-      "src/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_h_0_f9c8efea-de69-412a-8cb1-d8a94ba66635_0.png";
+      "/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_h_0_f9c8efea-de69-412a-8cb1-d8a94ba66635_0.png";
 
     // فريمات الشيلد
     const shieldSources = [
@@ -125,7 +125,7 @@ export class Player {
     ];
     this.shieldFrame = shieldSources.map((src) => {
       const img = new Image();
-      img.src = `src/assets/powerUp/${src}`;
+      img.src = `/assets/powerUp/${src}`;
       return img;
     });
 
@@ -138,7 +138,7 @@ export class Player {
     // فريمات لهب المحرك
     this.fireFrames = ["fire01.png", "fire02.png", "fire03.png"].map((src) => {
       const image = new Image();
-      image.src = `src/assets/${src}`;
+      image.src = `/assets/${src}`;
       return image;
     });
 
@@ -308,60 +308,60 @@ export class Player {
   }
 
   // ========= رسم الصواريخ ========== //
-_drawEquippedMissiles(ctx) {
-  // حساب الأبعاد النسبية للصاروخ (الأصل: عرض 50 وطول 100 -> 50/160 = 0.3125 و 100/160 = 0.625)
-  const missileW = this.width * 0.3125;
-  const missileH = this.height * 0.625;
+  _drawEquippedMissiles(ctx) {
+    // حساب الأبعاد النسبية للصاروخ (الأصل: عرض 50 وطول 100 -> 50/160 = 0.3125 و 100/160 = 0.625)
+    const missileW = this.width * 0.3125;
+    const missileH = this.height * 0.625;
 
-  // حساب الإزاحة العمودية المحلية (الأصل 50 بكسل -> 50/160 = 0.3125)
-  const localY = this.height * 0.3125;
+    // حساب الإزاحة العمودية المحلية (الأصل 50 بكسل -> 50/160 = 0.3125)
+    const localY = this.height * 0.3125;
 
-  if (this.missileCount >= 1) {
-    // الجناح الأيسر أفقياً (الأصل -15 بكسل -> -15/160 = -0.09375)
-    const leftLocalX = this.width * -0.09375;
-    ctx.drawImage(this.missileImage, leftLocalX, localY, missileW, missileH);
+    if (this.missileCount >= 1) {
+      // الجناح الأيسر أفقياً (الأصل -15 بكسل -> -15/160 = -0.09375)
+      const leftLocalX = this.width * -0.09375;
+      ctx.drawImage(this.missileImage, leftLocalX, localY, missileW, missileH);
+    }
+    if (this.missileCount === 2) {
+      // الجناح الأيمن أفقياً (الأصل 100 بكسل -> 100/160 = 0.625)
+      const rightLocalX = this.width * 0.625;
+      ctx.drawImage(this.missileImage, rightLocalX, localY, missileW, missileH);
+    }
   }
-  if (this.missileCount === 2) {
-    // الجناح الأيمن أفقياً (الأصل 100 بكسل -> 100/160 = 0.625)
-    const rightLocalX = this.width * 0.625;
-    ctx.drawImage(this.missileImage, rightLocalX, localY, missileW, missileH);
-  }
-}
 
   // ========= رسم اللهب ========== //
-_drawThrusterFlames(ctx) {
-  const frame = this.fireFrames[this.fireframeSettings.currentFrame];
-  const speed = Math.hypot(this.velocityX, this.velocityY);
-  const scale = Math.min(1.5, 1 + speed * 0.4);
+  _drawThrusterFlames(ctx) {
+    const frame = this.fireFrames[this.fireframeSettings.currentFrame];
+    const speed = Math.hypot(this.velocityX, this.velocityY);
+    const scale = Math.min(1.5, 1 + speed * 0.4);
 
-  const flameWidth = this.width * 0.1125; 
-  const flameHeight = this.height * 0.25 * scale; 
+    const flameWidth = this.width * 0.1125;
+    const flameHeight = this.height * 0.25 * scale;
 
-  const leftFlameX = this.width * 0.28125; 
-  const rightFlameX = this.width * 0.4375;  
-  const flameY = this.height * 0.84375;   
+    const leftFlameX = this.width * 0.28125;
+    const rightFlameX = this.width * 0.4375;
+    const flameY = this.height * 0.84375;
 
-  ctx.drawImage(frame, leftFlameX, flameY, flameWidth, flameHeight);  // المحرك الأيسر
-  ctx.drawImage(frame, rightFlameX, flameY, flameWidth, flameHeight); // المحرك الأيمن
-}
-  // ========== رسم الشيلد ========= //
-_drawShield(ctx, camera) {
-  if (this.shieldEffect) {
-    const frame = this.shieldFrame[this.shieldFrameSettings.currentFrame];
-
-    const dynamicShieldSize = this.width * 1.25;
-    
-    const dynamicShieldOffset = this.width * 0.21875;
-
-    ctx.drawImage(
-      frame,
-      this.x - camera.x - dynamicShieldOffset,
-      this.y - camera.y - dynamicShieldOffset,
-      dynamicShieldSize,
-      dynamicShieldSize
-    );
+    ctx.drawImage(frame, leftFlameX, flameY, flameWidth, flameHeight); // المحرك الأيسر
+    ctx.drawImage(frame, rightFlameX, flameY, flameWidth, flameHeight); // المحرك الأيمن
   }
-}
+  // ========== رسم الشيلد ========= //
+  _drawShield(ctx, camera) {
+    if (this.shieldEffect) {
+      const frame = this.shieldFrame[this.shieldFrameSettings.currentFrame];
+
+      const dynamicShieldSize = this.width * 1.25;
+
+      const dynamicShieldOffset = this.width * 0.21875;
+
+      ctx.drawImage(
+        frame,
+        this.x - camera.x - dynamicShieldOffset,
+        this.y - camera.y - dynamicShieldOffset,
+        dynamicShieldSize,
+        dynamicShieldSize
+      );
+    }
+  }
 
   // ========== رسم تاثير السلاح ========= //
   _drawWeaponProgressBar(ctx, camera) {
@@ -443,34 +443,38 @@ _drawShield(ctx, camera) {
 
     audioManager.loadSound(
       "expolsionPlayerSound",
-      "src/assets/audio/cannon_hit.ogg"
+      "/assets/audio/cannon_hit.ogg"
     );
     audioManager.play("expolsionPlayerSound");
   }
   // ============= دالة حساب موقع الصواريخ وارسالها لكلاس الصاروخ =========== //
-getMissileLaunchPositions() {
-  const angle = -Math.PI / 2 + this.velocityX * MISSILE_TILT_SENSITIVITY;
-  const cos = Math.cos(angle);
-  const sin = Math.sin(angle);
+  getMissileLaunchPositions() {
+    const angle = -Math.PI / 2 + this.velocityX * MISSILE_TILT_SENSITIVITY;
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
 
-  // الإحداثيات المحلية النسبية للصاروخ على الطائرة
-  const leftLocalX = this.width * -0.09375; // -15
-  const leftLocalY = this.height * 0.3125;   // 50
-  const rightLocalX = this.width * 0.625;   // 100
-  const rightLocalY = this.height * 0.3125;  // 50
+    // الإحداثيات المحلية النسبية للصاروخ على الطائرة
+    const leftLocalX = this.width * -0.09375; // -15
+    const leftLocalY = this.height * 0.3125; // 50
+    const rightLocalX = this.width * 0.625; // 100
+    const rightLocalY = this.height * 0.3125; // 50
 
-  // الصاروخ الأيسر
-  const leftX = this.x + (this.width * -0.25) + (leftLocalX * cos - leftLocalY * sin); // -40 / 160 = -0.25
-  const leftY = this.y + (this.height * 0.25) + (leftLocalX * sin + leftLocalY * cos);  //  40 / 160 = 0.25
+    // الصاروخ الأيسر
+    const leftX =
+      this.x + this.width * -0.25 + (leftLocalX * cos - leftLocalY * sin); // -40 / 160 = -0.25
+    const leftY =
+      this.y + this.height * 0.25 + (leftLocalX * sin + leftLocalY * cos); //  40 / 160 = 0.25
 
-  // الصاروخ الأيمن
-  const rightX = this.x + (this.width * 0.5) + (rightLocalX * cos - rightLocalY * sin);  //  80 / 160 = 0.5
-  const rightY = this.y + (this.height * 0.9375) + (rightLocalX * sin + rightLocalY * cos); // 150 / 160 = 0.9375
+    // الصاروخ الأيمن
+    const rightX =
+      this.x + this.width * 0.5 + (rightLocalX * cos - rightLocalY * sin); //  80 / 160 = 0.5
+    const rightY =
+      this.y + this.height * 0.9375 + (rightLocalX * sin + rightLocalY * cos); // 150 / 160 = 0.9375
 
-  return {
-    left: { x: leftX, y: leftY },
-    right: { x: rightX, y: rightY },
-    currentAngle: angle,
-  };
-}
+    return {
+      left: { x: leftX, y: leftY },
+      right: { x: rightX, y: rightY },
+      currentAngle: angle,
+    };
+  }
 }
