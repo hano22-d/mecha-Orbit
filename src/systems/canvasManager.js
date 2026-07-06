@@ -1,6 +1,6 @@
 // src/systems/CanvasManager.js
 
-const myCanvas = document.getElementById("gameCanvas"); // استبدله بـ ID الكانفاس الخاص بك
+const myCanvas = document.getElementById("myCanvas"); // استبدله بـ ID الكانفاس الخاص بك
 const ctx = myCanvas.getContext("2d");
 
 function resizeCanvas() {
