@@ -1,0 +1,109 @@
+#pause {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-overlay);
+    backdrop-filter: var(--layer-blur); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-slow);
+}
+
+/*كلاس إظهار شاشة التوقف*/
+#pause.showPauseBar {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* الصندوق المركزي للشاشة */
+.pause-box {
+    background:var(--color-bg-overlay);
+    border: var(--border-glow-info);
+    box-shadow: var(--shadow-glow-info);
+    padding: var(--space-xxl);
+    border-radius: var(--radius-standard);
+    text-align: center;
+    max-width: var(--box-max-width2);
+    width: 90%;
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#pause.showPauseBar .pause-box {
+    transform: scale(1);
+}
+
+.game-logo-container {
+    margin-bottom: var(--space-xl);
+}
+
+.game-logo-text {
+    font-size: var(--font-size-title);
+    color: var(--color-text-main);
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin: var(--space-md) 0 var(--space-xs) 0;
+    text-shadow: var(--shadow-glow-info);
+}
+
+.game-logo-text span {
+    color: var(--color-primary); 
+    text-shadow:var(--shadow-glow-primary);
+}
+
+.pause-status-text {
+    font-size: var(--font-size-hud);
+    color: var(--color-text-muted);
+    letter-spacing: 2px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.hud-line {
+    margin: var(--space-xs) 0;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 180, 255, 0.4), transparent);
+}
+
+.pause-info {
+    margin-bottom: var(--space-xl);
+}
+
+.system-ready {
+    font-size: var(--font-size-hud);
+    color: var(--color-text-muted);
+    letter-spacing: 1px;
+    animation: textBlink 2s infinite;
+}
+
+.pause-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
+    width: 100%;
+}
+
+.pause-controls .btnStyle {
+    width: 100%;
+    max-width: 50%;
+    box-sizing: border-box;
+}
+
+@keyframes textBlink {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+@media (max-width:950px) {
+    .pause-box {
+        max-width: var(--box-max-width);
+    }
+}

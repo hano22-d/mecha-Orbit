@@ -1,0 +1,226 @@
+/* الحاوية الكلية لشاشة الفوز */
+.winBar {
+  position: absolute;
+  inset: 0;
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-30px);
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.winBar.showWinBar {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-bg-overlay);
+  -webkit-backdrop-filter: blur(1px);
+  z-index: -1;
+}
+
+.crt-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+  background-size: 100% 4px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.winBox {
+  background: var(--color-bg-overlay);
+  width: 85%;
+  max-width: var(--box-max-width);
+  border: 2px solid var(--color-primary);
+  border-radius: calc(var(--radius-standard) * 2);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-glow-info);
+  z-index: 2;
+  position: relative;
+}
+
+.winHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: var(--border-glow-info);
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+.system-text {
+  color: var(--color-secondary);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+.winHeader h1 {
+  color: var(--color-success);
+  margin: var(--space-xs) 0 0 0;
+  font-size: var(--font-size-title);
+  font-weight: 900;
+  text-shadow: var(--shadow-glow-success);
+  letter-spacing: 3px;
+}
+
+.rankBox {
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+#rankWin {
+  max-width: 70%;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 2;
+
+  animation: badgePulse 2s infinite alternate ease-in-out;
+}
+
+.rankBox::after {
+  mix-blend-mode: source-atop;
+}
+
+@keyframes badgePulse {
+  0% {
+    filter: drop-shadow(0 0 4px rgba(255, 179, 89, 0.2)) brightness(0.9);
+  }
+  100% {
+    filter: drop-shadow(0 0 15px rgba(255, 179, 89, 0.6)) brightness(1.1);
+  }
+}
+
+.winBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+.statsSection h3,
+.enemiesSection h3 {
+  color: var(--color-primary);
+  font-size: var(--font-size-body);
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+  letter-spacing: 1px;
+  border-left: 3px solid var(--color-primary);
+  padding-left: var(--space-sm);
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: var(--border-glow-info);
+}
+.statLabel {
+  color: var(--color-text-main);
+  opacity: 0.8;
+}
+.statValue {
+  font-weight: bold;
+  font-size: var(--font-size-body);
+}
+.highlight-orange {
+  color: var(--color-secondary);
+  text-shadow: var(--shadow-glow-secondary);
+}
+.highlight-cyan {
+  color: var(--color-primary);
+  text-shadow: var(--shadow-glow-primary);
+}
+
+.enemyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+.enemyCard {
+  background: var(--color-bg-overlay);
+  border: var(--border-glow-info);
+  padding: var(--space-sm);
+  border-radius: var(--radius-standard);
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.enemyIcon {
+  font-size: var(--font-size-sub);
+  margin-right: var(--space-sm);
+  width: 25%;
+}
+.enemyName {
+  font-size: var(--font-size-hud);
+  color: var(--color-text-main);
+  opacity: 0.8;
+}
+.enemyCount {
+  position: absolute;
+  right: 1rem;
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+.winFooter {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+  border-top: var(--border-glow-info);
+  padding-top: var(--space-md);
+}
+.text {
+  font-size: var(--font-size-body);
+}
+
+.starRating {
+  display: flex;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sub);
+}
+
+.star {
+  color: rgba(255, 179, 89, 0.2);
+  text-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.star.active {
+  color: var(--color-secondary);
+  filter: drop-shadow(0 0 6px rgba(255, 179, 89, 0.8));
+  animation: starPop 0.4s ease-in-out forwards;
+}
+
+/* أنيميشن خفيف تكتيكي عند ظهور النجوم */
+@keyframes starPop {
+  0% {
+    transform: scale(0.5);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 950px) {
+  .winHeader h1 {
+    font-size: var(--font-size-sub);
+  }
+
+  #rankWin {
+    max-width: 40%;
+    justify-self: end;
+  }
+}

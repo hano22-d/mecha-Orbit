@@ -1,0 +1,244 @@
+/* الحاوية الرئيسية للشاشة */
+#gameOver {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg-dark); /* خلفية سوداء مائلة للاحمرار العسكري */
+  backdrop-filter: var(--layer-blur); /* تضبيب اللعبة بالخلفية لشعور الموت */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-slow);
+}
+
+/* فئة الإظهار الديناميكي مثل شاشة الفوز */
+#gameOver.showGameOverBar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 🕸️ خدعة الشروخ والخدوش الزجاجية المتشعبة (Screen Cracks) */
+.screen-cracks {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+  /* رسم خطوط ليزرية عشوائية حادة تحاكي كسر الزجاج */
+  background: linear-gradient(
+      55deg,
+      transparent 49.5%,
+      rgba(255, 60, 60, 0.3) 50%,
+      transparent 50.5%
+    ),
+    linear-gradient(
+      -35deg,
+      transparent 49.7%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 50.3%
+    ),
+    linear-gradient(
+      115deg,
+      transparent 49.4%,
+      rgba(255, 60, 60, 0.2) 50%,
+      transparent 50.6%
+    );
+  background-size: 100% 100%;
+}
+
+/* صندوق التقرير المركزي */
+.game-over-box {
+  position: relative;
+  z-index: 5;
+  background: rgba(20, 5, 5, 0.9);
+  border: 2px solid var(--color-danger); /* بوردر قرمزي مشع للتهديد */
+  box-shadow: var(--shadow-glow-danger);
+  padding: var(--space-xxl) var(--space-xxl);
+  border-radius: var( --radius-standard);
+  text-align: center;
+  max-width: var(--box-max-width2);
+  width: 90%;
+  transform: scale(0.9);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#gameOver.showGameOverBar .game-over-box {
+  transform: scale(1);
+}
+
+/* عنوان الفشل القرمزي النابض */
+.game-over-box h1 {
+  color: var(--color-danger);
+  font-size: var(--font-size-title);
+  text-shadow: 0 0 15px var(--color-danger);
+  margin: 0 0 var(--space-xs) 0;
+  font-weight: 900;
+  animation: crimsonPulse 1.5s infinite alternate ease-in-out;
+}
+
+.cause-of-death {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-hud);
+  margin-bottom: var(--space-lg);
+  letter-spacing: 1px;
+}
+
+/* تقرير الأضرار */
+.damage-report {
+  background: var(--color-bg-overlay);
+  border-left: 3px solid var(--color-danger);
+  padding: var( --space-md) var( --space-lg);
+  margin-bottom: var(--space-xl);
+  text-align: left;
+}
+
+.report-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+  font-size: var(--font-size-body);
+  color: var(--color-text-main);
+  letter-spacing: 1px;
+}
+
+.report-row:last-child {
+  margin-bottom: 0;
+}
+
+.stat-val {
+  font-weight: bold;
+  color: var(--color-text-main);
+  text-shadow: 0 0 5px var(--color-info);
+}
+
+.text-orange {
+  color: var(--color-secondary); /* الحفاظ على هويتك البرتقالية للرقم القياسي */
+}
+
+/* شريط تقدم القطاع الفضائي */
+.sector-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.progress-container {
+  width: 100%;
+  height: 10px;
+  background: var(--color-bg-overlay);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 51, 51, 0.2);
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-secondary),
+    var(--color-danger)
+  ); /* دمج البرتقالي مع الأحمر */
+  box-shadow: 0 0 10px var(--color-danger);
+  transition: width 1.5s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+/* 🕹️ أزرار سايبر مضلعة موحدة الحواف تبعا لهويتك البصرية */
+.game-over-controls {
+  display: flex;
+  gap: var(--space-lg);
+  justify-content: center;
+  align-items: center;
+}
+
+.lossBtn {
+  border: var(--border-glow-danger);
+}
+.lossBtn:hover{
+  border: 1px solid var(--color-danger);
+}
+.waveLoss {
+  position: absolute;
+  left: 0;
+  top: 50%;
+
+  width: 5px;
+  height: 30px;
+
+  transform: translateY(-50%);
+
+  background: var(--color-danger);
+
+  box-shadow: var(--shadow-glow-danger);
+
+  transition: var(--transition-fast);
+}
+
+.waveLoss::before,
+.waveLoss::after {
+  content: "";
+  position: absolute;
+  left: 0;
+
+  width: 100%;
+  background: var(--color-danger);
+
+  animation: waveLoss 1.1s infinite ease-in-out;
+}
+.waveLoss::before {
+  height: 14px;
+  top: -16px;
+}
+
+.waveLoss::after {
+  height: 14px;
+  bottom: -16px;
+  animation-delay: 0.2s;
+}
+
+.text {
+  display: block;
+}
+/* الأنيميشن التكتيكي للنبض القرمزي */
+@keyframes crimsonPulse {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 51, 51, 0.6);
+    filter: brightness(0.9);
+  }
+  100% {
+    text-shadow: 0 0 25px rgba(255, 51, 51, 1), 0 0 10px rgba(255, 51, 51, 0.6);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes waveLoss{
+  0% {
+    transform: scaleY(0.4);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scaleY(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.3;
+  }
+}
+
+@media (max-width: 950px) {
+  .game-over-box {
+    max-width: var(--box-max-width);
+  }
+}

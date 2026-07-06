@@ -1,0 +1,170 @@
+.intro {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.skipBtn {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  padding: var(--space-sm) var(--space-md);
+}
+
+/*تنسيقات شاشة الحوار*/
+.dialogDiv {
+  position: absolute;
+  left: 50%;
+  top: 15%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: var(--box-max-width);
+  background: rgba(2, 20, 10, 0.85);
+  border: 2px solid var(--color-success);
+  padding: var(--space-lg);
+  border-radius: var(--radius-standard);
+  box-shadow: var(--shadow-glow-success);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto 1fr; /* ليكون الرادار بجانب النص بصور أنيقة */
+  gap: var(--space-md);
+}
+
+.crt-overlay {
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+  background-size: 100% 4px, 6px 100%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hud-header {
+  grid-column: span 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: var(--border-glow-success);
+  padding-bottom: var(--space-sm);
+  color: var(--color-success);
+  font-size: var(--font-size-hud);
+}
+
+.hud-rec {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.blink-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-danger); 
+  border-radius: var(--radius-round);
+  box-shadow: 0 0 8px var(--color-danger);
+  animation: blink 1s infinite;
+}
+
+/* مؤشر إشارة اللاسلكي */
+.hud-comms {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.signal-bars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+}
+.signal-bars .bar {
+  width: 3px;
+  background-color: var(--color-success);
+  box-shadow: 0 0 4px var(--color-success);
+}
+.signal-bars .bar:nth-child(1) { height: 6px; }
+.signal-bars .bar:nth-child(2) { height: 10px; }
+.signal-bars .bar:nth-child(3) { height: 14px; }
+
+/* 🟢 تصميم الرادار العسكري ثنائي الأبعاد */
+.hud-radar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.radar-circle {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border:var(--border-glow-success);
+  border-radius: var(--radius-round);
+  background: radial-gradient(circle, rgba(0,255,102,0.05) 0%, rgba(0,0,0,0) 70%);
+}
+/* خط المسح الدائري للرادار */
+.radar-sweep {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background: linear-gradient(45deg, rgba(0, 255, 102, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+  transform-origin: bottom right;
+  border-right: var(--border-glow-success);
+  animation: radar-sweep 3s linear infinite;
+}
+/* نقاط الأهداف على الرادار */
+.radar-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-round);
+}
+.radar-dot.player {
+  background: var(--color-success);
+  box-shadow: 0 0 6px var(--color-success);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.radar-dot.enemy {
+  background: var(--color-danger);
+  box-shadow: 0 0 6px var(--color-danger);
+  top: 25%; left: 65%;
+  animation: pulse-enemy 1.5s infinite;
+}
+
+/* نصوص الحوار */
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.dialog-text {
+  color: var(--color-success);
+  text-shadow: 0 0 8px var(--color-success);
+  font-size: var(--font-size-body);
+  font-weight: bold;
+  margin: var(--space-md) 0;
+  white-space: nowrap; 
+  overflow: hidden;
+  width: 0;
+  display: none;
+}
+.dialog-text.active {
+  display: block;
+
+  animation: typewriter 2.5s steps(50) forwards;
+}
+
+/* 🟢 خطوط الأنيميشن الرياضية */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes radar-sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse-enemy {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.4; }
+}

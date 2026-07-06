@@ -1,0 +1,278 @@
+#menu {
+  position: absolute;
+  inset: 0;
+}
+
+.main {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: var(--space-xxl);
+}
+
+.imageMenu {
+  height: auto;
+  width: 30%;
+}
+
+/* == تنسيقات قائمة الخيارات ==*/
+.mainList {
+  width: 35%;
+}
+.mainList button {
+  width: 100%;
+}
+
+/*== تنسيقات لوحة score ==*/
+.scoreBox {
+  width: 50%;
+  margin: var(--space-sm) auto;
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-bg-overlay);
+  border: var(--border-glow-info);
+  border-bottom: 2px solid var(--color-primary);
+  border-radius: var(--radius-standard);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  filter: drop-shadow(0 4px 15px rgba(0, 217, 255, 0.15));
+}
+
+/*الخطوط الذهبية الجانبية*/
+.scoreBox::before,
+.scoreBox::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 2%;
+  height: 100%;
+  background: var(--color-secondary);
+}
+.scoreBox::before {
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.scoreBox::after {
+  right: 0;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+/* تنسيق الأقسام الداخلية */
+.hud-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-label {
+  font-size: var(--font-size-hud);
+  letter-spacing: 2px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+/* مؤشر النظام المضيء (النبضي) */
+.system-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: 2px;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-round);
+  box-shadow: var(--shadow-glow-primary);
+  animation: systemPulse 1.5s infinite ease-in-out;
+}
+.status-text {
+  font-size: var(--space-sm);
+  letter-spacing: 1px;
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
+/* منطقة الرتبة */
+.rank-value {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  text-shadow: var(--shadow-glow-secondary);
+}
+.rank-value img {
+  width: 45%;
+}
+
+.highscore-area {
+  text-align: center;
+  background: var(--color-bg-overlay);
+  padding: var(--space-xs) var(--space-lg);
+  border-left: var(--border-glow-secondary);
+  border-right: var(--border-glow-secondary);
+}
+
+.hud-label-center {
+  font-size: var(--font-size-hud);
+  letter-spacing: 3px;
+  color: var(--color-secondary);
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(255, 179, 89, 0.3);
+}
+
+.score-digits {
+  font-size: var(--font-size-sub);
+  font-weight: 900;
+  color: var(--color-text-main);
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #ffb359, 0 0 20px rgba(0, 217, 255, 0.5);
+}
+
+/* منطقة البيانات اليمنى */
+.stats-area {
+  align-items: flex-end;
+  gap: var(--space-sm);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.stat-value {
+  font-size: var(--font-size-body);
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* كلاسات الألوان المضيئة الجاهزة */
+.gold-text {
+  color: var(--color-secondary);
+  text-shadow: 0 0 6px rgba(255, 179, 89, 0.4);
+}
+
+.cyan-text {
+  color: var(--color-primary);
+  text-shadow: 0 0 6px rgba(0, 217, 255, 0.4);
+}
+
+.icon-mini {
+  font-size: var(--font-size-hud);
+  margin-right: 3px;
+}
+
+/* تعريف أنيميشن النبض للنقطة المضيئة */
+@keyframes systemPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.4;
+    box-shadow: 0 0 2px #00d9ff;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+    box-shadow: 0 0 10px #00d9ff, 0 0 15px rgba(0, 217, 255, 0.6);
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.4;
+    box-shadow: 0 0 2px #00d9ff;
+  }
+}
+
+
+/* ========== تنسيقات التجاوب للموبايل =========== */
+
+@media (max-width: 950px) {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  .main {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-grow: 1;
+    margin-top: 5px;
+    padding-bottom: 10px;
+    height: calc(100% - 60px);
+  }
+
+  #menu {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .imageMenu {
+    height: auto;
+    width: auto;
+    max-width: 35%;
+    max-height: 75vh;
+    object-fit: contain;
+  }
+
+  /* قسم السكور بوكس */
+  .scoreBox {
+    width: 80%;
+    top: 20px;
+    max-width: 750px;
+    margin: 8px auto 0 auto;
+    padding: 6px var(--space-md);
+    justify-content: space-evenly;
+  }
+
+  .hud-section {
+    flex-direction: row;
+  }
+  .rank-area {
+    gap: var(--space-md);
+  }
+  .stat-item {
+    flex-direction: row;
+    gap: var(--space-sm);
+    align-items: center;
+  }
+
+  .scoreBox #rank-name {
+    width: auto;
+    max-width: 45px;
+  }
+  .highscore-area {
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-xs) var(--space-sm);
+  }
+  .stats-area {
+    gap: var(--space-xl);
+  }
+  .hud-label-center {
+    font-size: var(--font-size-body);
+  }
+  .stat-value {
+    font-size: var(--font-size-sub);
+  }
+
+  /* قائمة الازرار */
+  .mainList {
+    width: 48%;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .mainList button {
+    width: 100%;
+  }
+
+  .mainList button .text {
+    font-size: var(--font-size-hud);
+    padding: 10px var(--space-lg);
+  }
+}

@@ -1,0 +1,137 @@
+export class Explosion {
+  constructor(canvas, x, y, type) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+
+    this.life = 0;
+    this.maxLife = 500;
+
+    const isMobile = canvas.height < 500 || canvas.width < 768;
+
+    if (this.type === "player") {
+      this.width = isMobile ? 150 : 300;
+      this.height = isMobile ? 150 : 300;
+    } else if (this.type === "xilosVex") {
+      this.width = isMobile ? 240 : 400;
+      this.height = isMobile ? 300 : 500;
+    } else {
+      this.width = isMobile ? 140 : 350; 
+      this.height = isMobile ? 140 : 350;
+    }
+
+    this.offsetX = this.width / 2;
+    this.offsetY = this.height / 2;
+
+    // فريمات انفجار اللاعب
+    this.frameEXplayer = [
+      "src/assets/explotionFrame/Explosion_1.png",
+      "src/assets/explotionFrame/Explosion_2.png",
+      "src/assets/explotionFrame/Explosion_3.png",
+      "src/assets/explotionFrame/Explosion_4.png",
+      "src/assets/explotionFrame/Explosion_5.png",
+      "src/assets/explotionFrame/Explosion_6.png",
+      "src/assets/explotionFrame/Explosion_7.png",
+      "src/assets/explotionFrame/Explosion_8.png",
+      "src/assets/explotionFrame/Explosion_9.png",
+      "src/assets/explotionFrame/Explosion_10.png",
+    ].map((src) => {
+      let img = new Image();
+      img.src = src;
+      return img;
+    });
+
+    // فريمات انفجار الاعداء
+    this.frameEXenemy = [
+      "src/assets/explotionFrame/enemyExFrame/Explosion_1.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_2.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_3.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_4.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_5.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_6.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_7.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_8.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_9.png",
+      "src/assets/explotionFrame/enemyExFrame/Explosion_10.png",
+    ].map((src) => {
+      let img = new Image();
+      img.src = src;
+      return img;
+    });
+
+    this.xilosFrame = [
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0005.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0007.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0009.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0011.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0013.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0015.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0017.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0019.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0020.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0022.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0024.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0026.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0028.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0030.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0032.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0034.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0036.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0038.png",
+      "src/assets/explotionFrame/xilosexplotionFrame/explosion1_0040.png",
+    ].map((src) => {
+      let img = new Image();
+      img.src = src;
+      return img;
+    });
+
+    // ادوات التحكم بفريمات الانفجارات
+    this.currentFrame = 0;
+    this.frameTimer = 0;
+    this.frameInterval = 150;
+    this.finished = false;
+  }
+
+  update(deltaTime) {
+    this.life += deltaTime;
+    this.frameTimer += deltaTime;
+
+    if (this.frameTimer > this.frameInterval) {
+      this.currentFrame++;
+      this.frameTimer = 0;
+    }
+    
+    const currentFrameArray = this.type === "player" ? this.frameEXplayer : (this.type === "xilosVex" ? this.xilosFrame : this.frameEXenemy);
+    if (this.currentFrame >= currentFrameArray.length) {
+      this.finished = true;
+    }
+  }
+
+  draw(ctx, camera) {
+    if (this.finished) return;
+
+    ctx.save();
+    let alpha = 1 - this.life / this.maxLife;
+    ctx.globalAlpha = Math.max(0, alpha);
+
+    const renderX = this.x - camera.x - this.offsetX;
+    const renderY = this.y - camera.y - this.offsetY;
+
+    if (this.type === "player") {
+      let frame = this.frameEXplayer[this.currentFrame];
+      if (frame) ctx.drawImage(frame, renderX, renderY, this.width, this.height);
+    } else if (this.type === "xilosVex") {
+      let frameXilos = this.xilosFrame[this.currentFrame];
+      if (frameXilos) ctx.drawImage(frameXilos, renderX, renderY, this.width, this.height);
+    } else {
+      let frameEXenemy = this.frameEXenemy[this.currentFrame];
+      if (frameEXenemy) ctx.drawImage(frameEXenemy, renderX, renderY, this.width, this.height);
+    }
+
+    ctx.restore();
+  }
+
+  isDone() {
+    return this.life > this.maxLife;
+  }
+}

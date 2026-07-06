@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="project/style.css" />
+    <link rel="stylesheet" href="project/menu.css" />
+    <link rel="stylesheet" href="project/hud.css" />
+    <link rel="stylesheet" href="project/intro.css" />
+    <link rel="stylesheet" href="project/win.css" />
+    <link rel="stylesheet" href="project/gameOver.css" />
+    <link rel="stylesheet" href="project/pause.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--خط اللعبة لاساسي-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <title>mecha-orbit</title>
+  </head>
+  <body>
+    <div class="gameContainer">
+      <canvas id="myCanvas"></canvas>
+
+      <!--رسالة قلب الهاتف-->
+      <div id="orientation-warning">
+        <div class="warning-content">
+          <div class="phone-icon">🔄</div>
+          <p>من فضلك قم بتدوير جهازك أفقياً للاستمتاع باللعبة</p>
+        </div>
+      </div>
+
+      <div class="intro" id="intro">
+        <div class="dialogDiv">
+          <div class="crt-overlay"></div>
+
+          <!-- 🟢 عناصر واجهة شاشة الطائرة (HUD Elements) -->
+          <div class="hud-header">
+            <div class="hud-comms">
+              <span class="signal-icon">⚡ COMMS OK</span>
+              <div class="signal-bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+              </div>
+            </div>
+            <div class="hud-rec"><span class="blink-dot"></span> LIVE FEED</div>
+          </div>
+
+          <!-- 🟢 الرادار الدائري النابض -->
+          <div class="hud-radar-container">
+            <div class="radar-circle">
+              <div class="radar-sweep"></div>
+              <div class="radar-dot enemy"></div>
+              <div class="radar-dot player"></div>
+            </div>
+          </div>
+
+          <!-- نصوص الحوار -->
+          <div class="dialog-content">
+            <h2 id="dialog1" class="dialog-text dialog1">
+              Cmdr. Vance: Pilot, asteroids cleared. Enemy bogeys entering your
+              sector...
+            </h2>
+            <h2 id="dialog2" class="dialog-text dialog2">
+              You: Thrusters at 100%. Weapons online.
+            </h2>
+            <h2 id="dialog3" class="dialog-text dialog3">
+              Cmdr. Vance: You are clear to engage. Good luck!
+            </h2>
+          </div>
+        </div>
+
+        <button id="skipBtn" class="btnStyle skipBtn">
+          <span class="wave"></span>
+          <span class="text" data-text="Skip">Skip</span>
+        </button>
+      </div>
+
+      <!--Hud-->
+      <div class="hud" id="hud">
+        <button id="pauseBtn" class="btnStyle">
+          <span class="wave"></span>
+          <span class="text" data-text="pause">Pause</span>
+        </button>
+
+        <div class="enemyHealthBar" id="enemyHealthBar">
+          <h3>zilos-vex</h3>
+          <span class="healthBox"></span>
+          <span class="healthbar" id="healthbar"></span>
+        </div>
+
+        <div class="scoreBar" id="scoreBar">
+          <div class="playerHealthContainer">
+            <div class="playerInfo">
+              <span class="playerName">Health</span>
+              <span class="healthPercent" id="healthPercent">100%</span>
+            </div>
+
+            <div class="playerHealthBox">
+              <span class="playerHealthBar" id="playerHealthBar"></span>
+            </div>
+          </div>
+
+          <div class="scoreDisplay">
+            <div class="hud-circle-wrapper score-theme">
+              <div class="radar-line"></div>
+              <div class="hud-circle-inner">
+                <svg
+                  class="skull-svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 2C7.03 2 3 6.03 3 11C3 13.92 4.39 16.5 6.55 18.16L7 22H10V20H14V22H17L17.45 18.16C19.61 16.5 21 13.92 21 11C21 6.03 16.97 2 12 2ZM9 11.5C9 10.12 10.12 9 11.5 9C12.88 9 14 10.12 14 11.5C14 12.88 12.88 14 11.5 14C10.12 14 9 12.88 9 11.5ZM14.5 15.5H9.5V14.5H14.5V15.5Z"
+                    fill="#ff0055"
+                  />
+                  <circle cx="9" cy="11" r="1.5" fill="#030712" />
+                  <circle cx="15" cy="11" r="1.5" fill="#030712" />
+                  <path d="M12 13L11 14.5H13L12 13Z" fill="#030712" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="hud-counter-plate score-theme">
+              <div class="decorative-bars">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="score-count-wrapper">
+                <span class="scoreValue" id="scoreValue">0</span>
+                <span class="count-label">SCORE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-missile-container">
+            <div class="hud-circle-wrapper">
+              <div class="radar-line"></div>
+              <div class="hud-circle-inner">
+                <svg
+                  class="missile-svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 2C12 2 15 6 15 10C15 11.5 14.5 13 13.5 14L16 19.5L14.5 21L13 18.5L11 18.5L9.5 21L8 19.5L10.5 14C9.5 13 9 11.5 9 10C9 6 12 2 12 2Z"
+                    fill="#00bfff"
+                  />
+                  <path
+                    d="M7 14L4 17V19L6.5 18L7.5 15.5"
+                    stroke="#00bfff"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M17 14L20 17V19L17.5 18L16.5 15.5"
+                    stroke="#00bfff"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div class="hud-counter-plate">
+              <div class="decorative-bars">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="missile-count-wrapper">
+                <span class="count-number" id="count-number">0</span>
+                <span class="count-label">ROCKETS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--Menu-->
+      <div id="menu">
+          <div class="scoreBox">
+            <div class="hud-section rank-area">
+              <div class="system-status">
+                <span class="pulse-dot"></span>
+                <span class="status-text">SYS ACTIVE</span>
+              </div>
+              <div class="rank-info">
+                <div class="rank-value"><img id="rank-name" src="" alt="" /></div>
+              </div>
+            </div>
+            <div class="hud-section highscore-area">
+              <span class="hud-label-center">HIGH SCORE :</span>
+              <div class="score-digits" id="high-score"></div>
+            </div>
+            <div class="hud-section stats-area">
+              <div class="stat-item">
+                <span class="stat-value"
+                  ><i class="bx bx-trending-up cyan-text"></i
+                ></span>
+                <span class="gold-text" id="total-score"></span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value"
+                  ><i class="fa-solid fa-coins cyan-text"></i
+                ></span>
+                <span id="credits-amount" class="gold-text"></span>
+              </div>
+            </div>
+          </div>
+
+        <div class="main">
+          <img
+            class="imageMenu"
+            src="src/assets/UI/5 يوليو 2026، 09_13_26 م (1).png"
+            alt=""
+          />
+          <div class="mainList">
+            <button id="btn" class="btnStyle">
+              <span class="wave"></span
+              ><span class="content"
+                ><span class="icon"><i class="fa-solid fa-crosshairs"></i></span
+                ><span class="text" data-text="START MISSION"
+                  >START MISSION</span
+                ></span
+              >
+            </button>
+            <button id="btn" class="btnStyle">
+              <span class="wave"></span
+              ><span class="content"
+                ><span class="icon"
+                  ><i class="fa-solid fa-floppy-disk"></i></span
+                ><span class="text" data-text="SAVED GAME"
+                  >SAVED GAME</span
+                ></span
+              >
+            </button>
+            <button class="btnStyle">
+              <span class="wave"></span
+              ><span class="content"
+                ><span class="icon">✈</span
+                ><span class="text" data-text="HANGAR / AIRCRAFTS"
+                  >HANGAR / AIRCRAFTS</span
+                ></span
+              >
+            </button>
+            <button class="btnStyle">
+              <span class="wave"></span
+              ><span class="content"
+                ><span class="icon"><i class="fa-solid fa-medal"></i></span
+                ><span class="text" data-text="Achievements"
+                  >Achievements</span
+                ></span
+              >
+            </button>
+            <button class="btnStyle">
+              <span class="wave"></span
+              ><span class="content"
+                ><span class="icon"><i class="fa-solid fa-gear"></i></span
+                ><span class="text" data-text="SETTINGS">SETTINGS</span></span
+              >
+            </button>
+            <button class="btnStyle">
+              <span class="wave"></span
+              ><span class="content"
+                ><span class="icon"
+                  ><i class="fa-solid fa-circle-question"></i></span
+                ><span class="text" data-text="How to Play"
+                  >How to Play</span
+                ></span
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!--Pause-->
+      <div id="pause" class="space-overlay">
+        <div class="pause-box">
+          <div class="game-logo-container">
+            <div class="hud-line"></div>
+            <h2 class="game-logo-text">MECHA<span>ORBIT</span></h2>
+            <p class="pause-status-text">// TACTICAL PAUSE_</p>
+            <div class="hud-line"></div>
+          </div>
+
+          <div class="pause-info">
+            <span class="system-ready">> ALL SYSTEMS ON STANDBY...</span>
+          </div>
+
+          <div class="pause-controls">
+            <button id="resumeGame" class="btnStyle">
+              <span class="wave"></span>
+              <span class="text" data-text="RESUME FLIGHT">RESUME FLIGHT</span>
+            </button>
+
+            <button id="menmenu" class="btnStyle">
+              <span class="wave"></span>
+              <span class="text" data-text="MAIN MENU">MAIN MENU</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!--Game Over-->
+      <div id="gameOver" class="space-overlay">
+        <div class="screen-cracks"></div>
+
+        <div class="game-over-box">
+          <h1 class="glitch-text" data-text="SYSTEM FAILURE">SYSTEM FAILURE</h1>
+          <p class="cause-of-death">
+            > HULL INTEGRITY COMPROMISED. SHIP DESTROYED...
+          </p>
+
+          <div class="damage-report">
+            <div class="report-row">
+              <span>SCORE:</span>
+              <span id="overScore" class="stat-val">0</span>
+            </div>
+            <div class="report-row">
+              <span>ACCURACY RATE:</span>
+              <span id="overAccuracy" class="stat-val">0%</span>
+            </div>
+            <div class="report-row sector-row">
+              <span>SECTOR CLEARED:</span>
+              <div class="progress-container">
+                <div id="sectorProgress" class="progress-bar"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="game-over-controls">
+            <button id="btnOverRestart" class="lossBtn btnStyle">
+              <span class="waveLoss"></span>
+              <span class="text" data-text="QUICK RESPAWN">QUICK RESPAWN</span>
+            </button>
+
+            <button id="btnOverMenu" class="lossBtn btnStyle">
+              <span class="waveLoss"></span>
+              <span class="text" data-text="RETURN TO BASE"
+                >RETURN TO BASE</span
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!--Win-->
+      <div id="win" class="winBar">
+        <div class="overlay" id="overlay"></div>
+        <div class="crt-overlay"></div>
+
+        <div class="winBox">
+          <div class="winHeader">
+            <div class="headerTitle">
+              <span class="system-text">> SYSTEM: MISSION ACCOMPLISHED_</span>
+              <h1>ORBIT CLEARED</h1>
+            </div>
+            <div class="rankBox">
+              <img src="" alt="" id="rankWin" />
+            </div>
+          </div>
+
+          <div class="winBody">
+            <div class="statsSection">
+              <h3>MAIN TELEMETRY</h3>
+              <div class="statRow">
+                <span class="statLabel">TOTAL SCORE</span>
+                <span class="statValue highlight-orange" id="winScore"
+                  >24,500</span
+                >
+              </div>
+              <div class="statRow">
+                <span class="statLabel">MISSION RATING</span>
+                <div class="starRating" id="winPerformance">
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                </div>
+              </div>
+              <div class="statRow">
+                <span class="statLabel">WEAPONS ACCURACY</span>
+                <span class="statValue highlight-cyan" id="winAccuracy"
+                  >87.4%</span
+                >
+              </div>
+            </div>
+
+            <div class="enemiesSection">
+              <h3>HOSTILES ELIMINATED</h3>
+              <div class="enemyGrid">
+                <div class="enemyCard">
+                  <img
+                    src="src/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_t_0_5ab76d0e-5f0d-455b-9aa6-9119708664e9_0.png"
+                    alt=""
+                    class="enemyIcon"
+                  />
+                  <span class="enemyName">Normal</span>
+                  <span class="enemyCount" id="deadNormal">×14</span>
+                </div>
+                <div class="enemyCard">
+                  <img
+                    class="enemyIcon"
+                    src="src/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_h_0_997ddf4a-5f4f-4dd2-bb64-101dcfc5ed77_0.png"
+                  />
+                  <span class="enemyName">Chaser</span>
+                  <span class="enemyCount" id="deadChaser">×08</span>
+                </div>
+                <div class="enemyCard">
+                  <img
+                    src="src/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_n_0_436172b1-61fd-46f3-850b-f4f4c403f432_0.png"
+                    alt=""
+                    class="enemyIcon"
+                  />
+                  <span class="enemyName">Dodger</span>
+                  <span class="enemyCount" id="deadDodger">×05</span>
+                </div>
+                <div class="enemyCard">
+                  <img
+                    src="src/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_t_0_ccce8f49-3b08-455f-8f89-cb68881b31db_0.png"
+                    alt=""
+                    class="enemyIcon"
+                  />
+                  <span class="enemyName">Shooter</span>
+                  <span class="enemyCount" id="deadShooter">×03</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="winFooter">
+            <div class="winFooter">
+              <button id="btnRestart" class="btnStyle">
+                <span class="wave"></span>
+                <span class="text" data-text="Retry Mission"
+                  >Retry Mission</span
+                >
+              </button>
+
+              <button id="btnMenu" class="btnStyle">
+                <span class="wave"></span>
+                <span class="text" data-text="Main Menu">Main Menu</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="project/main.js"></script>
+  </body>
+</html>

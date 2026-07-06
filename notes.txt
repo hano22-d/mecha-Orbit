@@ -1,0 +1,71 @@
+1️⃣ 🎮 Game Feel (نرفعه لمستوى أعلى)
+
+هذا أهم شيء الآن
+
+🔜 أشياء ناقصة:
+✨ Particles (شرارات، دخان)
+💥 Debris (حطام الطائرة)
+🌟 Glow effect (إضاءة خفيفة)
+🔊 Sounds (مهم جدًا جدًا)
+2️⃣ 🧠 Game Systems (منطق اللعبة)
+
+اللعبة تعمل، لكن ليست “نظام لعبة كامل” بعد
+
+🔜 تحتاج:
+نظام waves (تدرج صعوبة)
+نظام score احترافي
+نظام lives / respawn
+balancing (سرعة + spawn)
+3️⃣ 🧩 UI / UX
+
+حاليًا عندك نص بسيط فقط
+
+🔜 نطور:
+❤️ شريط حياة (health bar)
+🎯 UI للسكور احترافي
+💀 شاشة Game Over جميلة
+▶️ زر Restart
+4️⃣ ⚡ Polish (اللمسات النهائية)
+
+هنا تتحول لعبتك من “جيدة” إلى “ممتازة”
+
+🔜 مثل:
+Screen shake متطور (مش بس عشوائي)
+Slow motion عند الانفجار 🔥
+Hit pause (freeze frame لحظة الاصطدام)
+Camera lag (تأخير خفيف بالكاميرا)
+5️⃣ 📱 لاحقًا (مو الآن)
+دعم الموبايل
+touch controls
+
+// مستويات الشارات في اللعبة
+| Score  | Rank                 |
+| ------ | -------------------- |
+| 0      | Cadet I              |
+| 25     | Cadet II             |
+| 50     | Cadet III            |
+| 100    | Rookie I             |
+| 150    | Rookie II            |
+| 200    | Rookie III           |
+| 300    | Pilot I              |
+| 400    | Pilot II             |
+| 500    | Pilot III            |
+| 650    | Veteran I            |
+| 800    | Veteran II           |
+| 1000   | Veteran III          |
+| 1250   | Ace I                |
+| 1500   | Ace II               |
+| 1800   | Ace III              |
+| 2200   | Elite Ace I          |
+| 2600   | Elite Ace II         |
+| 3000   | Elite Ace III        |
+| 3500   | Squadron Leader I    |
+| 4000   | Squadron Leader II   |
+| 4500   | Squadron Leader III  |
+| 5000   | Star Commander I     |
+| 6000   | Star Commander II    |
+| 7000   | Star Commander III   |
+| 8000   | Galaxy Guardian I    |
+| 9000   | Galaxy Guardian II   |
+| 10000  | Galaxy Guardian III  |
+| 12000+ | Legend of the Galaxy |

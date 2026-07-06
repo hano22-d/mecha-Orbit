@@ -1,0 +1,58 @@
+import { Weapon } from "./Weapon";
+import { Bullet } from "../entities/Bullet";
+
+export class NormalWeapon extends Weapon {
+  constructor(...arg) {
+    super(...arg);
+    this.image = new Image();
+    this.image.src = "src/assets/weapon/laserBlue06.png";
+  }
+
+  shoot(bullets, canvas) {
+    // زاوية ميلان اللاعب
+    let angle = this.owner.currentAngle || 0;
+    const fireAngle = angle * 2.5; // تضخيم زاوية ميلان اللاعب
+
+    // زاوية الرصاصة الديناميكية
+    const bulletSpeed = 8;
+    const velocityX = bulletSpeed * Math.sin(fireAngle);
+    const velocityY = -bulletSpeed * Math.cos(fireAngle);
+
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    const centerX = this.owner.x;
+    const centerY = this.owner.y;
+
+    // الحسابات المحلية النسبية المعتمدة على حجم الطائرة الحالي (متجاوب بالفعل)
+    const localX = this.owner.width / 2 - this.owner.width / 12;
+    const localY = -(this.owner.height / 10);
+
+    // 📱 فحص الشاشة المتجاوب للرصاصة
+    const isMobile = canvas.height < 500 || canvas.width < 768;
+
+    // جعل حجم الرصاصة ديناميكياً (اللابتوب: 5x20 | الموبايل: 2.5x10)
+    const bulletW = isMobile ? 2.5 : 5;
+    const bulletH = isMobile ? 10 : 20;
+
+    const bulletCenterOffset = bulletW / 2;
+
+    // ضبط الاحداثيات الاولية للرصاصة الديناميكية حسب زاوية اللاعب
+    const spawnX = centerX + (localX * cos - localY * sin) - bulletCenterOffset;
+    const spawnY = centerY + (localX * sin + localY * cos);
+
+    bullets.push(
+      new Bullet({
+        x: spawnX,
+        y: spawnY,
+        velocityX: velocityX,
+        velocityY: velocityY,
+        width: bulletW,  
+        height: bulletH, 
+        image: this.image,
+        damage: 10,
+        angle: fireAngle,
+      })
+    );
+  }
+}

@@ -1,0 +1,581 @@
+.hud {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  pointer-events: none;
+}
+
+/*=================================
+   تنسيقات شريط صحة العدو الكبير
+ ===================================*/
+.enemyHealthBar {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  position: absolute;
+  top: 7%;
+  right: -50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: var(--color-text-main);
+
+  transition: var(--transition-slow);
+}
+
+.enemyHealthBar h3 {
+  margin: 0 0 var(--space-md) 0;
+  font-size: var(--font-size-sub);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+
+  color: var(--color-text-main);
+
+  text-shadow: 0 0 5px var(--color-danger), 0 0 12px var(--color-danger),
+    0 0 25px var(--color-secondary);
+}
+
+.healthBox {
+  display: block;
+  position: absolute;
+  top: 63%;
+  width: 100%;
+  height: 1.5rem;
+
+  border: 2px solid var(--color-danger);
+
+  box-shadow: var(--shadow-glow-danger);
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(0, 0, 0, 0.3)
+  );
+
+  overflow: hidden;
+}
+
+.healthbar {
+  display: block;
+  width: 100%;
+  height: 1.5rem;
+  transition: 0.3s ease;
+
+  position: relative;
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    #220000 0%,
+    #5a0505 20%,
+    #b81212 50%,
+    #ff2f00 80%,
+    #ff8a00 100%
+  );
+
+  box-shadow: 0 0 8px #ff1e00, 0 0 18px #ff3c00, 0 0 35px rgba(255, 50, 0, 0.85),
+    0 0 60px rgba(255, 120, 0, 0.35);
+
+  overflow: hidden;
+}
+
+/* لمعة متحركة */
+.healthbar::after {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: -40%;
+
+  width: 15%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+
+  animation: healthShine 5s linear infinite;
+}
+
+/* حركة اللمعة */
+@keyframes healthShine {
+  from {
+    left: -40%;
+  }
+
+  to {
+    left: 140%;
+  }
+}
+
+/* =====================================
+score Bar
+===================================== */
+
+.scoreBar {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  left: -40%;
+  top: 1.3rem;
+
+  padding: var(--space-md);
+
+  overflow: hidden;
+  transition: 1s ease-in-out;
+}
+
+/* =========================
+   SCORE
+========================= */
+
+.scoreDisplay {
+  display: flex;
+
+  margin-bottom: 14px;
+}
+.scoreValue {
+  font-size: var(--font-size-sub);
+
+  font-weight: bold;
+
+  color: var(--color-text-main);
+
+  text-shadow: 0 0 10px var(--color-danger), 0 0 25px rgba(0, 200, 255, 0.7);
+}
+
+/* 🌀 تطبيق الثيم الأحمر المضيء على الدائرة */
+.hud-circle-wrapper.score-theme {
+  border: 3px double rgba(255, 0, 85, 0.3);
+  box-shadow: 0 0 15px rgba(255, 0, 85, 0.2),
+    inset 0 0 15px rgba(255, 0, 85, 0.2);
+  background: radial-gradient(
+    circle,
+    rgba(80, 0, 40, 0.6) 0%,
+    rgba(3, 7, 18, 0.9) 80%
+  );
+}
+
+/* خط الرادار الخارجي الأحمر الدوّار */
+.hud-circle-wrapper.score-theme::before {
+  border-top-color: var(--color-danger);
+  border-bottom-color: var(--color-danger);
+  box-shadow: 0 0 10px var(--color-danger);
+  animation: rotateRadar 4s linear infinite; /* يستعير نفس أنيميشن الدوران السابق */
+}
+
+.hud-circle-wrapper.score-theme .hud-circle-inner {
+  border: 1px solid rgba(255, 0, 85, 0.6);
+  box-shadow: var(--shadow-glow-danger);
+  background: var(--color-bg-overlay);
+}
+
+/* 💀 أيقونة الجمجمة مع تأثير النبض الغامض (Skull Breathe) */
+.skull-svg {
+  width: 4rem;
+  height: 4rem;
+  filter: drop-shadow(0 0 8px var(--color-danger))
+    drop-shadow(0 0 15px var(--color-danger));
+  animation: skullPulse 2.5s ease-in-out infinite;
+}
+
+/* الخطوط المائلة الزخرفية للسكور */
+.hud-counter-plate.score-theme .decorative-bars span {
+  background-color: var(--color-danger);
+  box-shadow: 0 0 5px var(--color-danger);
+}
+
+/* نصوص الأرقام والكلمات */
+.score-count-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.hud-counter-plate.score-theme .count-number {
+  color: var(--color-text-main);
+  text-shadow: 0 0 10px var(--color-danger), 0 0 20px var(--color-danger);
+}
+
+.hud-counter-plate.score-theme .count-label {
+  font-size: var(--font-size-body);
+  color: var(--color-danger);
+  text-shadow: 0 0 5px rgba(255, 0, 85, 0.6);
+}
+
+/* 🎬 أنيميشن نبض الجمجمة الخاص */
+@keyframes skullPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px #ff0055) drop-shadow(0 0 12px #ff0055);
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    filter: drop-shadow(0 0 12px #ff0055) drop-shadow(0 0 25px #ff0055);
+    transform: scale(1.05); /* تضخم خفيف جداً يعطي شعور بالهيبة */
+    opacity: 1;
+  }
+}
+
+/* =========================
+   PLAYER HEALTH
+========================= */
+.playerHealthContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.playerInfo {
+  display: flex;
+  align-items: center;
+}
+
+.playerName {
+  color: var(--color-text-main);
+
+  font-weight: bold;
+  font-size: var(--font-size-hud);
+  margin-left: var(--space-sm);
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+}
+
+.healthPercent {
+  color: var(--color-text-main);
+  font-weight: bold;
+  position: relative;
+  left: 7rem;
+  text-shadow: 0 0 8px var(--color-primary);
+}
+
+.playerHealthBox {
+  position: relative;
+
+  width: 240px;
+
+  height: 1.5rem;
+
+  border-radius: 999px;
+
+  overflow: hidden;
+
+  border: 2px solid var(--color-primary);
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(0, 0, 0, 0.4)
+  );
+
+  box-shadow: var(--shadow-glow-primary);
+}
+
+.playerHealthBar {
+  display: block;
+
+  width: 100%;
+
+  height: 100%;
+
+  border-radius: 999px;
+
+  background: linear-gradient(90deg, #004d7a 0%, #008cff 40%, #00f0ff 100%);
+
+  box-shadow: var(--shadow-glow-primary);
+
+  position: relative;
+
+  overflow: hidden;
+
+  transition: 0.3s ease;
+}
+
+/* لمعة الطاقة */
+
+.playerHealthBar::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -30%;
+
+  width: 25%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+
+  animation: energyFlow 2s linear infinite;
+}
+
+@keyframes energyFlow {
+  from {
+    left: -30%;
+  }
+
+  to {
+    left: 130%;
+  }
+}
+
+/*انيميشن اهتزاز رقم الscore */
+@keyframes scoreReward {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  25% {
+    transform: scale(1.45);
+    filter: brightness(2);
+  }
+
+  60% {
+    transform: scale(0.9);
+    filter: brightness(1.4);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/*====================
+  تنسيقات زر الايقاف  
+======================*/
+#pauseBtn,
+.enemyHealthBar {
+  pointer-events: auto;
+}
+
+#pauseBtn {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 5;
+}
+
+/*====================
+تنسيقات عداد الصواريخ
+======================*/
+/* الحاوية الأساسية للـ UI */
+.hud-missile-container {
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+/* 🌀 تأثير الدائرة الحية والرادار */
+.hud-circle-wrapper {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 3px double rgba(0, 191, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.2),
+    inset 0 0 15px rgba(0, 191, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  background: radial-gradient(
+    circle,
+    rgba(0, 40, 80, 0.6) 0%,
+    rgba(3, 7, 18, 0.9) 80%
+  );
+}
+
+/* خط الرادار الدوّار المضيء لتبدو حية */
+.hud-circle-wrapper::before {
+  content: "";
+  position: absolute;
+  width: 104%;
+  height: 104%;
+  border-radius: var(--radius-round);
+  border: 2px solid transparent;
+  border-top-color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary);
+  animation: rotateRadar 4s linear infinite;
+}
+
+.hud-circle-inner {
+  width: 4rem;
+  height: 4rem;
+    border-radius: var(--radius-round);
+  border: var( --border-glow-primary);
+  box-shadow:var( --shadow-glow-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-bg-overlay);
+}
+
+/* 🚀 أيقونة الصاروخ النيوني مع تأثير النبض الخفيف (Pulse) */
+.missile-svg {
+  width: 4rem;
+  height: 4rem;
+  filter: drop-shadow(0 0 8px var(--color-primary)) drop-shadow(0 0 15px var(--color-primary));
+  transform: rotate(-45deg); /* إمالة الصاروخ تماماً مثل الصورة */
+  animation: missilePulse 2s ease-in-out infinite;
+}
+
+/* 📋 لوحة العداد الممتدة من الدائرة */
+.hud-counter-plate {
+  height: 4rem;
+  padding: 0 var(--space-xxl) 0 4rem; /* إزاحة لليسار لتعويض تداخل الدائرة */
+  margin-left: -2.8rem; /* سحب اللوحة تحت الدائرة تماماً */
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* الخطوط المائلة الزخرفية الصغيرة على يسار الأرقام */
+.decorative-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-right: var(--space-md);
+}
+
+.decorative-bars span {
+  width: 4px;
+  height: 12px;
+  background-color: var(--color-primary);
+  transform: skewX(-30deg);
+  box-shadow: 0 0 5px var(--color-primary);
+  opacity: 0.8;
+}
+
+/* الأرقام والنصوص */
+.missile-count-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.count-number {
+  font-size: var(--font-size-sub);
+  font-weight: 900;
+  color: var(--color-text-main);
+  text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
+  letter-spacing: 2px;
+}
+
+.count-label {
+  font-size: var(--font-size-body);
+  font-weight: 700;
+  color: var(--color-primary);
+  text-shadow: 0 0 5px rgba(0, 191, 255, 0.6);
+  letter-spacing: 3px;
+}
+
+/* 🎬 الأنيميشن والحركات التفاعلية */
+
+/* دوران حواف الرادار الخارجي */
+@keyframes rotateRadar {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* نبض الطاقة المضيء داخل الصاروخ */
+@keyframes missilePulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px #00bfff) drop-shadow(0 0 12px #00bfff);
+    opacity: 0.9;
+  }
+  50% {
+    filter: drop-shadow(0 0 12px #00bfff) drop-shadow(0 0 25px #00bfff);
+    opacity: 1;
+  }
+}
+
+
+@media (max-width: 950px) {
+  .playerHealthContainer {
+    gap: var(--space-xs);
+  }
+  .playerName {
+    font-size: 0.6rem;
+    margin-left: var(--space-sm);
+  
+    text-transform: uppercase;
+  }
+  
+  .healthPercent {
+    font-size: 0.7rem;
+    left: 4rem;
+  }
+.playerHealthBox {
+  width: 170px;
+}
+
+
+.hud-missile-container  {
+  position: relative;
+  bottom: 20px;
+}
+.scoreDisplay {
+  margin-bottom: 0;
+}
+.skull-svg {
+  width: 2.5rem;
+  height: 2.5em;
+}
+.missile-svg {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.hud-circle-wrapper {
+  width: 3rem;
+  height: 3rem;
+}
+.hud-circle-inner {
+  height: 2.5rem;
+}
+.hud-counter-plate.score-theme .count-label {
+  font-size: var(--font-size-hud);
+}
+.count-label {
+  font-size: var(--font-size-hud);
+}
+
+
+
+.enemyHealthBar h3 {
+  margin: 0 0 var(--space-xs) 0;
+  font-size: var(--font-size-hud);
+}
+.healthBox {
+  position: relative;
+  top: 0;
+}
+.healthbar {
+  bottom: 1.5rem;
+}
+}
