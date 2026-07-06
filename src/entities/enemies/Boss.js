@@ -119,6 +119,7 @@ this.htiBox = [
         this.x += this.speed * deltaTime * this.direction;
     } else {
         this.y += this.speed * deltaTime;
+    }
 
     //حساب المسافة بين العدو واللاعب من اجل اطلاق النار
     let dx = game.player.x - this.x;
