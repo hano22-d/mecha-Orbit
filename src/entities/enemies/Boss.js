@@ -48,16 +48,14 @@ this.htiBox = [
     this.bulletDamage = 30;
 
     //صور فريمات اللهب
-   /* this.bossFrame = [
+    this.bossFrame = [
       "/assets/bossFrame1.png",
+      "/assets/bossFrame2.png",
     ].map((src) => {
       const image = new Image();
       image.src = src;
       return image;
-    }); */
-
-    this.bossImage = new Image()
-    this.bossImage.src =  "/assets/bossFrame1.png"
+    });
 
     //فريمات زايلوس بعد التضرر
     this.bossFrameDamage = [
@@ -109,18 +107,18 @@ this.htiBox = [
   update(time, deltaTime, game) {
     if (!this.alive) return;
 
-    //حركة العدو
-    if (this.y > game.camera.y + 50) {
-      this.y = game.camera.y + 50;
+    // حركة العدو: نمنع التثبيت الصلب المتكرر الذي يسبب الرجفة
+    if (this.y >= game.camera.y + 50) {
+        // بدلاً من السطر القديم المسبب للمشكلة، نثبته بسلاسة مرة واحدة
+        this.y = game.camera.y + 50; 
 
-      if (this.x < game.camera.x) this.direction = 1;
-      if (this.x > game.camera.x + game.myCanvas.width - this.width) {
-        this.direction = -1;
-      }
-      this.x += this.speed * deltaTime * this.direction;
+        if (this.x < game.camera.x) this.direction = 1;
+        if (this.x > game.camera.x + game.myCanvas.width - this.width) {
+            this.direction = -1;
+        }
+        this.x += this.speed * deltaTime * this.direction;
     } else {
-      this.y += this.speed * deltaTime;
-    }
+        this.y += this.speed * deltaTime;
 
     //حساب المسافة بين العدو واللاعب من اجل اطلاق النار
     let dx = game.player.x - this.x;
@@ -140,7 +138,7 @@ this.htiBox = [
       this.htiBox[i].y = this.y + this.htiBox[i].offsetY - this.height / 10;
     }
 
- //   UpdateAnimationFrame(this.bossFrameSettings, this.bossFrame, deltaTime); //تحديث زايلوس
+    UpdateAnimationFrame(this.bossFrameSettings, this.bossFrame, deltaTime); //تحديث زايلوس
     UpdateAnimationFrame(
       //تحديث اعمدة الدخان
       this.bossDamageFrameSettings,
@@ -152,68 +150,53 @@ this.htiBox = [
   draw(ctx, camera) {
     if (!this.alive) return;
 
-    //رسم السحابة البرتقالية
+    // رسم السحابة البرتقالية (نقوم بتقريب المركز أيضاً لثبات الإضاءة)
     ctx.save();
-    let centerX = this.x + this.width / 2 - camera.x;
-    let centerY = this.y + this.height / 2 - camera.y;
+    let centerX = Math.round(this.x + this.width / 2 - camera.x);
+    let centerY = Math.round(this.y + this.height / 2 - camera.y);
 
-    let gradient = ctx.createRadialGradient(
-      centerX,
-      centerY,
-      10,
-      centerX,
-      centerY,
-      300
-    );
-
+    let gradient = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, 300);
     gradient.addColorStop(0, "rgba(255, 68, 0, 0.4)");
     gradient.addColorStop(0.5, "rgba(200, 0, 0, 0.2)");
     gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-
     ctx.fillStyle = gradient;
-
     ctx.beginPath();
     ctx.arc(centerX, centerY, 300, 0, Math.PI * 2);
     ctx.fill();
-
     ctx.restore();
 
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
+    // رسم زايلوس بإحداثيات مقربة صحيحة بنسبة 100%
+    const frame = this.bossFrame[this.bossFrameSettings.currentFrame];
+    
+    const drawX = Math.round(this.x - camera.x);
+    const drawY = Math.round(this.y - camera.y);
 
-    //رسم زايلوس
-  //  const frame = this.bossFrame[this.bossFrameSettings.currentFrame];
     ctx.drawImage(
-      this.bossImage,
-      this.x - camera.x,
-      this.y - camera.y,
+      frame,
+      drawX,
+      drawY,
       this.width,
       this.height
     );
 
-    //رسم اعمدة الدخان
-if (this.health < 150) {
-  const frameDamage = this.bossFrameDamage[this.bossDamageFrameSettings.currentFrame];
-  
-  const screenX = this.x - camera.x;
-  const screenY = this.y - camera.y;
+    // رسم أعمدة الدخان مع تقريب الإحداثيات لمنع اهتزاز الدخان نفسه
+    if (this.health < 150) {
+      const frameDamage = this.bossFrameDamage[this.bossDamageFrameSettings.currentFrame];
+      
+      const smoke1X = Math.round(drawX + (this.width * 0.3));
+      const smoke1Y = Math.round(drawY - (this.height * 0.64));
+      ctx.drawImage(frameDamage, smoke1X, smoke1Y, this.width, this.height);
 
-  const smoke1X = screenX + (this.width * 0.3);
-  const smoke1Y = screenY - (this.height * 0.64);
-  ctx.drawImage(frameDamage, smoke1X, smoke1Y, this.width, this.height);
+      const smoke2X = Math.round(drawX - (this.width * 0.125));
+      const smoke2Y = Math.round(drawY - (this.height * 0.5));
+      ctx.drawImage(frameDamage, smoke2X, smoke2Y, this.width, this.height);
 
-
-  const smoke2X = screenX - (this.width * 0.125);
-  const smoke2Y = screenY - (this.height * 0.5);
-  ctx.drawImage(frameDamage, smoke2X, smoke2Y, this.width, this.height);
-
-
-  const smoke3X = screenX + (this.width * 0.2);
-  const smoke3Y = screenY;
-  const smoke3Width = this.width - (this.width * 0.375);
-  const smoke3Height = this.height - (this.height * 0.3);
-  ctx.drawImage(frameDamage, smoke3X, smoke3Y, smoke3Width, smoke3Height);
-}
+      const smoke3X = Math.round(drawX + (this.width * 0.2));
+      const smoke3Y = Math.round(drawY);
+      const smoke3Width = this.width - (this.width * 0.375);
+      const smoke3Height = this.height - (this.height * 0.3);
+      ctx.drawImage(frameDamage, smoke3X, smoke3Y, smoke3Width, smoke3Height);
+    }
     /*
     for (let i = 0; i < this.htiBox.length; i++) {
       ctx.beginPath();
