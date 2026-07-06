@@ -101,7 +101,7 @@ export class Game {
     this.gameTimer += deltaTime;
 
     //شرط الدخول لمرحلة زايلوس
-    if (this.gameTimer > 6000) {
+    if (this.gameTimer > 60000) {
       this.bossStart = true;
     }
 
