@@ -275,11 +275,11 @@ export class Player {
     // رسم السبرايت الأساسي للطائرة
     ctx.drawImage(
       this.planeImg,
-      -this.width / 12,
-      -this.height / 10,
-      this.width,
-      this.height
-    );
+      Math.round(-this.width / 12),
+      Math.round(-this.height / 10),
+      Math.round(this.width),
+      Math.round(this.height)
+  );
 
     // إعادة ضبط الشفافية والتوهج لحماية العناصر التالية
     ctx.globalAlpha = 1;
@@ -301,29 +301,24 @@ export class Player {
       ctx.beginPath();
       ctx.globalAlpha = p.alpha;
       ctx.fillStyle = "cyan";
-      ctx.arc(p.x - camera.x, p.y - camera.y, 2, 0, Math.PI * 2);
+      // تقريب إحداثيات مركز كل نقطة ضوئية
+      ctx.arc(Math.round(p.x - camera.x), Math.round(p.y - camera.y), 2, 0, Math.PI * 2);
       ctx.fill();
     });
     ctx.globalAlpha = 1;
   }
-
   // ========= رسم الصواريخ ========== //
   _drawEquippedMissiles(ctx) {
-    // حساب الأبعاد النسبية للصاروخ (الأصل: عرض 50 وطول 100 -> 50/160 = 0.3125 و 100/160 = 0.625)
-    const missileW = this.width * 0.3125;
-    const missileH = this.height * 0.625;
-
-    // حساب الإزاحة العمودية المحلية (الأصل 50 بكسل -> 50/160 = 0.3125)
-    const localY = this.height * 0.3125;
-
+    const missileW = Math.round(this.width * 0.3125);
+    const missileH = Math.round(this.height * 0.625);
+    const localY = Math.round(this.height * 0.3125);
+  
     if (this.missileCount >= 1) {
-      // الجناح الأيسر أفقياً (الأصل -15 بكسل -> -15/160 = -0.09375)
-      const leftLocalX = this.width * -0.09375;
+      const leftLocalX = Math.round(this.width * -0.09375);
       ctx.drawImage(this.missileImage, leftLocalX, localY, missileW, missileH);
     }
     if (this.missileCount === 2) {
-      // الجناح الأيمن أفقياً (الأصل 100 بكسل -> 100/160 = 0.625)
-      const rightLocalX = this.width * 0.625;
+      const rightLocalX = Math.round(this.width * 0.625);
       ctx.drawImage(this.missileImage, rightLocalX, localY, missileW, missileH);
     }
   }
@@ -333,61 +328,57 @@ export class Player {
     const frame = this.fireFrames[this.fireframeSettings.currentFrame];
     const speed = Math.hypot(this.velocityX, this.velocityY);
     const scale = Math.min(1.5, 1 + speed * 0.4);
-
-    const flameWidth = this.width * 0.1125;
-    const flameHeight = this.height * 0.25 * scale;
-
-    const leftFlameX = this.width * 0.28125;
-    const rightFlameX = this.width * 0.4375;
-    const flameY = this.height * 0.84375;
-
-    ctx.drawImage(frame, leftFlameX, flameY, flameWidth, flameHeight); // المحرك الأيسر
-    ctx.drawImage(frame, rightFlameX, flameY, flameWidth, flameHeight); // المحرك الأيمن
+  
+    const flameWidth = Math.round(this.width * 0.1125);
+    const flameHeight = Math.round(this.height * 0.25 * scale);
+  
+    const leftFlameX = Math.round(this.width * 0.28125);
+    const rightFlameX = Math.round(this.width * 0.4375);
+    const flameY = Math.round(this.height * 0.84375);
+  
+    ctx.drawImage(frame, leftFlameX, flameY, flameWidth, flameHeight);
+    ctx.drawImage(frame, rightFlameX, flameY, flameWidth, flameHeight);
   }
   // ========== رسم الشيلد ========= //
   _drawShield(ctx, camera) {
     if (this.shieldEffect) {
       const frame = this.shieldFrame[this.shieldFrameSettings.currentFrame];
-
-      const dynamicShieldSize = this.width * 1.25;
-
-      const dynamicShieldOffset = this.width * 0.21875;
-
-      ctx.drawImage(
-        frame,
-        this.x - camera.x - dynamicShieldOffset,
-        this.y - camera.y - dynamicShieldOffset,
-        dynamicShieldSize,
-        dynamicShieldSize
-      );
+      const dynamicShieldSize = Math.round(this.width * 1.25);
+      const dynamicShieldOffset = Math.round(this.width * 0.21875);
+  
+      // تقريب الحسابات النهائية بالكامل لثبات مطلق للهالة حول الطائرة
+      const drawX = Math.round(this.x - camera.x - dynamicShieldOffset);
+      const drawY = Math.round(this.y - camera.y - dynamicShieldOffset);
+  
+      ctx.drawImage(frame, drawX, drawY, dynamicShieldSize, dynamicShieldSize);
     }
   }
 
   // ========== رسم تاثير السلاح ========= //
   _drawWeaponProgressBar(ctx, camera) {
     if (!this.weaponEffect) return;
-
+  
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = "orange";
     ctx.lineWidth = WEAPON_ARC_LINE_WIDTH;
-
+  
     const spriteOffsetX = this.width / 12;
     const spriteOffsetY = this.height / 10;
-
-    const centerX = this.x - camera.x + this.width / 2 - spriteOffsetX;
-    const centerY = this.y - camera.y + this.height / 2 - spriteOffsetY;
-
-    const dynamicRadius = this.width * 0.53125;
-
+  
+    // تقريب إحداثيات مركز المؤشر الدائري
+    const centerX = Math.round(this.x - camera.x + this.width / 2 - spriteOffsetX);
+    const centerY = Math.round(this.y - camera.y + this.height / 2 - spriteOffsetY);
+    const dynamicRadius = Math.round(this.width * 0.53125);
+  
     ctx.arc(
       centerX,
       centerY,
       dynamicRadius,
       -Math.PI / 2,
-      -Math.PI / 2 + Math.PI * 2 * this.weaponProgressEffect // التناقص بناءً على الوقت المتبقي
+      -Math.PI / 2 + Math.PI * 2 * this.weaponProgressEffect
     );
-
+  
     ctx.stroke();
     ctx.restore();
   }
