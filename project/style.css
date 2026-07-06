@@ -16,6 +16,12 @@ canvas {
   height: 100%;
   display: block;
   z-index: 1;
+
+  /* منع المتصفح من تنعيم البكسلات قسرياً والحفاظ على حدة حواف الصور */
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 img:not([src]), img[src=""] {
