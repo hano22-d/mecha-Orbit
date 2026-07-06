@@ -244,7 +244,7 @@ export class Game {
     let totalWeight =
       normalWeight + chaserWeight + dodgerWeight + shooterWeight; // مجموع الأوزان الحالية
     let roll = Math.random() * totalWeight;
-    let x = this.camera.x + Math.random() * this.myCanvas.width;
+    let x = this.camera.x + Math.random() * this.myCanvas.logicalWidth;
     let y = this.camera.y - 50;
 
     //توليد الاعداء بنسب
@@ -379,14 +379,15 @@ spawnPoweUp() {
   const types = [MissilePowerUp];
   const randomType = types[Math.floor(Math.random() * types.length)];
 
-  const isMobile = this.myCanvas.height < 500 || this.myCanvas.width < 768;
+  const isMobile = this.myCanvas.logicalHeight < 500 || this.myCanvas.logicalWidth < 768;
   
   // نحدد أقصى عرض متوقع للكبسولة لتأمين عملية التوليد (الصاروخ هو الأكبر: 70 للكمبيوتر و35 للموبايل)
   const maxPowerUpWidth = (randomType === MissilePowerUp) ? (isMobile ? 35 : 70) : (isMobile ? 15 : 30);
 
   const padding = 20; 
   
-  const randomX = padding + Math.random() * (this.myCanvas.width - padding * 2 - maxPowerUpWidth);
+  const randomX = padding + Math.random() * (this.myCanvas.logicalWidth - padding * 2 - maxPowerUpWidth);
+
 
   this.powerUps.push(
     new randomType(this.myCanvas, this.camera.x + randomX, this.camera.y - 40) // توليدها مختفية قليلاً بالأعلى
@@ -994,12 +995,12 @@ spawnPoweUp() {
 spawnRocks(gameTimer) {
   if (gameTimer - this.lastRock > this.rockDelay && !this.bossStart) {
     
-    const isMobile = this.myCanvas.height < 500 || this.myCanvas.width < 768;
+    const isMobile = this.myCanvas.logicalHeight < 500 || this.myCanvas.logicalWidth < 768;
     
     const maxRockWidth = isMobile ? 55 : 110;
     const padding = 15;
 
-    let x = this.camera.x + padding + Math.random() * (this.myCanvas.width - padding * 2 - maxRockWidth);
+    let x = this.camera.x + padding + Math.random() * (this.myCanvas.logicalWidth - padding * 2 - maxRockWidth);
     let y = this.camera.y - maxRockWidth;
 
     this.rocks.push(new Rocks(this.myCanvas, x, y));
@@ -1021,7 +1022,7 @@ spawnRocks(gameTimer) {
     ctx.globalAlpha = this.flash.alpha;
     ctx.fillStyle = this.flash.color;
 
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.logicalWidth, canvas.logicalHeight);
 
     ctx.restore();
   }
@@ -1034,9 +1035,10 @@ spawnRocks(gameTimer) {
 
         // الإحداثيات الأولية للزعيم
         this.boss.x =
-          this.bossArenaX + this.myCanvas.width / 2 - this.boss.width / 2;
+          this.bossArenaX + this.myCanvas.logicalWidth / 2 - this.boss.width / 2;
 
-        this.boss.y = this.bossArenaY - this.myCanvas.height;
+          this.boss.y = this.bossArenaY - this.myCanvas.logicalHeight;
+
       }
 
       // تثبيت الكاميرا في الحلبة
@@ -1052,8 +1054,9 @@ spawnRocks(gameTimer) {
       }
     } else {
       // حركة الكاميرا الطبيعية الملاحقة للاعب
-      this.camera.x = this.player.x - this.myCanvas.width * 0.45;
-      this.camera.y = this.player.y - this.myCanvas.height * 0.6;
+      this.camera.x = this.player.x - this.myCanvas.logicalWidth * 0.45;
+      this.camera.y = this.player.y - this.myCanvas.logicalHeight * 0.6;
+      
     }
   }
 

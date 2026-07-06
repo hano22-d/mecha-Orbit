@@ -34,7 +34,7 @@ function gameLoop(time) {
 
   if (deltaTime > 100) deltaTime = 16.6;
 
-  ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  ctx.clearRect(0, 0, myCanvas.logicalWidth, myCanvas.logicalHeight);
 
   switch (stateManager.getState()) {
     case "intro":

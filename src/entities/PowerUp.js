@@ -6,7 +6,7 @@ export class PowerUp {
     this.speed = speed;
 
 
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     this.width = isMobile ? baseWidth * 0.5 : baseWidth;
     this.height = isMobile ? baseHeight * 0.5 : baseHeight;
@@ -42,9 +42,9 @@ export class PowerUp {
     const padding = 50;
     return (
       this.x < camera.x - padding ||
-      this.x > canvas.width + camera.x + padding ||
+      this.x > canvas.logicalWidth + camera.x + padding ||
       this.y < camera.y - padding ||
-      this.y > camera.y + canvas.height + padding
+      this.y > camera.y + canvas.logicalHeight + padding
     );
   } 
 }

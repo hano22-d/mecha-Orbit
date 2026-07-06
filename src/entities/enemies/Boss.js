@@ -5,7 +5,8 @@ export class Boss {
     this.alive = true;
     this.x = 0;
     this.y = 0;
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
+
     this.width = isMobile ? 100 : 200;
     this.height = isMobile ? 132.5 : 250;
     this.direction = 1;

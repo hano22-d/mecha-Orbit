@@ -7,7 +7,7 @@ export class Rocks {
     this.x = x;
     this.y = y;
 
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     const baseRandomWidth = Math.random() * 80 + 30;
     this.width = isMobile ? baseRandomWidth * 0.5 : baseRandomWidth;

@@ -30,11 +30,12 @@ export class Player {
   constructor(canvas) {
     // خواص الحالة الأساسية
     this.alive = true;
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
+
     this.width = isMobile ? PLANE_WIDTH_MOBILE : PLANE_WIDTH;
     this.height = isMobile ? PLANE_HEIGHT_MOBILE : PLANE_HEIGHT;
-    this.x = canvas.width / 2 - this.width / 2;
-    this.y = canvas.height * 0.85;
+    this.x = canvas.logicalWidth / 2 - this.width / 2;
+    this.y = canvas.logicalHeight * 0.85;
     this.health = MAX_HEALTH;
 
     // صناديق الاصطدام للاعب
