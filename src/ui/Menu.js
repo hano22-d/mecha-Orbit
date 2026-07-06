@@ -18,6 +18,7 @@ export function menu(stateManager, game) {
   playerRank(rank, lastTotalScore); //دالة حساب الشارة الحالية
 
   startGamebtn.addEventListener("click", () => {
+    enterFullScreen()
     audioManager.play("bg", true, true);
     game.reset();
     stateManager.setState("intro");
@@ -30,4 +31,24 @@ export function menu(stateManager, game) {
       menu.style.display = "none";
     }
   });
+}
+
+// دالة لتفعيل ملء الشاشة بالكامل متوافقة مع جميع الهواتف والمتصفحات
+function enterFullScreen() {
+  const element = document.documentElement;
+
+  // استخدام try catch لضمان عدم توقف اللعبة إذا رفض المتصفح الإذن
+  try {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) { /* Firefox */
+        element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) { /* IE/Edge */
+        element.msRequestFullscreen();
+    }
+  } catch (error) {
+     console.log("حجب المتصفح ميزة ملء الشاشة التلقائي:", error);
+  }
 }

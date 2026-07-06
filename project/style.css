@@ -3,6 +3,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  touch-action: none; /* يمنع حركات السحب الافتراضية للمتصفح */
   background-color: #000;
   font-family: Orbitron, sans-serif;
 }
