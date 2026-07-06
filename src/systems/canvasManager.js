@@ -9,13 +9,15 @@ function resizeCanvas() {
   const logicalHeight = window.innerHeight;
 
   // أبعاد الكانفاس الداخلية (عدد البكسلات الحقيقي) × dpr
-  myCanvas.width = logicalWidth ;
-  myCanvas.height = logicalHeight ;
+  myCanvas.width = logicalWidth * dpr;
+  myCanvas.height = logicalHeight * dpr;
 
   // الحجم الظاهر على الشاشة يبقى بالـ CSS pixels
   myCanvas.style.width = logicalWidth + "px";
   myCanvas.style.height = logicalHeight + "px";
 
+  // نعيد تحجيم نظام الإحداثيات كي تبقى حساباتك (camera, x, y...) شغالة بنفس القيم المنطقية
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 
 // استدعاء الدالة عند تشغيل اللعبة لأول مرة
