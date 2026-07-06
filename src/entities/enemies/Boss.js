@@ -50,7 +50,6 @@ this.htiBox = [
     //صور فريمات اللهب
     this.bossFrame = [
       "/assets/bossFrame1.png",
-      "/assets/bossFrame2.png",
     ].map((src) => {
       const image = new Image();
       image.src = src;
