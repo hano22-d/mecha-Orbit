@@ -1,27 +1,20 @@
 // src/systems/CanvasManager.js
 
-const myCanvas = document.getElementById("myCanvas"); // استبدله بـ ID الكانفاس الخاص بك
+const myCanvas = document.getElementById("myCanvas");
 const ctx = myCanvas.getContext("2d");
 
 function resizeCanvas() {
-  // 1. الحصول على نسبة بكسل الجهاز الحقيقية (مثلاً 2 أو 3 في الموبايل، و 1 في الشاشات القديمة)
-  const dpr = window.devicePixelRatio || 1;
 
-  // 2. تحديد الأبعاد المنطقية للشاشة (عرض وارتفاع المتصفح حالياً)
+  // نكتفي بأبعاد الشاشة المنطقية الحالية لتطابق حسابات الـ translate والكاميرا لديك 100%
   const logicalWidth = window.innerWidth;
   const logicalHeight = window.innerHeight;
 
-  // 3. تكبير الأبعاد الداخلية للكانفاس الحقيقية بضربها في الـ DPR
-  myCanvas.width = logicalWidth * dpr;
-  myCanvas.height = logicalHeight * dpr;
+  // جعل أبعاد الكانفاس مطابقة تماماً لأبعاد الشاشة دون ضربها في dpr
+  myCanvas.width = logicalWidth;
+  myCanvas.height = logicalHeight;
 
-  // 4. إجبار الـ CSS على الحفاظ على الأبعاد المنطقية للشاشة بدون مطّ
   myCanvas.style.width = logicalWidth + "px";
   myCanvas.style.height = logicalHeight + "px";
-
-  // 5. موازنة الرسم: نخبر الـ Canvas بأن يقوم بعمل Scale تلقائي لكل عمليات الرسم القادمة
-  // هذا يضمن أن أكوادك الحالية (مثل الأبعاد والسرعات) لن تخرب وتعمل بنفس مقاساتها الطبيعية!
-  ctx.scale(dpr, dpr);
 }
 
 // استدعاء الدالة عند تشغيل اللعبة لأول مرة

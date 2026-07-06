@@ -9,21 +9,23 @@ body {
 }
 
 canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  z-index: 1;
 
-  /* منع المتصفح من تنعيم البكسلات قسرياً والحفاظ على حدة حواف الصور */
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-crisp-edges;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  /* تفعيل الفلاتر الصلبة لكرت الشاشة لمنع التغبش نهائياً عند تمطيط الصور الصغيرة والنجوم */
+  image-rendering: -moz-crisp-edges;         /* Firefox */
+  image-rendering: -webkit-crisp-edges;      /* Safari/Chrome old */
+  image-rendering: pixelated;                 /* Chrome/Webkit New */
+  image-rendering: crisp-edges;               /* Standard */
+  
+  /* تسريع الرسوميات وتحويل العبء إلى كرت الشاشة (GPU Acceleration) لإنهاء البطء */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
-
 img:not([src]), img[src=""] {
   opacity: 0;
   width: 0;
