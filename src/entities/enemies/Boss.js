@@ -48,13 +48,16 @@ this.htiBox = [
     this.bulletDamage = 30;
 
     //صور فريمات اللهب
-    this.bossFrame = [
+   /* this.bossFrame = [
       "/assets/bossFrame1.png",
     ].map((src) => {
       const image = new Image();
       image.src = src;
       return image;
-    });
+    }); */
+
+    this.bossImage = new Image()
+    this.bossImage.src =  "/assets/bossFrame1.png"
 
     //فريمات زايلوس بعد التضرر
     this.bossFrameDamage = [
@@ -137,7 +140,7 @@ this.htiBox = [
       this.htiBox[i].y = this.y + this.htiBox[i].offsetY - this.height / 10;
     }
 
-    UpdateAnimationFrame(this.bossFrameSettings, this.bossFrame, deltaTime); //تحديث زايلوس
+ //   UpdateAnimationFrame(this.bossFrameSettings, this.bossFrame, deltaTime); //تحديث زايلوس
     UpdateAnimationFrame(
       //تحديث اعمدة الدخان
       this.bossDamageFrameSettings,
@@ -179,9 +182,9 @@ this.htiBox = [
     ctx.fillStyle = this.color;
 
     //رسم زايلوس
-    const frame = this.bossFrame[this.bossFrameSettings.currentFrame];
+  //  const frame = this.bossFrame[this.bossFrameSettings.currentFrame];
     ctx.drawImage(
-      frame,
+      this.bossImage,
       this.x - camera.x,
       this.y - camera.y,
       this.width,
