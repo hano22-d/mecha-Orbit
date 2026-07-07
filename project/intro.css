@@ -31,9 +31,17 @@
 
 .crt-overlay {
   position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
-              linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%),
+    linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.05),
+      rgba(0, 255, 0, 0.02),
+      rgba(0, 0, 255, 0.05)
+    );
   background-size: 100% 4px, 6px 100%;
   z-index: 5;
   pointer-events: none;
@@ -58,7 +66,7 @@
 .blink-dot {
   width: 8px;
   height: 8px;
-  background-color: var(--color-danger); 
+  background-color: var(--color-danger);
   border-radius: var(--radius-round);
   box-shadow: 0 0 8px var(--color-danger);
   animation: blink 1s infinite;
@@ -80,9 +88,15 @@
   background-color: var(--color-success);
   box-shadow: 0 0 4px var(--color-success);
 }
-.signal-bars .bar:nth-child(1) { height: 6px; }
-.signal-bars .bar:nth-child(2) { height: 10px; }
-.signal-bars .bar:nth-child(3) { height: 14px; }
+.signal-bars .bar:nth-child(1) {
+  height: 6px;
+}
+.signal-bars .bar:nth-child(2) {
+  height: 10px;
+}
+.signal-bars .bar:nth-child(3) {
+  height: 14px;
+}
 
 /* 🟢 تصميم الرادار العسكري ثنائي الأبعاد */
 .hud-radar-container {
@@ -94,16 +108,24 @@
   position: relative;
   width: 90px;
   height: 90px;
-  border:var(--border-glow-success);
+  border: var(--border-glow-success);
   border-radius: var(--radius-round);
-  background: radial-gradient(circle, rgba(0,255,102,0.05) 0%, rgba(0,0,0,0) 70%);
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 102, 0.05) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
 }
 /* خط المسح الدائري للرادار */
 .radar-sweep {
   position: absolute;
   width: 50%;
   height: 50%;
-  background: linear-gradient(45deg, rgba(0, 255, 102, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(
+    45deg,
+    rgba(0, 255, 102, 0.4) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
   transform-origin: bottom right;
   border-right: var(--border-glow-success);
   animation: radar-sweep 3s linear infinite;
@@ -118,13 +140,15 @@
 .radar-dot.player {
   background: var(--color-success);
   box-shadow: 0 0 6px var(--color-success);
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }
 .radar-dot.enemy {
   background: var(--color-danger);
   box-shadow: 0 0 6px var(--color-danger);
-  top: 25%; left: 65%;
+  top: 25%;
+  left: 65%;
   animation: pulse-enemy 1.5s infinite;
 }
 
@@ -140,7 +164,7 @@
   font-size: var(--font-size-body);
   font-weight: bold;
   margin: var(--space-md) 0;
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
   width: 0;
   display: none;
@@ -153,18 +177,48 @@
 
 /* 🟢 خطوط الأنيميشن الرياضية */
 @keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 @keyframes radar-sweep {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 @keyframes pulse-enemy {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.4; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.4;
+  }
+}
+
+@media (max-width: 950px) {
+  .dialogDiv {
+    max-width: 100vw;
+  }
+  .dialog-text {
+    font-size: 0.5rem;
+    font-weight: 900;
+  }
 }

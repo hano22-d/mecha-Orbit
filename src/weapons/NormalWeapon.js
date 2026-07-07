@@ -29,7 +29,7 @@ export class NormalWeapon extends Weapon {
     const localY = -(this.owner.height / 10);
 
     // 📱 فحص الشاشة المتجاوب للرصاصة
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     // جعل حجم الرصاصة ديناميكياً (اللابتوب: 5x20 | الموبايل: 2.5x10)
     const bulletW = isMobile ? 2.5 : 5;

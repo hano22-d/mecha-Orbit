@@ -25,7 +25,7 @@ export class Dodger extends Enemy {
     this.attackRange = 150;
     this.dodgeDirection = null;
 
-    const isMobile = config.canvas.height < 500 || config.canvas.width < 768;
+    const isMobile = config.canvas.logicalHeight < 500 || config.canvas.logicalWidth < 768;
     this.powerDisplacement = isMobile ? 1.5 : 3
     
   }

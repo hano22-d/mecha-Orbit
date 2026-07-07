@@ -7,7 +7,7 @@ export class Explosion {
     this.life = 0;
     this.maxLife = 500;
 
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     if (this.type === "player") {
       this.width = isMobile ? 150 : 300;

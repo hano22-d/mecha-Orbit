@@ -26,7 +26,7 @@ export class Shooter extends Enemy {
       ],
     });
 
-    const isMobile = config.canvas.height < 500 || config.canvas.width < 768;
+    const isMobile = config.canvas.logicalHeight < 500 || config.canvas.logicalWidth < 768;
 
     this.attackRange = isMobile ? 200 : 300;
     this.lastShoot = 0;

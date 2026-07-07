@@ -56,10 +56,10 @@ export class Bullet {
   isOffScreen(canvas, camera) {
     const isTooFarLeft = this.x < camera.x - SCREEN_OFFBOUNDS_PADDING;
     const isTooFarRight =
-      this.x > canvas.width + camera.x + SCREEN_OFFBOUNDS_PADDING;
+      this.x > canvas.logicalWidth + camera.x + SCREEN_OFFBOUNDS_PADDING;
     const isTooFarTop = this.y < camera.y - SCREEN_OFFBOUNDS_PADDING;
     const isTooFarBottom =
-      this.y > canvas.height + camera.y + SCREEN_OFFBOUNDS_PADDING;
+      this.y > canvas.logicalHeight + camera.y + SCREEN_OFFBOUNDS_PADDING;
 
     return isTooFarLeft || isTooFarRight || isTooFarTop || isTooFarBottom;
   }

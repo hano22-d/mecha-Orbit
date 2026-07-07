@@ -101,7 +101,7 @@ export class Game {
     this.gameTimer += deltaTime;
 
     //شرط الدخول لمرحلة زايلوس
-    if (this.gameTimer > 60000) {
+    if (this.gameTimer > 240000) {
       this.bossStart = true;
     }
 
@@ -376,7 +376,7 @@ spawnEnemyBullets(enemy, player) {
 
   //دالة توليد المكافات
 spawnPoweUp() {
-  const types = [MissilePowerUp];
+  const types = [MissilePowerUp,WeaponPowerUp,HealthPowerUp,ShieldPowerUp];
   const randomType = types[Math.floor(Math.random() * types.length)];
 
   const isMobile = this.myCanvas.logicalHeight < 500 || this.myCanvas.logicalWidth < 768;
@@ -671,7 +671,7 @@ spawnPoweUp() {
             this.spawnExplosion(this.player, "player");
             if (typeof this.player.delete === "function") this.player.delete();
 
-            let progressPercent = (this.gameTimer / 60000) * 100;
+            let progressPercent = (this.gameTimer / 240000) * 100;
             this.remainingTimeBoss = Math.max(
               0,
               Math.min(progressPercent, 100)
@@ -745,7 +745,7 @@ spawnPoweUp() {
             if (typeof this.player.delete === "function") this.player.delete();
 
             // حساب نسبة التقدم قبل ظهور الزعيم
-            let progressPercent = (this.gameTimer / 60000) * 100;
+            let progressPercent = (this.gameTimer / 240000) * 100;
             this.remainingTimeBoss = Math.max(
               0,
               Math.min(progressPercent, 100)
@@ -849,7 +849,7 @@ spawnPoweUp() {
             if (typeof this.player.delete === "function") this.player.delete();
 
             // حساب نسبة التقدم المستقرة قبل ظهور الزعيم
-            let progressPercent = (this.gameTimer / 60000) * 100;
+            let progressPercent = (this.gameTimer / 240000) * 100;
             this.remainingTimeBoss = Math.max(
               0,
               Math.min(progressPercent, 100)
@@ -946,7 +946,7 @@ spawnPoweUp() {
 
       this.boss.x =
         this.bossArenaX +
-        this.myCanvas.width / 2 -
+        this.myCanvas.logicalWidth / 2 -
         (this.boss.width / 2 || 100);
       this.boss.y = this.bossArenaY - 700;
     }

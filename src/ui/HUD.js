@@ -45,7 +45,7 @@ export class Hud {
   }
 
   healthBarChanged(game, canvas) {
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     //شرط عرض شريط صحة زايلوس
     if (game.bossStart) {
@@ -73,7 +73,7 @@ export class Hud {
   }
 
   updateScoreAndhealth(game, canvas) {
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     //تحديث الscore
     this.scoreValue.textContent = game.score;

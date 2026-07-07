@@ -114,7 +114,7 @@ this.htiBox = [
         this.y = game.camera.y + 50; 
 
         if (this.x < game.camera.x) this.direction = 1;
-        if (this.x > game.camera.x + game.myCanvas.width - this.width) {
+        if (this.x > game.camera.x + game.myCanvas.logicalWidth - this.width) {
             this.direction = -1;
         }
         this.x += this.speed * deltaTime * this.direction;

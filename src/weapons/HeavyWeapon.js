@@ -26,8 +26,8 @@ export class HeavyWeapon extends Weapon {
 
     const localX = this.owner.width / 2 - this.owner.width / 12;
     const localY = -(this.owner.height / 10);
-
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     const bulletW = isMobile ? 5 : 10;
     const bulletH = isMobile ? 12.5 : 25;

@@ -3,7 +3,8 @@ export class Debris {
     this.x = x;
     this.y = y;
     
-    const isMobile = canvas.height < 500 || canvas.width < 768;
+    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
+    
     this.width = isMobile ? 25 : 100;
     this.height = isMobile ? 25 : 100;
 

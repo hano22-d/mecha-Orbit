@@ -25,7 +25,7 @@ export class Background {
 // ========== دالة توليد التدرج اللوني للخلفية السوداء ========= //
   _initSpaceGradient() {
     const ctx = this.canvas.getContext("2d");
-    this.spaceGradient = ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+    this.spaceGradient = ctx.createLinearGradient(0, 0, 0, this.canvas.logicalHeight);
     this.spaceGradient.addColorStop(0, "#000010"); // أزرق ليلي داكن جداً في الأعلى
     this.spaceGradient.addColorStop(1, "#000000"); // أسود مطلق في الأسفل
   }
@@ -36,8 +36,8 @@ export class Background {
       for (let i = 0; i < layer.starCount; i++) {
         layer.stars.push({
           // توزيع النجوم عشوائياً داخل الكانفاس + المنطقة العازلة المحيطة به
-          x: this.camera.x - BUFFER_ZONE + Math.random() * (this.canvas.width + BUFFER_ZONE * 2),
-          y: this.camera.y - BUFFER_ZONE + Math.random() * (this.canvas.height + BUFFER_ZONE * 2),
+          x: this.camera.x - BUFFER_ZONE + Math.random() * (this.canvas.logicalWidth + BUFFER_ZONE * 2),
+          y: this.camera.y - BUFFER_ZONE + Math.random() * (this.canvas.logicalHeight + BUFFER_ZONE * 2),
           opacity: Math.random(), // درجة لمعان عشوائية بدايةً
         });
       }
@@ -46,14 +46,14 @@ export class Background {
 
   // ========= دالة اعادة تدوير النجوم ========== //
   _recycleStarIfOutOfBounds(star) {
-    const isPastBottom = star.y > this.camera.y + this.canvas.height + BUFFER_ZONE;
+    const isPastBottom = star.y > this.camera.y + this.canvas.logicalHeight + BUFFER_ZONE;
     const isPastTop    = star.y < this.camera.y - BUFFER_ZONE;
-    const isPastRight  = star.x > this.camera.x + this.canvas.width + BUFFER_ZONE;
+    const isPastRight  = star.x > this.camera.x + this.canvas.logicalWidth + BUFFER_ZONE;
     const isPastLeft   = star.x < this.camera.x - BUFFER_ZONE;
 
     if (isPastBottom || isPastTop || isPastRight || isPastLeft) {
-      star.x = this.camera.x - BUFFER_ZONE + Math.random() * (this.canvas.width + BUFFER_ZONE * 2);
-      star.y = this.camera.y - BUFFER_ZONE + Math.random() * (this.canvas.height + BUFFER_ZONE * 2);
+      star.x = this.camera.x - BUFFER_ZONE + Math.random() * (this.canvas.logicalWidth + BUFFER_ZONE * 2);
+      star.y = this.camera.y - BUFFER_ZONE + Math.random() * (this.canvas.logicalHeight + BUFFER_ZONE * 2);
     }
   }
 
@@ -91,7 +91,7 @@ export class Background {
   draw(ctx, camera) {
     // رسم الخلفية السوداء المتدرحة
     ctx.fillStyle = this.spaceGradient;
-    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.fillRect(0, 0, this.canvas.logicalWidth, this.canvas.logicalHeight);
 
     // رسم النجوم لكل طبقة بحجمها وشفافيتها الخاصة
     for (let layer of this.layers) {
