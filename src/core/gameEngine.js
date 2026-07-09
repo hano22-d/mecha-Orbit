@@ -21,6 +21,7 @@ import { Missile } from "../weapons/Missile";
 import { Rocks } from "../entities/rocks";
 import { winUpdate } from "../ui/win";
 import { gameOverUi } from "../ui/gameOver";
+import { TouchButton } from "../entities/ToucheButton";
 
 //game manager class//
 export class Game {
@@ -96,6 +97,14 @@ export class Game {
     };
 
     this.background = new Background(this.myCanvas, this.camera);
+
+    //مصفوفة تخزين الازرار
+    this.touchButtons = [];
+    //استدعاء دالة بناء الازرار لاول مرة
+    this.initTouchControls();
+
+    // ضبط عدم خروج اللاعب من الشاشة + تحديث مواقع الازرار عند تغير في حجم الشاشة
+    window.addEventListener("resize", () => this.handleResize());
   }
   update(input, time, deltaTime) {
     this.gameTimer += deltaTime;
@@ -150,7 +159,7 @@ export class Game {
 
     this.handleCollisions(time);
 
-    hud.update(this,this.myCanvas); //تحديث واجهة اللعب
+    hud.update(this, this.myCanvas); //تحديث واجهة اللعب
   }
 
   draw() {
@@ -184,6 +193,10 @@ export class Game {
 
     this.ctx.restore(); //نهاية الshack
 
+    this.touchButtons.forEach((button) => {
+      button.draw(this.ctx);
+    });
+
     this.drawFlash(this.ctx, this.myCanvas); //رسم الفلاش
   }
   //دالة اطلاق الرصاص
@@ -194,7 +207,7 @@ export class Game {
     }
 
     if (this.player.canShoot(input.keys, gameTimer)) {
-      this.player.weapon.shoot(this.bullets,this.myCanvas);
+      this.player.weapon.shoot(this.bullets, this.myCanvas);
       this.bulletsFired++;
       audioManager.poolPlay("fire");
     }
@@ -267,7 +280,7 @@ export class Game {
     } else if (roll < normalWeight + chaserWeight) {
       this.enemies.push(
         new Chaser({
-          canvas : this.myCanvas,
+          canvas: this.myCanvas,
           type: "chaser",
           x: x,
           y: y,
@@ -318,51 +331,51 @@ export class Game {
       this.enemyDelay = 2000; // البداية الهادئة للعبة
     }
     if (gameTimer - this.lastEnemy > this.enemyDelay && !this.bossStart) {
-     // this.spawnEnemy(gameTimer);
+      // this.spawnEnemy(gameTimer);
       this.lastEnemy = gameTimer;
     }
   }
 
   //دالة توليد رصاصات العدو
-spawnEnemyBullets(enemy, player) {
-  if (!this.player.alive) return;
+  spawnEnemyBullets(enemy, player) {
+    if (!this.player.alive) return;
 
-  const targetX = player.x + player.width / 2;
-  const targetY = player.y + player.height / 2;
+    const targetX = player.x + player.width / 2;
+    const targetY = player.y + player.height / 2;
 
-  const offsetX = enemy.width * 0.085;
-  const offsetY = enemy.height * 0.2;
+    const offsetX = enemy.width * 0.085;
+    const offsetY = enemy.height * 0.2;
 
-  const spawnX = enemy.x + enemy.width / 2 - offsetX;
-  const spawnY = enemy.y + enemy.height - offsetY;
+    const spawnX = enemy.x + enemy.width / 2 - offsetX;
+    const spawnY = enemy.y + enemy.height - offsetY;
 
-  const dx = targetX - spawnX;
-  const dy = targetY - spawnY;
-  const distance = Math.hypot(dx, dy);
+    const dx = targetX - spawnX;
+    const dy = targetY - spawnY;
+    const distance = Math.hypot(dx, dy);
 
-  if (distance === 0) return;
+    if (distance === 0) return;
 
-  const dirX = dx / distance;
-  const dirY = dy / distance;
+    const dirX = dx / distance;
+    const dirY = dy / distance;
 
-  const BULLET_SPEED = 3;
-  const bulletSize = enemy.width * 0.142;
+    const BULLET_SPEED = 3;
+    const bulletSize = enemy.width * 0.142;
 
-  this.enemiesBullets.push(
-    new Bullet({
-      x: spawnX,
-      y: spawnY,
-      velocityX: dirX * BULLET_SPEED,
-      velocityY: dirY * BULLET_SPEED,
-      width: bulletSize,  
-      height: bulletSize,
-      image: enemy.imgBullet,
-      damage: enemy.bulletDamage,
-    })
-  );
+    this.enemiesBullets.push(
+      new Bullet({
+        x: spawnX,
+        y: spawnY,
+        velocityX: dirX * BULLET_SPEED,
+        velocityY: dirY * BULLET_SPEED,
+        width: bulletSize,
+        height: bulletSize,
+        image: enemy.imgBullet,
+        damage: enemy.bulletDamage,
+      })
+    );
 
-  audioManager.poolPlay("EnemyWeapon");
-}
+    audioManager.poolPlay("EnemyWeapon");
+  }
   // دالة تحديث رصاصات العدو
   updateEnemyBullets(canvas, camera) {
     this.enemiesBullets.forEach((bullet) => {
@@ -375,24 +388,28 @@ spawnEnemyBullets(enemy, player) {
   }
 
   //دالة توليد المكافات
-spawnPoweUp() {
-  const types = [MissilePowerUp,WeaponPowerUp,HealthPowerUp,ShieldPowerUp];
-  const randomType = types[Math.floor(Math.random() * types.length)];
+  spawnPoweUp() {
+    const types = [MissilePowerUp, WeaponPowerUp, HealthPowerUp, ShieldPowerUp];
+    const randomType = types[Math.floor(Math.random() * types.length)];
 
-  const isMobile = this.myCanvas.logicalHeight < 500 || this.myCanvas.logicalWidth < 768;
-  
-  // نحدد أقصى عرض متوقع للكبسولة لتأمين عملية التوليد (الصاروخ هو الأكبر: 70 للكمبيوتر و35 للموبايل)
-  const maxPowerUpWidth = (randomType === MissilePowerUp) ? (isMobile ? 35 : 70) : (isMobile ? 15 : 30);
+    const isMobile =
+      this.myCanvas.logicalHeight < 500 || this.myCanvas.logicalWidth < 768;
 
-  const padding = 20; 
-  
-  const randomX = padding + Math.random() * (this.myCanvas.logicalWidth - padding * 2 - maxPowerUpWidth);
+    // نحدد أقصى عرض متوقع للكبسولة لتأمين عملية التوليد (الصاروخ هو الأكبر: 70 للكمبيوتر و35 للموبايل)
+    const maxPowerUpWidth =
+      randomType === MissilePowerUp ? (isMobile ? 35 : 70) : isMobile ? 15 : 30;
 
+    const padding = 20;
 
-  this.powerUps.push(
-    new randomType(this.myCanvas, this.camera.x + randomX, this.camera.y - 40) // توليدها مختفية قليلاً بالأعلى
-  );
-};
+    const randomX =
+      padding +
+      Math.random() *
+        (this.myCanvas.logicalWidth - padding * 2 - maxPowerUpWidth);
+
+    this.powerUps.push(
+      new randomType(this.myCanvas, this.camera.x + randomX, this.camera.y - 40) // توليدها مختفية قليلاً بالأعلى
+    );
+  }
 
   //تحديث المكافات
   updatePowerUp(gameTimer) {
@@ -426,7 +443,9 @@ spawnPoweUp() {
     const targetCenterX = target.x + (target.width ? target.width / 2 : 0);
     const targetCenterY = target.y + (target.height ? target.height / 2 : 0);
 
-    this.explosions.push(new Explosion(this.myCanvas,targetCenterX, targetCenterY, typeName));
+    this.explosions.push(
+      new Explosion(this.myCanvas, targetCenterX, targetCenterY, typeName)
+    );
   }
 
   // دالة تحديث الانفجارات
@@ -454,7 +473,12 @@ spawnPoweUp() {
         spawnY = launchData.left.y;
       }
 
-      let newMissile = new Missile(this.myCanvas,spawnX, spawnY, launchData.currentAngle);
+      let newMissile = new Missile(
+        this.myCanvas,
+        spawnX,
+        spawnY,
+        launchData.currentAngle
+      );
       this.missile.push(newMissile);
 
       audioManager.volume("missileSound", 0.5);
@@ -987,26 +1011,30 @@ spawnPoweUp() {
     this.shake.duration = duration;
   }
   spawnDebris(enemy) {
-    const enemyCenterX = enemy.x + (enemy.width / 2);
-    const enemyCenterY = enemy.y + (enemy.height / 2);
-  
+    const enemyCenterX = enemy.x + enemy.width / 2;
+    const enemyCenterY = enemy.y + enemy.height / 2;
+
     this.debris.push(new Debris(this.myCanvas, enemyCenterX, enemyCenterY));
   }
-spawnRocks(gameTimer) {
-  if (gameTimer - this.lastRock > this.rockDelay && !this.bossStart) {
-    
-    const isMobile = this.myCanvas.logicalHeight < 500 || this.myCanvas.logicalWidth < 768;
-    
-    const maxRockWidth = isMobile ? 55 : 110;
-    const padding = 15;
+  spawnRocks(gameTimer) {
+    if (gameTimer - this.lastRock > this.rockDelay && !this.bossStart) {
+      const isMobile =
+        this.myCanvas.logicalHeight < 500 || this.myCanvas.logicalWidth < 768;
 
-    let x = this.camera.x + padding + Math.random() * (this.myCanvas.logicalWidth - padding * 2 - maxRockWidth);
-    let y = this.camera.y - maxRockWidth;
+      const maxRockWidth = isMobile ? 55 : 110;
+      const padding = 15;
 
-    this.rocks.push(new Rocks(this.myCanvas, x, y));
-    this.lastRock = gameTimer;
+      let x =
+        this.camera.x +
+        padding +
+        Math.random() *
+          (this.myCanvas.logicalWidth - padding * 2 - maxRockWidth);
+      let y = this.camera.y - maxRockWidth;
+
+      this.rocks.push(new Rocks(this.myCanvas, x, y));
+      this.lastRock = gameTimer;
+    }
   }
-}
   updateRocks(gameTimer, deltaTime) {
     this.spawnRocks(gameTimer);
     this.rocks.forEach((r) => r.update(deltaTime));
@@ -1035,10 +1063,11 @@ spawnRocks(gameTimer) {
 
         // الإحداثيات الأولية للزعيم
         this.boss.x =
-          this.bossArenaX + this.myCanvas.logicalWidth / 2 - this.boss.width / 2;
+          this.bossArenaX +
+          this.myCanvas.logicalWidth / 2 -
+          this.boss.width / 2;
 
-          this.boss.y = this.bossArenaY - this.myCanvas.logicalHeight;
-
+        this.boss.y = this.bossArenaY - this.myCanvas.logicalHeight;
       }
 
       // تثبيت الكاميرا في الحلبة
@@ -1056,15 +1085,87 @@ spawnRocks(gameTimer) {
       // حركة الكاميرا الطبيعية الملاحقة للاعب
       this.camera.x = this.player.x - this.myCanvas.logicalWidth * 0.45;
       this.camera.y = this.player.y - this.myCanvas.logicalHeight * 0.6;
-      
     }
   }
 
   //دالة تجاوب ابعاد اللاعب والازرار اللمسية عند تغير ابعاد الكانفاس (مثل قلب الهاتف)
   handleResize() {
-    // فور حدوث الريسايز، نجبر اللاعب على إعادة فحص حدوده فوراً بالدالة التي كتبتها
+    // 1️⃣ إجبار اللاعب على إعادة فحص حدوده فوراً بناءً على الأبعاد الجديدة
     if (this.player) {
       this.player._constrainMovement(this.camera, this.myCanvas);
     }
+
+    // 2️⃣ إعادة حساب مواقع الأزرار اللمسية ديناميكياً لتتبع الزوايا الجديدة فوراً
+    if (typeof this.initTouchControls === "function") {
+      this.initTouchControls();
+    }
+  }
+
+  //دالة توليد الازرار
+  initTouchControls() {
+    this.touchButtons = [];
+
+    const padding = 25;
+    const joyRadius = 100;
+    const btnRadius = 60;
+
+    const canvasWidth = this.myCanvas.logicalWidth || this.myCanvas.width;
+    const canvasHeight = this.myCanvas.logicalHeight || this.myCanvas.height;
+
+    // إحداثيات عصا التحكم (أسفل اليسار)
+    const joyX = padding + joyRadius;
+    const joyY = canvasHeight - joyRadius;
+
+    // إحداثيات زر الرصاص العادي (أسفل اليمين)
+    const shootX = canvasWidth - btnRadius * 2.3;
+    const shootY = canvasHeight - padding - btnRadius * 1.2;
+
+    // إحداثيات زر الصاروخ التكتيكي
+    const missileX = shootX + btnRadius;
+    const missileY = shootY - btnRadius * 0.5;
+
+    this.touchButtons.push(
+      new TouchButton({
+        canvas: this.myCanvas,
+        type: "JOY_BASE",
+        imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_52_23 م.png",
+        relativeX: joyX,
+        relativeY: joyY,
+        radius: joyRadius,
+      })
+    );
+
+    this.touchButtons.push(
+      new TouchButton({
+        canvas: this.myCanvas,
+        type: "JOY_KNOB",
+        imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_50_08 م.png",
+        relativeX: joyX,
+        relativeY: joyY - 5,
+        radius: joyRadius * 0.5, // المقبض نصف حجم القاعدة
+      })
+    );
+
+    this.touchButtons.push(
+      new TouchButton({
+        canvas: this.myCanvas,
+        type: "SHOOT",
+        imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_33_51 م.png",
+        relativeX: shootX,
+        relativeY: shootY,
+        radius: btnRadius,
+      })
+    );
+
+    this.touchButtons.push(
+      new TouchButton({
+        canvas: this.myCanvas,
+        type: "MISSILE",
+        imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_39_11 م.png",
+        relativeX: missileX,
+        relativeY: missileY,
+        radius: btnRadius * 0.8, 
+      })
+    );
   }
 }
