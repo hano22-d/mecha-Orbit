@@ -16,7 +16,7 @@
   justify-content: center;
   align-items: end;
   position: absolute;
-  top: 7%;
+  top: 16%;
   right: -50%;
   transform: translateX(-50%);
   text-align: center;
@@ -369,10 +369,10 @@ score Bar
 }
 
 #pauseBtn {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
   z-index: 5;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
 }
 
 /*====================
@@ -422,9 +422,9 @@ score Bar
 .hud-circle-inner {
   width: 4rem;
   height: 4rem;
-    border-radius: var(--radius-round);
-  border: var( --border-glow-primary);
-  box-shadow:var( --shadow-glow-primary);
+  border-radius: var(--radius-round);
+  border: var(--border-glow-primary);
+  box-shadow: var(--shadow-glow-primary);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -435,7 +435,8 @@ score Bar
 .missile-svg {
   width: 4rem;
   height: 4rem;
-  filter: drop-shadow(0 0 8px var(--color-primary)) drop-shadow(0 0 15px var(--color-primary));
+  filter: drop-shadow(0 0 8px var(--color-primary))
+    drop-shadow(0 0 15px var(--color-primary));
   transform: rotate(-45deg); /* إمالة الصاروخ تماماً مثل الصورة */
   animation: missilePulse 2s ease-in-out infinite;
 }
@@ -515,67 +516,100 @@ score Bar
   }
 }
 
-
 @media (max-width: 950px) {
+  .scoreBar {
+    top: 0.5rem;
+  }
   .playerHealthContainer {
     gap: var(--space-xs);
   }
   .playerName {
-    font-size: 0.6rem;
-    margin-left: var(--space-sm);
-  
+    font-size: 0.4rem;
+    margin-left: var(--space-xs);
+
     text-transform: uppercase;
   }
-  
+
   .healthPercent {
-    font-size: 0.7rem;
+    font-size: 0.5rem;
     left: 4rem;
   }
-.playerHealthBox {
-  width: 170px;
+  .playerHealthBox {
+    width: 140px;
+    height: 1.2rem;
+  }
+
+  .hud-missile-container {
+    position: relative;
+    bottom: 20px;
+  }
+  .scoreDisplay {
+    margin-bottom: 0;
+  }
+  .skull-svg {
+    width: 1.5rem;
+    height: 1.5em;
+  }
+  .missile-svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .hud-circle-wrapper {
+    width: 2rem;
+    height: 2rem;
+  }
+  .hud-circle-inner {
+    height: 1.5rem;
+  }
+  .hud-counter-plate.score-theme .count-label {
+    font-size: var(--font-size-hud);
+  }
+  .count-label {
+    font-size: 10px;
+  }
+  .count-number {
+    font-size: var(--font-size-body);
+  }
+  .scoreValue {
+    font-size: var(--font-size-body);
+  }
+
+  .enemyHealthBar h3 {
+    margin: 0 0 var(--space-sm) 0;
+    font-size: var(--font-size-hud);
+  }
+  .healthBox {
+    position: relative;
+    top: 0;
+    height: 1.2rem;
+  }
+  .healthbar {
+    bottom: 1.3rem;
+    height: 1.2rem;
+  }
+
+  #pauseBtn {
+    width: fit-content;
+    padding: 0;
+    margin: 0;
+  }
+  #pauseBtn .text {
+    font-size: 0.6rem;
+    padding: 6px 10px;
+  }
+
+.hud-counter-plate {
+  height: 2.6rem;
+  padding: 0 var(--space-xl) 0 4rem;
+  margin-left: -3.6rem;
 }
 
-
-.hud-missile-container  {
-  position: relative;
-  bottom: 20px;
+.decorative-bars {
+  gap: var(--space-xs);
+  margin-right: var(--space-sm);
 }
-.scoreDisplay {
-  margin-bottom: 0;
-}
-.skull-svg {
-  width: 2.5rem;
-  height: 2.5em;
-}
-.missile-svg {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-.hud-circle-wrapper {
-  width: 3rem;
-  height: 3rem;
-}
-.hud-circle-inner {
-  height: 2.5rem;
-}
-.hud-counter-plate.score-theme .count-label {
-  font-size: var(--font-size-hud);
-}
-.count-label {
-  font-size: var(--font-size-hud);
+.decorative-bars span {
+  height: 6px;
 }
 
-
-
-.enemyHealthBar h3 {
-  margin: 0 0 var(--space-xs) 0;
-  font-size: var(--font-size-hud);
-}
-.healthBox {
-  position: relative;
-  top: 0;
-}
-.healthbar {
-  bottom: 1.5rem;
-}
 }

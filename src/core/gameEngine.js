@@ -318,7 +318,7 @@ export class Game {
       this.enemyDelay = 2000; // البداية الهادئة للعبة
     }
     if (gameTimer - this.lastEnemy > this.enemyDelay && !this.bossStart) {
-      this.spawnEnemy(gameTimer);
+     // this.spawnEnemy(gameTimer);
       this.lastEnemy = gameTimer;
     }
   }

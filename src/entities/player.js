@@ -113,20 +113,20 @@ export class Player {
 
     // فريمات الشيلد
     const shieldSources = [
-      "00.png",
-      "01.png",
-      "02.png",
-      "04.png",
-      "05.png",
-      "06.png",
-      "07.png",
-      "08.png",
-      "09.png",
-      "10.png",
+      "/assets/powerUp/00.png",
+      "/assets/powerUp/01.png",
+      "/assets/powerUp/02.png",
+      "/assets/powerUp/03.png",
+      "/assets/powerUp/04.png",
+      "/assets/powerUp/05.png",
+      "/assets/powerUp/06.png",
+      "/assets/powerUp/07.png",
+      "/assets/powerUp/08.png",
+      "/assets/powerUp/09.png",
     ];
     this.shieldFrame = shieldSources.map((src) => {
       const img = new Image();
-      img.src = `/assets/powerUp/${src}`;
+      img.src = src;
       return img;
     });
 
