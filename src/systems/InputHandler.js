@@ -139,7 +139,7 @@ export class InputsHandle {
           const currentLimit = Math.min(distance, maxLimit);
 
           knob.x = base.startX + Math.cos(angle) * currentLimit;
-          knob.y = base.startY + Math.sin(angle) * currentLimit - 5;
+          knob.y = base.startY + Math.sin(angle) * currentLimit - 15;
 
           if (distance > 15) {
             // ال15 تمثل ادنى مسافة يجب ان يبتعد فيها المقبض عن القاعدة حتى تتم الاستجابة
