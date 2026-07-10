@@ -60,26 +60,25 @@ export class InputsHandle {
     this.myCanvas.addEventListener('touchmove', (e) => this._handleAllTouches(e), { passive: false });
     this.myCanvas.addEventListener('touchend', (e) => this._handleAllTouches(e), { passive: false });
   }
-
+  
   _handleAllTouches(e) {
     e.preventDefault();
 
     if (!this.touchButtons || this.touchButtons.length === 0) return;
 
-    // العثور على كائنات الجويستيك داخل المصفوفة للتحكم بهما بشكل خاص
     const base = this.touchButtons.find(btn => btn.type === 'JOY_BASE');
     const knob = this.touchButtons.find(btn => btn.type === 'JOY_KNOB');
 
-    // تصفير الحالات الرقمية (أزرار القتال والاتجاهات اللمسية) قبل إعادة الفحص
-    this.touchButtons.forEach(btn => btn.isPressed = false);
+    // ⚡ التعديل الهام: نصفر الأزرار التي سنقوم بفحصها حالاً فقط لكي نترك أحداث اللمس الحية تعيد تفعيلها
     this.keys.space = false;
     this.keys.missileKey = false;
-    
-    // تصفير اتجاهات الجويستيك مؤقتاً لكي لا تستمر الطائرة بالتحرك إذا رفع اللاعب إصبعه
     this.keys.left = false;
     this.keys.right = false;
     this.keys.up = false;
     this.keys.down = false;
+
+    // 🔥 نقوم بتصفير حالة الضغط بشكل مبدئي، وإذا كان الإصبع ما زال فوق الزر، سيعاد تفعيله في الحلقة بالأسفل فوراً
+    this.touchButtons.forEach(btn => btn.isPressed = false);
 
     let joystickTouched = false;
 
@@ -90,8 +89,10 @@ export class InputsHandle {
       const touchX = touch.clientX - rect.left;
       const touchY = touch.clientY - rect.top;
 
+      // فحص أزرار القتال
       this.touchButtons.forEach(button => {
         if (button.type === 'SHOOT' || button.type === 'MISSILE') {
+          // دالة checkTouch ستقوم بتفعيل isPressed = true إذا كان الإصبع موجوداً
           if (button.checkTouch(touchX, touchY)) {
             if (button.type === 'SHOOT')   this.keys.space = true;
             if (button.type === 'MISSILE') this.keys.missileKey = true;
@@ -101,7 +102,6 @@ export class InputsHandle {
 
       // منطق الجويستيك
       if (base && knob) {
-        // حساب الفارق الرياضي بين موقع إصبع اللاعب ومركز قاعدة الجويستيك الثابتة
         const dx = touchX - base.startX;
         const dy = touchY - base.startY;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -111,17 +111,14 @@ export class InputsHandle {
           base.isPressed = true;
           knob.isPressed = true;
 
-          // حساب زاوية السحب بالراديان
           const angle = Math.atan2(dy, dx);
-          
-          // تحديد الحد الأقصى لحركة المقبض البصرية (نصف قطر القاعدة)
-          const maxLimit = base.radius * 0.5; 
+          const maxLimit = base.radius; 
           const currentLimit = Math.min(distance, maxLimit);
 
           knob.x = base.startX + Math.cos(angle) * currentLimit;
           knob.y = base.startY + Math.sin(angle) * currentLimit;
 
-          if (distance > 15) { // ال15 تمثل ادنى مسافة يجب ان يبتعد فيها المقبض عن القاعدة حتى تتم الاستجابة
+          if (distance > 15) {
             if (dx > 20)  this.keys.right = true;
             if (dx < -20) this.keys.left = true;
             if (dy > 20)  this.keys.down = true;
@@ -131,12 +128,15 @@ export class InputsHandle {
       }
     }
 
+    // إذا لم يلمس أحد الجويستيك، نعيد المقبض للمركز ونلغي ضغطه
     if (!joystickTouched && base && knob) {
       knob.x = base.startX;
       knob.y = base.startY;
+      base.isPressed = false;
+      knob.isPressed = false;
     }
 
-    // شبكة الأمان الكلية عند خلو الشاشة تماماً
+    // شبكة الأمان عند رفع كل الأصابع تماماً من الشاشة
     if (e.touches.length === 0) {
       this.touchButtons.forEach(btn => btn.isPressed = false);
       if (knob && base) {
