@@ -157,6 +157,10 @@ export class Game {
     this.updateMissile(input, time, deltaTime);
     this.updateRocks(this.gameTimer, deltaTime);
 
+  if (this.touchButtons) {
+    this.touchButtons.forEach(button => button.update(deltaTime));
+  }
+
     this.handleCollisions(time);
 
     hud.update(this, this.myCanvas); //تحديث واجهة اللعب

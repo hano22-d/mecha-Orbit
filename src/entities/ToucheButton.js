@@ -1,72 +1,87 @@
 // ==========================================================================
-// 🕹️ Mecha-Orbit: Touch Controls Engine - TouchButton Class (OOP)
+// 🕹️ Mecha-Orbit: Touch Controls Engine - TouchButton Class with Juice
 // ==========================================================================
 
 export class TouchButton {
-  constructor({ canvas, type, imageSrc, relativeX, relativeY, radius }) {
-    this.canvas = canvas; 
-    this.type = type;    
-
-    this.x = relativeX; 
-    this.y = relativeY;
-
-    this.startX = relativeX;
-    this.startY = relativeY;
-    
-    this.radius = radius; 
-    
-    this.isPressed = false;
-
-    this.image = new Image();
-    this.image.src = imageSrc;
-    
-    this.isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
-  }
-
-  checkTouch(touchX, touchY) {
-    // حساب الفارق بين مركز الزر ونقطة اللمس على المحورين X و Y
-    const dx = touchX - this.x;
-    const dy = touchY - this.y;
-    
-    // قانون المسافة بين نقطتين (فيثاغورس بدون جذر لسرعة الأداء العالية)
-    const distanceSquared = dx * dx + dy * dy;
-    
-    // حساب مربع نصف القطر
-    let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
-    const radiusSquared = currentRadius * currentRadius;
-
-    // إذا كانت المسافة المربعة أصغر من مربع نصف القطر، فالإصبع داخل الزر!
-    if (distanceSquared <= radiusSquared) {
-      this.isPressed = true;
-      return true;
+    constructor({ canvas, type, imageSrc, relativeX, relativeY, radius }) {
+      this.canvas = canvas; 
+      this.type = type;     
+  
+      this.x = relativeX; 
+      this.y = relativeY;
+      this.startX = relativeX;
+      this.startY = relativeY;
+      
+      this.radius = radius; 
+      this.isPressed = false;
+  
+      this.image = new Image();
+      this.image.src = imageSrc;
+      
+      this.isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
+  
+      this.opacity = 0.5;       
+      this.fadeTimer = 0;      
+      this.delayDuration = 1000; 
     }
-    
-    return false;
-  }
-
-  // 🎨 دالة الرسم: تقوم برسم صورة الزر في موقعه الحالي مع تطبيق الوهج النيوني الثابت.
-  draw(ctx) {
-
-    ctx.save(); // حفظ حالة الكانفاس الحالية (لكي لا يؤثر التوهج على باقي عناصر اللعبة)
-
-    // 🖼️ رسم الصورة البصرية (الأزرار الاحترافية التي قمت بتوليدها)
-    // رسم الصورة في المركز تماماً بناءً على إحداثيات (x, y) وطرح نصف القطر للحجم.
-    
-    // حساب الأبعاد الحقيقية بناءً على نوع الشاشة
-    let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
-
-    if (this.isPressed) {
-        currentRadius = currentRadius * 0.9;
+  
+    checkTouch(touchX, touchY) {
+      const dx = touchX - this.x;
+      const dy = touchY - this.y;
+      const distanceSquared = dx * dx + dy * dy;
+      
+      let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+      const radiusSquared = currentRadius * currentRadius;
+  
+      if (distanceSquared <= radiusSquared) {
+        this.isPressed = true;
+        return true;
+      }
+      return false;
+    }
+  
+    update(deltaTime) {
+      let targetOpacity = 0.5; 
+  
+      if (this.isPressed) {
+        targetOpacity = 1.0;
+        this.fadeTimer = 0; 
+      } else {
+        this.fadeTimer += deltaTime;
+  
+        if (this.fadeTimer < this.delayDuration) {
+          targetOpacity = 1.0;
+        } else {
+          targetOpacity = 0.5;
+        }
       }
 
-    ctx.drawImage(
-      this.image,
-      this.x - currentRadius,
-      this.y - currentRadius,
-      currentRadius * 2,
-      currentRadius * 2
-    );
-
-    ctx.restore(); // استعادة حالة الكانفاس الأصلية
-  }
+      this.opacity += (targetOpacity - this.opacity) * (0.008 * deltaTime);
+      
+      // تأمين الحدود برمجياً بين 0.5 و 1.0
+      if (this.opacity < 0.5) this.opacity = 0.5;
+      if (this.opacity > 1.0) this.opacity = 1.0;
+    }
+  
+    draw(ctx) {
+      ctx.save(); 
+  
+      ctx.globalAlpha = this.opacity;
+  
+      let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+  
+      if (this.isPressed) {
+        currentRadius = currentRadius * 0.9;
+      }
+  
+      ctx.drawImage(
+        this.image,
+        this.x - currentRadius,
+        this.y - currentRadius,
+        currentRadius * 2,
+        currentRadius * 2
+      );
+  
+      ctx.restore(); 
+    }
   }
