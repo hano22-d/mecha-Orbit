@@ -18,22 +18,36 @@ export class TouchButton {
       this.fadeTimer = 0;       
       this.delayDuration = 1000; 
   
-      // ✨ زاوية دوران نقطة اللمعان حول حافة الزر
+      // ✨ زاوية دوران شريط اللمعان
       this.shineAngle = 0;
   
-      // 🔵 تحديد لون اللمعان الليزري بناءً على نوع الزر (الهوية البصرية)
-      // زر الرصاص أزرق نيوني، الصاروخ فوشيا/أحمر، والجويستيك سيان
+      // 🔵 تحديد لون اللمعان الليزري بناءً على نوع الزر
       if (this.type === 'SHOOT') {
-        this.glowColor = 'rgba(0, 212, 255, 1)'; // أزرق نيوني ساطع
+        this.glowColor = 'rgba(0, 212, 255, 1)'; 
       } else if (this.type === 'MISSILE') {
-        this.glowColor = 'rgba(255, 0, 127, 1)'; // فوشيا تكتيكي
+        this.glowColor = 'rgba(255, 0, 127, 1)'; 
       } else {
-        this.glowColor = 'rgba(0, 255, 200, 0.8)'; // سيان للجويستيك
+        this.glowColor = 'rgba(0, 255, 200, 0.8)'; 
       }
     }
   
+    // 📐 دالة الفحص (تأكد من وجودها كاملة في ملفك)
+    checkTouch(touchX, touchY) {
+      const dx = touchX - this.x;
+      const dy = touchY - this.y;
+      const distanceSquared = dx * dx + dy * dy;
+      
+      let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+      const radiusSquared = currentRadius * currentRadius;
+  
+      if (distanceSquared <= radiusSquared) {
+        this.isPressed = true;
+        return true;
+      }
+      return false;
+    }
+  
     update(deltaTime) {
-      // 1️⃣ تحديث الشفافية (كودنا المستقر الحركي)
       let targetOpacity = 0.5;
       if (this.isPressed) {
         targetOpacity = 1.0;
@@ -46,46 +60,46 @@ export class TouchButton {
       if (this.opacity < 0.5) this.opacity = 0.5;
       if (this.opacity > 1.0) this.opacity = 1.0;
   
-      // 2️⃣ زيادة زاوية اللمعان باستمرار ليطوف حول الدائرة
-      // نضرب بـ 0.004 للتحكم بسرطان الدوران (يمكنك زيادته لجعله أسرع وخاطفاً أكثر)
       this.shineAngle += deltaTime * 0.004;
     }
   
     draw(ctx) {
-        ctx.save(); 
-    
-        // تطبيق الشفافية الحركية الموحدة
-        ctx.globalAlpha = this.opacity;
-    
-        let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
-        if (this.isPressed) currentRadius = currentRadius * 0.9;
-    
-        // 🖼️ 1. رسم صورة الزر الأصلية في المركز
-        ctx.drawImage(
-          this.image,
-          this.x - currentRadius,
-          this.y - currentRadius,
-          currentRadius * 2,
-          currentRadius * 2
-        );
-    
-        // ✨ 2. رسم شريط اللمعان المداري المحيط (The Orbital Neon Arc)
-        // نجعل طول الشريط يحتل جزءاً من الدائرة (مثلاً Math.PI * 0.5 يعطينا قوساً رائعاً بزاوية 90 درجة)
-        const arcLength = Math.PI * 0.5; 
-        const startAngle = this.shineAngle;
-        const endAngle = this.shineAngle + arcLength;
-    
-        ctx.beginPath();
-        // نرسم القوس مباشرة على الحافة الخارجية للزر (نزيد بكسل أو اثنين ليكون الوهج راكباً على الحافة تماماً)
-        ctx.arc(this.x, this.y, currentRadius + 1, startAngle, endAngle);
-        
-        // ضبط مظهر الشريط الليزري
-        ctx.strokeStyle = this.glowColor; // اللون النيوني الخاص بالزر القادم من الـ constructor
-        ctx.lineWidth = this.isMobile ? 3 : 4;     // سماكة شريط اللمعان
-        ctx.lineCap = "round";            // جعل أطراف الشريط دائرية وناعمة لتبدو انسيابية كالليزر
-        
-        ctx.stroke(); // صب الخط الليزري
-    
-        ctx.restore(); 
-      }
+      ctx.save(); 
+  
+      // 🔥 1. تهيئة مسار نظيف ومعزول تماماً لهذا الزر لمنع تضارب الإحداثيات
+      ctx.beginPath();
+  
+      ctx.globalAlpha = this.opacity;
+  
+      let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+      if (this.isPressed) currentRadius = currentRadius * 0.9;
+  
+      // 🖼️ 2. رسم صورة الزر الأصلية
+      ctx.drawImage(
+        this.image,
+        this.x - currentRadius,
+        this.y - currentRadius,
+        currentRadius * 2,
+        currentRadius * 2
+      );
+  
+      // ✨ 3. رسم شريط اللمعان المداري المحيط
+      const arcLength = Math.PI * 0.5; 
+      const startAngle = this.shineAngle;
+      const endAngle = this.shineAngle + arcLength;
+  
+      // رسم القوس
+      ctx.arc(this.x, this.y, currentRadius + 1, startAngle, endAngle);
+      
+      ctx.strokeStyle = this.glowColor; 
+      ctx.lineWidth = this.isMobile ? 3 : 4;     
+      ctx.lineCap = "round";            
+      
+      ctx.stroke(); 
+  
+      // 🔥 4. إغلاق المسار كلياً للتأكيد وإراحة ذاكرة الكانفاس هندسياً
+      ctx.closePath();
+  
+      ctx.restore(); 
+    }
   }
