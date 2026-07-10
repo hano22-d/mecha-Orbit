@@ -76,7 +76,6 @@ export class InputsHandle {
       const touch = e.touches[i];
       const rect = this.myCanvas.getBoundingClientRect();
       
-      // ✨ الحل الصحيح: نأخذ قيم المتصفح المنطقية الصافية مباشرة دون ضربها بالـ dpr!
       const touchX = touch.clientX - rect.left;
       const touchY = touch.clientY - rect.top;
 

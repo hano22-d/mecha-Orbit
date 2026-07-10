@@ -1106,23 +1106,23 @@ export class Game {
     this.touchButtons.length = 0;
 
     const padding = 25;
-    const joyRadius = 80;
-    const btnRadius = 50;
+    const joyRadius = 100;
+    const btnRadius = 60;
 
     const canvasWidth = this.myCanvas.logicalWidth || this.myCanvas.width;
     const canvasHeight = this.myCanvas.logicalHeight || this.myCanvas.height;
 
     // إحداثيات عصا التحكم (أسفل اليسار)
-    const joyX = padding + joyRadius;
-    const joyY = canvasHeight - joyRadius;
+    const joyX = padding + 80;
+    const joyY = canvasHeight - 80;
 
     // إحداثيات زر الرصاص العادي (أسفل اليمين)
-    const shootX = canvasWidth - btnRadius * 2.3;
-    const shootY = canvasHeight - padding - btnRadius * 1.2;
+    const shootX = canvasWidth - 50 * 2.3;
+    const shootY = canvasHeight - padding - 50 * 1.2;
 
     // إحداثيات زر الصاروخ التكتيكي
-    const missileX = shootX + btnRadius;
-    const missileY = shootY - btnRadius * 0.5;
+    const missileX = shootX + 50;
+    const missileY = shootY - 50 * 0.5;
 
     this.touchButtons.push(
       new TouchButton({
