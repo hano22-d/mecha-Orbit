@@ -65,34 +65,39 @@ export class InputsHandle {
   _handleAllTouches(e) {
     e.preventDefault();
 
-    // 1. تصفير حالات الضغط البصري لجميع الأزرار لإعادة فحصها
-    this.touchButtons.forEach(btn => btn.isPressed = false);
+    // 1️⃣ تأمين المرجع الحي للمصفوفة: نضمن أننا نقرأ الأزرار النشطة دائماً في اللعبة
+    // إذا كنت مخزن كلاس المدخلات داخل كلاس اللعبة، سنضمن الوصول للمصفوفة الحية
+    if (!this.touchButtons || this.touchButtons.length === 0) return;
 
-    // 2. تصفير حالات أزرار القتال في الـ keys (الحركة عبر الجويستيك سنبرمجها في الخطوة القادمة)
+    this.touchButtons.length = 0
+
+    // 2️⃣ حساب الـ DPR الحقيقي للشاشة لحل مشكلة الفجوة البكسلية
+    const dpr = window.devicePixelRatio || 1;
+
+    // تصفير الحالات مؤقتاً للأمان
+    this.touchButtons.forEach(btn => btn.isPressed = false);
     this.keys.space = false;
     this.keys.missileKey = false;
 
-    // 3. مسح وفحص جميع الأصابع الموجودة على الشاشة حالياً
+    // 3️⃣ مسح الأصابع وتحويل إحداثياتها بدقة هندسية
     for (let i = 0; i < e.touches.length; i++) {
       const touch = e.touches[i];
       const rect = this.myCanvas.getBoundingClientRect();
       
-      // حساب الإحداثيات بالنسبة للكانفاس المنطقي
-      const touchX = touch.clientX - rect.left;
-      const touchY = touch.clientY - rect.top;
+      // 📐 الحل العبقري: نطرح الحواف ثم نضرب بالـ dpr لكي تتطابق نقطة إصبعك مع نقطة الرسم الحقيقية!
+      const touchX = (touch.clientX - rect.left) * dpr;
+      const touchY = (touch.clientY - rect.top) * dpr;
 
-      // فحص كل زر، وإذا تم لمسه نقوم بتحديث كائن الـ keys الموحد فوراً!
+      // فحص الأزرار
       this.touchButtons.forEach(button => {
         if (button.checkTouch(touchX, touchY)) {
           if (button.type === 'SHOOT')   this.keys.space = true;
           if (button.type === 'MISSILE') this.keys.missileKey = true;
-          
-          // ملاحظة: أزرار الجويستيك (JOY_BASE و JOY_KNOB) سنتعامل معها رياضياً في الخطوة التالية لحساب الاتجاهات بدقة
         }
       });
     }
 
-    // 4. أمان: إذا رفعت كل الأصابع، نضمن إيقاف كل شيء
+    // 4️⃣ شبكة الأمان عند رفع كل الأصابع
     if (e.touches.length === 0) {
       this.touchButtons.forEach(btn => btn.isPressed = false);
       this.keys.space = false;
