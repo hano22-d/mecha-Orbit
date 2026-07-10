@@ -13,17 +13,27 @@ export class TouchButton {
       this.image.src = imageSrc;
       this.isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
   
-      // 🎨 متغيرات الـ Juice
+      // 🎨 متغيرات الشفافية
       this.opacity = 0.5;       
       this.fadeTimer = 0;       
       this.delayDuration = 1000; 
   
-      // ⚡ عداد وقت خاص بنبض الطاقة النيوني
-      this.pulseTimer = 0;
+      // ✨ زاوية دوران نقطة اللمعان حول حافة الزر
+      this.shineAngle = 0;
+  
+      // 🔵 تحديد لون اللمعان الليزري بناءً على نوع الزر (الهوية البصرية)
+      // زر الرصاص أزرق نيوني، الصاروخ فوشيا/أحمر، والجويستيك سيان
+      if (this.type === 'SHOOT') {
+        this.glowColor = 'rgba(0, 212, 255, 1)'; // أزرق نيوني ساطع
+      } else if (this.type === 'MISSILE') {
+        this.glowColor = 'rgba(255, 0, 127, 1)'; // فوشيا تكتيكي
+      } else {
+        this.glowColor = 'rgba(0, 255, 200, 0.8)'; // سيان للجويستيك
+      }
     }
   
     update(deltaTime) {
-      // [كود الشفافية السابق كما هو بدون تغيير]
+      // 1️⃣ تحديث الشفافية (كودنا المستقر الحركي)
       let targetOpacity = 0.5;
       if (this.isPressed) {
         targetOpacity = 1.0;
@@ -36,31 +46,21 @@ export class TouchButton {
       if (this.opacity < 0.5) this.opacity = 0.5;
       if (this.opacity > 1.0) this.opacity = 1.0;
   
-      // 🔥 الجديد: جعل عداد النبض يتصاعد مستمراً مع الوقت
-      // نضرب بـ 0.005 للتحكم بسرعات النبض (كلما صغر الرقم أصبح النبض أهدأ وأنعم)
-      this.pulseTimer += deltaTime * 0.005;
+      // 2️⃣ زيادة زاوية اللمعان باستمرار ليطوف حول الدائرة
+      // نضرب بـ 0.004 للتحكم بسرطان الدوران (يمكنك زيادته لجعله أسرع وخاطفاً أكثر)
+      this.shineAngle += deltaTime * 0.004;
     }
   
     draw(ctx) {
       ctx.save(); 
   
+      // تطبيق الشفافية الموحدة
       ctx.globalAlpha = this.opacity;
   
-      // حساب الحجم الأساسي حسب نوع الشاشة
       let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+      if (this.isPressed) currentRadius = currentRadius * 0.9;
   
-      if (this.isPressed) {
-        // أ) إذا ضغط اللاعب: ينكمش الزر ميكانيكياً بنسبة 10% لتأكيد الضغط
-        currentRadius = currentRadius * 0.9;
-      } else {
-        // ب) إذا كان في حالة انتظار: يبدأ سحر نبض الطاقة النيوني!
-        // Math.sin تعطينا رقماً بين -1 و +1، نضربه في 0.04 (أي تلاعب بالحجم بنسبة 4% فقط)
-        const pulseFactor = Math.sin(this.pulseTimer) * 0.04;
-        
-        // الحجم النهائي سيتأرجح بنعومة فائقة بين (الحجم * 0.96) و (الحجم * 1.04)
-        currentRadius = currentRadius * (1 + pulseFactor);
-      }
-  
+      // 🖼️ أ) رسم صورة الزر الأصلية
       ctx.drawImage(
         this.image,
         this.x - currentRadius,
@@ -68,6 +68,20 @@ export class TouchButton {
         currentRadius * 2,
         currentRadius * 2
       );
+  
+      // ✨ ب) رسم نقطة اللمعان الدائرية المدارية الحية (The Orbital Glow Particle)
+      // نحسب موقع النقطة بدقة على الحافة الخارجية للزر باستخدام الجيب وجيب التمام
+      const glowX = this.x + Math.cos(this.shineAngle) * currentRadius;
+      const glowY = this.y + Math.sin(this.shineAngle) * currentRadius;
+  
+      // رسم النقطة المضيئة كدائرة ليزرية صغيرة ناعمة جداً وخفيفة على الأداء
+      ctx.beginPath();
+      // نصف قطر نقطة اللمعان هو 4 بكسل (صغيرة وخاطفة)
+      ctx.arc(glowX, glowY, this.isMobile ? 3 : 4, 0, Math.PI * 2);
+      ctx.fillStyle = this.glowColor;
+      
+      // إضافة خدعة بصرية خفيفة: جعل النقطة تمتلك وهجاً بسيطاً جداً مدمجاً عبر التدرج أو الفتح الصافي
+      ctx.fill();
   
       ctx.restore(); 
     }
