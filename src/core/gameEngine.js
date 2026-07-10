@@ -1115,8 +1115,8 @@ export class Game {
     const canvasHeight = this.myCanvas.logicalHeight || this.myCanvas.height;
 
     // إحداثيات عصا التحكم (أسفل اليسار)
-    const joyX = padding + joyRadius;
-    const joyY = canvasHeight - joyRadius;
+    const joyX = padding + 80;
+    const joyY = canvasHeight - 80;
 
     // إحداثيات زر الرصاص العادي (أسفل اليمين)
     const shootX = canvasWidth - 50 * 2.5;
@@ -1143,7 +1143,7 @@ export class Game {
         type: "JOY_KNOB",
         imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_50_08 م.png",
         relativeX: joyX,
-        relativeY: joyY,
+        relativeY: joyY - 5,
         radius: joyRadius * 0.5, // المقبض نصف حجم القاعدة
       })
     );

@@ -5,7 +5,7 @@ export class TouchButton {
     this.x = relativeX;
     this.y = relativeY;
     this.startX = relativeX;
-    this.startY = relativeY;
+    this.startY = relativeY - 5;
     this.radius = radius;
     this.isPressed = false;
 
