@@ -9,8 +9,7 @@ export class TouchButton {
 
     this.x = relativeX; 
     this.y = relativeY;
-    
-    // 🔥 أضف هذين السطرين لحفظ المركز الأصلي (مهم جداً لإعادة المقبض للمنتصف عند رفع الإصبع)
+
     this.startX = relativeX;
     this.startY = relativeY;
     

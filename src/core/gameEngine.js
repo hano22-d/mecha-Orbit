@@ -331,7 +331,7 @@ export class Game {
       this.enemyDelay = 2000; // البداية الهادئة للعبة
     }
     if (gameTimer - this.lastEnemy > this.enemyDelay && !this.bossStart) {
-      // this.spawnEnemy(gameTimer);
+       this.spawnEnemy(gameTimer);
       this.lastEnemy = gameTimer;
     }
   }
@@ -1107,7 +1107,7 @@ export class Game {
 
     const padding = 25;
     const joyRadius = 120;
-    const btnRadius = 60;
+    const btnRadius = 75;
 
     const canvasWidth = this.myCanvas.logicalWidth || this.myCanvas.width;
     const canvasHeight = this.myCanvas.logicalHeight || this.myCanvas.height;
@@ -1141,7 +1141,7 @@ export class Game {
         type: "JOY_KNOB",
         imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_50_08 م.png",
         relativeX: joyX,
-        relativeY: joyY - 5,
+        relativeY: joyY,
         radius: joyRadius * 0.5, // المقبض نصف حجم القاعدة
       })
     );
