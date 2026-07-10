@@ -67,11 +67,24 @@ export class InputsHandle {
 
     if (!this.touchButtons || this.touchButtons.length === 0) return;
 
-    // تصفير الحالات للأمان
+    // 1️⃣ العثور على كائنات الجويستيك داخل المصفوفة للتحكم بهما بشكل خاص
+    const base = this.touchButtons.find(btn => btn.type === 'JOY_BASE');
+    const knob = this.touchButtons.find(btn => btn.type === 'JOY_KNOB');
+
+    // 2️⃣ تصفير الحالات الرقمية (أزرار القتال والاتجاهات اللمسية) قبل إعادة الفحص
     this.touchButtons.forEach(btn => btn.isPressed = false);
     this.keys.space = false;
     this.keys.missileKey = false;
+    
+    // تصفير اتجاهات الجويستيك مؤقتاً لكي لا تستمر الطائرة بالتحرك إذا رفع اللاعب إصبعه
+    this.keys.left = false;
+    this.keys.right = false;
+    this.keys.up = false;
+    this.keys.down = false;
 
+    let joystickTouched = false;
+
+    // 3️⃣ مسح الأصابع النشطة على الشاشة
     for (let i = 0; i < e.touches.length; i++) {
       const touch = e.touches[i];
       const rect = this.myCanvas.getBoundingClientRect();
@@ -79,19 +92,65 @@ export class InputsHandle {
       const touchX = touch.clientX - rect.left;
       const touchY = touch.clientY - rect.top;
 
-      // فحص الأزرار
+      // 🎯 فحص أزرار القتال (الرصاص والصاروخ) كالمعتاد
       this.touchButtons.forEach(button => {
-        if (button.checkTouch(touchX, touchY)) {
-          if (button.type === 'SHOOT')   this.keys.space = true;
-          if (button.type === 'MISSILE') this.keys.missileKey = true;
+        if (button.type === 'SHOOT' || button.type === 'MISSILE') {
+          if (button.checkTouch(touchX, touchY)) {
+            if (button.type === 'SHOOT')   this.keys.space = true;
+            if (button.type === 'MISSILE') this.keys.missileKey = true;
+          }
         }
       });
+
+      // 🕹️ منطق الجويستيك المطور هندسياً:
+      if (base && knob) {
+        // حساب الفارق الرياضي بين موقع إصبع اللاعب ومركز قاعدة الجويستيك الثابتة
+        const dx = touchX - base.startX;
+        const dy = touchY - base.startY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // إذا كان الإصبع يقع ضمن نطاق محيط القاعدة (أو قريب جداً منها كمنطقة مسامحة تكتيكية)
+        if (distance < base.radius * 1.5) {
+          joystickTouched = true;
+          base.isPressed = true;
+          knob.isPressed = true;
+
+          // حساب زاوية السحب بالراديان باستخدام تان المائل
+          const angle = Math.atan2(dy, dx);
+          
+          // تحديد الحد الأقصى لحركة المقبض البصرية (نصف قطر القاعدة)
+          const maxLimit = base.radius; 
+          const currentLimit = Math.min(distance, maxLimit);
+
+          // 📐 تحديث موقع المقبض البصري ديناميكياً ليدور في محيط دائري مقيد
+          knob.x = base.startX + Math.cos(angle) * currentLimit;
+          knob.y = base.startY + Math.sin(angle) * currentLimit;
+
+          // 🚀 ترجمة المتجهات الفيزيائية إلى اتجاهات حركة حقيقية للطائرة (this.keys)
+          // نضع حد أدنى للتأكيد (Dead-zone = 15) لكي لا تتحرك الطائرة من مجرد لمسة خفيفة غير مقصودة
+          if (distance > 15) {
+            if (dx > 20)  this.keys.right = true;
+            if (dx < -20) this.keys.left = true;
+            if (dy > 20)  this.keys.down = true;
+            if (dy < -20) this.keys.up = true;
+          }
+        }
+      }
     }
 
+    // 4️⃣ الإفلات (Release Logic): إذا لم يلمس أحد الجويستيك، نعيد المقبض للمركز فوراً!
+    if (!joystickTouched && base && knob) {
+      knob.x = base.startX;
+      knob.y = base.startY;
+    }
+
+    // شبكة الأمان الكلية عند خلو الشاشة تماماً
     if (e.touches.length === 0) {
       this.touchButtons.forEach(btn => btn.isPressed = false);
-      this.keys.space = false;
-      this.keys.missileKey = false;
+      if (knob && base) {
+        knob.x = base.startX;
+        knob.y = base.startY;
+      }
     }
   }
 }

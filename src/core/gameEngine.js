@@ -1106,7 +1106,7 @@ export class Game {
     this.touchButtons.length = 0;
 
     const padding = 25;
-    const joyRadius = 100;
+    const joyRadius = 120;
     const btnRadius = 60;
 
     const canvasWidth = this.myCanvas.logicalWidth || this.myCanvas.width;
