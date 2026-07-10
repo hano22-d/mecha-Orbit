@@ -89,7 +89,7 @@ export class TouchButton {
       const endAngle = this.shineAngle + arcLength;
   
       // رسم القوس
-      ctx.arc(this.x, this.y, currentRadius + 1, startAngle, endAngle);
+      ctx.arc(this.x, this.y, currentRadius, startAngle, endAngle);
       
       ctx.strokeStyle = this.glowColor; 
       ctx.lineWidth = this.isMobile ? 3 : 4;     
