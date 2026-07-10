@@ -1143,7 +1143,7 @@ export class Game {
         type: "JOY_KNOB",
         imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_50_08 م.png",
         relativeX: joyX,
-        relativeY: joyY,
+        relativeY: joyY - 5,
         radius: joyRadius * 0.5, // المقبض نصف حجم القاعدة
       })
     );
