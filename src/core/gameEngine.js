@@ -1103,7 +1103,7 @@ export class Game {
 
   //دالة توليد الازرار
   initTouchControls() {
-    this.touchButtons = [];
+    this.touchButtons.length = 0;
 
     const padding = 25;
     const joyRadius = 80;

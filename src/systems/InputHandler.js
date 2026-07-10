@@ -69,7 +69,6 @@ export class InputsHandle {
     // إذا كنت مخزن كلاس المدخلات داخل كلاس اللعبة، سنضمن الوصول للمصفوفة الحية
     if (!this.touchButtons || this.touchButtons.length === 0) return;
 
-    this.touchButtons.length = 0
 
     // 2️⃣ حساب الـ DPR الحقيقي للشاشة لحل مشكلة الفجوة البكسلية
     const dpr = window.devicePixelRatio || 1;
