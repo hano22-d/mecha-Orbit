@@ -17,7 +17,7 @@ export class TouchButton {
     this.image = new Image();
     this.image.src = imageSrc;
     
-    this.isMobile = canvas.height < 500 || canvas.width < 768;
+    this.isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
   }
 
   checkTouch(touchX, touchY) {
