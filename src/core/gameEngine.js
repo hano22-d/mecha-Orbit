@@ -157,9 +157,9 @@ export class Game {
     this.updateMissile(input, time, deltaTime);
     this.updateRocks(this.gameTimer, deltaTime);
 
-  if (this.touchButtons) {
-    this.touchButtons.forEach(button => button.update(deltaTime));
-  }
+    if (this.touchButtons) {
+      this.touchButtons.forEach((button) => button.update(deltaTime));
+    }
 
     this.handleCollisions(time);
 
@@ -335,7 +335,7 @@ export class Game {
       this.enemyDelay = 2000; // البداية الهادئة للعبة
     }
     if (gameTimer - this.lastEnemy > this.enemyDelay && !this.bossStart) {
-       this.spawnEnemy(gameTimer);
+      this.spawnEnemy(gameTimer);
       this.lastEnemy = gameTimer;
     }
   }
@@ -1091,7 +1091,6 @@ export class Game {
       this.camera.y = this.player.y - this.myCanvas.logicalHeight * 0.6;
     }
   }
-
   //دالة تجاوب ابعاد اللاعب والازرار اللمسية عند تغير ابعاد الكانفاس (مثل قلب الهاتف)
   handleResize() {
     // 1️⃣ إجبار اللاعب على إعادة فحص حدوده فوراً بناءً على الأبعاد الجديدة
@@ -1104,14 +1103,13 @@ export class Game {
       this.initTouchControls();
     }
   }
-
   //دالة توليد الازرار
   initTouchControls() {
     this.touchButtons.length = 0;
 
     const padding = 25;
     const joyRadius = 120;
-    const btnRadius = 75;
+    const btnRadius = 80;
 
     const canvasWidth = this.myCanvas.logicalWidth || this.myCanvas.width;
     const canvasHeight = this.myCanvas.logicalHeight || this.myCanvas.height;
@@ -1121,12 +1119,12 @@ export class Game {
     const joyY = canvasHeight - 80;
 
     // إحداثيات زر الرصاص العادي (أسفل اليمين)
-    const shootX = canvasWidth - 50 * 2.3;
+    const shootX = canvasWidth - 50 * 2.5;
     const shootY = canvasHeight - padding - 50 * 1.2;
 
     // إحداثيات زر الصاروخ التكتيكي
-    const missileX = shootX + 50;
-    const missileY = shootY - 50 * 0.5;
+    const missileX = shootX + 60;
+    const missileY = shootY - 50 * 0.6;
 
     this.touchButtons.push(
       new TouchButton({
@@ -1168,7 +1166,7 @@ export class Game {
         imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_39_11 م.png",
         relativeX: missileX,
         relativeY: missileY,
-        radius: btnRadius * 0.8, 
+        radius: btnRadius * 0.8,
       })
     );
   }
