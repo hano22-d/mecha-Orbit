@@ -154,7 +154,7 @@ export class InputsHandle {
 
     if (!joystickTouched && base && knob) {
       knob.x = base.startX;
-      knob.y = base.startY - 5;
+      knob.y = base.startY - 20;
     }
 
     // شبكة الأمان الكلية عند خلو الشاشة تماماً
