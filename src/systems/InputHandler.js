@@ -119,7 +119,7 @@ export class InputsHandle {
           const angle = Math.atan2(dy, dx);
           
           // تحديد الحد الأقصى لحركة المقبض البصرية (نصف قطر القاعدة)
-          const maxLimit = base.radius; 
+          const maxLimit = base.radius * 0.5; 
           const currentLimit = Math.min(distance, maxLimit);
 
           // 📐 تحديث موقع المقبض البصري ديناميكياً ليدور في محيط دائري مقيد
