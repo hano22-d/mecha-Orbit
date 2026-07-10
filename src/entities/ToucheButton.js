@@ -29,7 +29,7 @@ export class TouchButton {
     const distanceSquared = dx * dx + dy * dy;
     
     // حساب مربع نصف القطر
-    const currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+    let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
     const radiusSquared = currentRadius * currentRadius;
 
     // إذا كانت المسافة المربعة أصغر من مربع نصف القطر، فالإصبع داخل الزر!
@@ -50,8 +50,8 @@ export class TouchButton {
     // رسم الصورة في المركز تماماً بناءً على إحداثيات (x, y) وطرح نصف القطر للحجم.
     
     // حساب الأبعاد الحقيقية بناءً على نوع الشاشة
-    const currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
-    
+    let currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+
     if (this.isPressed) {
         currentRadius = currentRadius * 0.9;
       }
