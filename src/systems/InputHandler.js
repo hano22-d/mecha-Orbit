@@ -65,27 +65,20 @@ export class InputsHandle {
   _handleAllTouches(e) {
     e.preventDefault();
 
-    // 1️⃣ تأمين المرجع الحي للمصفوفة: نضمن أننا نقرأ الأزرار النشطة دائماً في اللعبة
-    // إذا كنت مخزن كلاس المدخلات داخل كلاس اللعبة، سنضمن الوصول للمصفوفة الحية
     if (!this.touchButtons || this.touchButtons.length === 0) return;
 
-
-    // 2️⃣ حساب الـ DPR الحقيقي للشاشة لحل مشكلة الفجوة البكسلية
-    const dpr = window.devicePixelRatio || 1;
-
-    // تصفير الحالات مؤقتاً للأمان
+    // تصفير الحالات للأمان
     this.touchButtons.forEach(btn => btn.isPressed = false);
     this.keys.space = false;
     this.keys.missileKey = false;
 
-    // 3️⃣ مسح الأصابع وتحويل إحداثياتها بدقة هندسية
     for (let i = 0; i < e.touches.length; i++) {
       const touch = e.touches[i];
       const rect = this.myCanvas.getBoundingClientRect();
       
-      // 📐 الحل العبقري: نطرح الحواف ثم نضرب بالـ dpr لكي تتطابق نقطة إصبعك مع نقطة الرسم الحقيقية!
-      const touchX = (touch.clientX - rect.left) * dpr;
-      const touchY = (touch.clientY - rect.top) * dpr;
+      // ✨ الحل الصحيح: نأخذ قيم المتصفح المنطقية الصافية مباشرة دون ضربها بالـ dpr!
+      const touchX = touch.clientX - rect.left;
+      const touchY = touch.clientY - rect.top;
 
       // فحص الأزرار
       this.touchButtons.forEach(button => {
@@ -96,7 +89,6 @@ export class InputsHandle {
       });
     }
 
-    // 4️⃣ شبكة الأمان عند رفع كل الأصابع
     if (e.touches.length === 0) {
       this.touchButtons.forEach(btn => btn.isPressed = false);
       this.keys.space = false;
