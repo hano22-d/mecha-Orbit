@@ -20,6 +20,27 @@ export class TouchButton {
     this.isMobile = canvas.height < 500 || canvas.width < 768;
   }
 
+  checkTouch(touchX, touchY) {
+    // حساب الفارق بين مركز الزر ونقطة اللمس على المحورين X و Y
+    const dx = touchX - this.x;
+    const dy = touchY - this.y;
+    
+    // قانون المسافة بين نقطتين (فيثاغورس بدون جذر لسرعة الأداء العالية)
+    const distanceSquared = dx * dx + dy * dy;
+    
+    // حساب مربع نصف القطر
+    const currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+    const radiusSquared = currentRadius * currentRadius;
+
+    // إذا كانت المسافة المربعة أصغر من مربع نصف القطر، فالإصبع داخل الزر!
+    if (distanceSquared <= radiusSquared) {
+      this.isPressed = true;
+      return true;
+    }
+    
+    return false;
+  }
+
   // 🎨 دالة الرسم: تقوم برسم صورة الزر في موقعه الحالي مع تطبيق الوهج النيوني الثابت.
   draw(ctx) {
 
@@ -30,6 +51,10 @@ export class TouchButton {
     
     // حساب الأبعاد الحقيقية بناءً على نوع الشاشة
     const currentRadius = this.isMobile ? this.radius * 0.7 : this.radius;
+    
+    if (this.isPressed) {
+        currentRadius = currentRadius * 0.9;
+      }
 
     ctx.drawImage(
       this.image,

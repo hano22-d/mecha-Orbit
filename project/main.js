@@ -9,8 +9,8 @@ import { setupAudioAndEnvironment } from "../src/systems/gameAudioContruller";
 import { initAllGameUI } from "../src/systems/UiManager";
 
 
-const input = new InputsHandle();
 export const game = new Game(myCanvas, ctx, stateManager);
+const input = new InputsHandle(myCanvas,game.touchButtons);
 const background = new Background(myCanvas, game.camera);
 const intro = new IntroScene(myCanvas, ctx);
 
