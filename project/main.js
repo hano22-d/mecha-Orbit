@@ -1,17 +1,14 @@
 import { InputsHandle } from "../src/systems/InputHandler";
 import { Game } from "../src/core/gameEngine";
 import { stateManager } from "../src/core/state";
-import { Background } from "../src/entities/Background";
 import { IntroScene } from "../src/core/introScene";
 import { initAllGameSounds } from "../src/systems/audioManiFest";
-import { myCanvas,ctx } from "../src/systems/canvasManager";
 import { setupAudioAndEnvironment } from "../src/systems/gameAudioContruller";
 import { initAllGameUI } from "../src/systems/UiManager";
+import { myCanvas, bgCanvas, ctx, bgCtx } from "../src/systems/canvasManager";
 
-
-export const game = new Game(myCanvas, ctx, stateManager);
-const input = new InputsHandle(myCanvas,game.touchButtons);
-const background = new Background(myCanvas, game.camera);
+export const game = new Game(myCanvas, ctx, bgCanvas, bgCtx, stateManager);
+const input = new InputsHandle(myCanvas, game.touchButtons);
 const intro = new IntroScene(myCanvas, ctx);
 
 //=== توليد جميع اصوات اللعبة ===//
@@ -19,11 +16,11 @@ initAllGameSounds();
 // ===============================//
 
 // === دالة تشغيل اصوات الخلفية + ادارة حالة اغلاق التبويب === //
-setupAudioAndEnvironment(stateManager)
+setupAudioAndEnvironment(stateManager);
 // =============================================================== //
 
 // === UI تشغيل دالات === //
-initAllGameUI(stateManager,game)
+initAllGameUI(stateManager, game);
 // ======================== //
 
 let lastTime = 0;
@@ -46,21 +43,15 @@ function gameLoop(time) {
       game.draw(ctx);
       break;
     case "pause":
-      game.draw(ctx);
+      game.draw(ctx, bgCtx);
       break;
     case "menu":
-      background.update();
-      background.draw(ctx, game.camera);
-      break;
-    case "win":
-      game.update(input, time, deltaTime);
-      game.draw(ctx);
-      break;
     case "gameOver":
-      background.update();
-      background.draw(ctx, game.camera);
+    case "win":
+      game.background.update();
+      game.background.draw(bgCtx, game.camera);
   }
 
   requestAnimationFrame(gameLoop);
 }
-gameLoop();
+gameLoop(0);

@@ -25,10 +25,13 @@ import { TouchButton } from "../entities/ToucheButton";
 
 //game manager class//
 export class Game {
-  constructor(canvas, ctx) {
+  constructor(canvas, ctx,bgCanvas,bgCtx) {
     //ادوات الرسم
     this.myCanvas = canvas;
     this.ctx = ctx;
+    this.bgCanvas = bgCanvas;
+    this.bgCtx = bgCtx;
+
     window.gameInstance = this;
     this.gameTimer = 0;
 
@@ -96,7 +99,7 @@ export class Game {
       color: "white",
     };
 
-    this.background = new Background(this.myCanvas, this.camera);
+    this.background = new Background(this.bgCanvas, this.camera);
 
     //مصفوفة تخزين الازرار
     this.touchButtons = [];
@@ -178,7 +181,7 @@ export class Game {
     this.ctx.save(); //بداية shack
     this.ctx.translate(shakeX, shakeY);
 
-    this.background.draw(this.ctx, this.camera);
+    this.background.draw(this.bgCtx, this.camera);
 
     this.enemies.forEach((e) => e.draw(this.ctx, this.camera));
 

@@ -26,6 +26,20 @@ canvas {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
+
+#backgroundCanvas {
+  z-index: 1;
+  background-color: #000; /* الخلفية السوداء الأساسية للكون */
+}
+
+#myCanvas {
+  z-index: 2;
+  background: transparent !important; 
+  pointer-events: auto; 
+}
+
+
+
 img:not([src]), img[src=""] {
   opacity: 0;
   width: 0;
