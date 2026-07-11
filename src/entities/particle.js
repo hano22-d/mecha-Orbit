@@ -28,7 +28,7 @@ export class Particle {
     // تقليص الحجم تدريجياً بشكل متناسب
     if (this.size > 0.05) this.size -= 0.05;
   }
-
+/*
   draw(ctx, camera) {
     if (this.alpha <= 0) return;
     ctx.save();
@@ -38,5 +38,5 @@ export class Particle {
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.restore();
-  }
+  } */
 }

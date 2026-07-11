@@ -67,7 +67,7 @@ export class Enemy {
       box.y = this.y + box.offsetY;
     }
   }
-
+/*
   draw(ctx, camera) {
     if (!this.alive) return;
     this._drawHealthBar(ctx, camera);
@@ -85,9 +85,9 @@ export class Enemy {
       );
     }
     ctx.restore();
-  }
+  } */
 
-  _drawHealthBar(ctx, camera) {
+  drawHealthBar(ctx, camera) {
     if (this.health >= this.maxHealth) return;
     const healthRate = Math.max(0, this.health / this.maxHealth);
     let barColor =

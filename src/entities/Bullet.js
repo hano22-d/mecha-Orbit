@@ -32,7 +32,7 @@ export class Bullet {
     this.x += this.velocityX;
     this.y += this.velocityY;
   }
-
+/*
   draw(ctx, camera) {
     ctx.save();
 
@@ -51,7 +51,7 @@ export class Bullet {
     );
 
     ctx.restore();
-  }
+  } */
 
   isOffScreen(canvas, camera) {
     const isTooFarLeft = this.x < camera.x - SCREEN_OFFBOUNDS_PADDING;

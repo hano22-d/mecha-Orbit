@@ -51,7 +51,7 @@ export class Rocks {
       box.y = this.y + box.offsetY;
     }
   }
-
+/*
   draw(ctx, camera) {
     if (!this.alive) return;
     ctx.save();
@@ -71,5 +71,5 @@ export class Rocks {
     );
 
     ctx.restore();
-  }
+  } */
 }

@@ -121,7 +121,7 @@ export class Missile {
     this.particles = this.particles.filter((p) => p.alpha > 0);
   }
 
-  draw(ctx, camera) {
+  draw(ctx, camera,game) {
     if (!this.alive) return;
 
     ctx.save();
@@ -156,6 +156,6 @@ export class Missile {
     );
     ctx.restore();
 
-    this.particles.forEach((p) => p.draw(ctx, camera));
+   game.renderParticleBatch(this.particles,ctx,camera)
   }
 }

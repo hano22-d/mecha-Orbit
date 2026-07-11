@@ -42,7 +42,7 @@ export class Debris {
     this.alpha = Math.max(0, this.alpha - 0.02);
   }
 
-  draw(ctx, camera) {
+ /* draw(ctx, camera) {
     if (this.finished) return;
 
     ctx.save();
@@ -58,5 +58,5 @@ export class Debris {
     }
     
     ctx.restore();
-  }
+  } */
 }

@@ -87,24 +87,26 @@ export class Background {
     this.previousCameraX = this.camera.x;
     this.previousCameraY = this.camera.y;
   }
- 
   draw(ctx, camera) {
-    // رسم الخلفية السوداء المتدرحة
+    // رسم الخلفية المتدرجة مرة واحدة
     ctx.fillStyle = this.spaceGradient;
     ctx.fillRect(0, 0, this.canvas.logicalWidth, this.canvas.logicalHeight);
-
-    // رسم النجوم لكل طبقة بحجمها وشفافيتها الخاصة
+  
+    // رسم النجوم المجمع لكل طبقة
     for (let layer of this.layers) {
-      for (let star of layer.stars) {
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+      ctx.beginPath();
 
-        ctx.fillRect(
+      ctx.fillStyle = `rgba(255, 255, 255, 0.7)`; 
+  
+      for (let star of layer.stars) {
+        ctx.rect(
           star.x - camera.x,
           star.y - camera.y,
           layer.starSize,
           layer.starSize
         );
       }
+      ctx.fill(); 
     }
   }
 }

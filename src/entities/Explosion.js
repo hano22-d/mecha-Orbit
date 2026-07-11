@@ -106,7 +106,7 @@ export class Explosion {
       this.finished = true;
     }
   }
-
+/*
   draw(ctx, camera) {
     if (this.finished) return;
 
@@ -129,7 +129,7 @@ export class Explosion {
     }
 
     ctx.restore();
-  }
+  } */
 
   isDone() {
     return this.life > this.maxLife;

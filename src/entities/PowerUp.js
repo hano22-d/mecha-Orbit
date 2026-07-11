@@ -24,7 +24,7 @@ export class PowerUp {
       box.y = this.y + box.offsetY;
     }
   }
-
+/*
   draw(ctx, camera) {
     if (!this.alive) return;
     if (this.image) {
@@ -36,7 +36,7 @@ export class PowerUp {
         this.height
       );
     }
-  }
+  } */
 
   isOffScreen(canvas, camera) {
     const padding = 50;

@@ -25,7 +25,7 @@ import { TouchButton } from "../entities/ToucheButton";
 
 //game manager class//
 export class Game {
-  constructor(canvas, ctx,bgCanvas,bgCtx) {
+  constructor(canvas, ctx, bgCanvas, bgCtx) {
     //ادوات الرسم
     this.myCanvas = canvas;
     this.ctx = ctx;
@@ -183,20 +183,20 @@ export class Game {
 
     this.background.draw(this.bgCtx, this.camera);
 
-    this.enemies.forEach((e) => e.draw(this.ctx, this.camera));
+    this.renderEnemyBatch(this.enemies, this.ctx, this.camera);
 
     this.player.draw(this.ctx, this.camera);
 
     if (this.bossStart && this.boss.alive) {
       this.boss.draw(this.ctx, this.camera);
     }
-    this.bullets.forEach((b) => b.draw(this.ctx, this.camera));
-    this.enemiesBullets.forEach((eb) => eb.draw(this.ctx, this.camera));
-    this.powerUps.forEach((p) => p.draw(this.ctx, this.camera));
-    this.explosions.forEach((ex) => ex.draw(this.ctx, this.camera));
-    this.debris.forEach((d) => d.draw(this.ctx, this.camera));
-    this.missile.forEach((m) => m.draw(this.ctx, this.camera, this.player));
-    this.rocks.forEach((r) => r.draw(this.ctx, this.camera));
+    this.renderSpriteBatch(this.bullets, this.ctx, this.camera); //رسم الرصاصات
+    this.renderSpriteBatch(this.enemiesBullets, this.ctx, this.camera); //رسم رصاص العدو
+    this.renderSpriteBatch(this.powerUps, this.ctx, this.camera); // رسم الباور ابس
+    this.renderSpriteBatch(this.rocks, this.ctx, this.camera); //رسم الصخور
+
+    this.renderExplosionAndDebrisBatch(this.ctx, this.camera); // رسم الحطام والانفجارات
+    this.missile.forEach((m) => m.draw(this.ctx, this.camera, this)); // رسم الصواريخ
 
     this.ctx.restore(); //نهاية الshack
 
@@ -1172,5 +1172,139 @@ export class Game {
         radius: btnRadius * 0.8,
       })
     );
+  }
+
+
+  // ========================================================= //
+  //===========  Batch Rendering دالات الرسم العامة ========== //
+  // ========================================================== //
+
+  // دالة عام لرسم الكائنات الحاشدة البسيطة
+  renderSpriteBatch(entities, ctx, camera) {
+    if (!entities || entities.length === 0) return;
+
+    for (let i = 0; i < entities.length; i++) {
+      const e = entities[i];
+
+      const screenX = e.x - camera.x + e.width / 2;
+      const screenY = e.y - camera.y + e.height / 2;
+
+      ctx.save();
+      ctx.translate(screenX, screenY);
+
+      if (e.angle !== 0) {
+        ctx.rotate(e.angle);
+      }
+
+
+      ctx.drawImage(e.image, -e.width / 2, -e.height / 2, e.width, e.height);
+
+      ctx.restore(); 
+    }
+  }
+
+  // (دالة عامة لرسم الكائنات المعقدة (الاعداء
+  renderEnemyBatch(enemies, ctx, camera) {
+    if (!enemies || enemies.length === 0) return;
+
+    for (let i = 0; i < enemies.length; i++) {
+      const e = enemies[i];
+      if (!e.alive) continue;
+
+      ctx.save();
+
+      if (e.hit) {
+        ctx.globalAlpha = 0.3 + Math.abs(Math.sin(Date.now() * 0.04)) * 0.5;
+      }
+
+      ctx.drawImage(e.image, e.x - camera.x, e.y - camera.y, e.width, e.height);
+
+      ctx.restore();
+    }
+
+    for (let i = 0; i < enemies.length; i++) {
+      enemies[i].drawHealthBar(ctx, camera);
+    }
+  }
+
+  // دالة عامة لرسم جميع شظايا لهب الصاروخ
+  renderParticleBatch(particles, ctx, camera) {
+    if (!particles || particles.length === 0) return;
+
+    const sortedByColor = {};
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      if (p.alpha <= 0) continue;
+      if (!sortedByColor[p.color]) sortedByColor[p.color] = [];
+      sortedByColor[p.color].push(p);
+    }
+
+    for (const color in sortedByColor) {
+      ctx.beginPath();
+      ctx.fillStyle = color;
+
+      const list = sortedByColor[color];
+      for (let i = 0; i < list.length; i++) {
+        const p = list[i];
+
+        ctx.globalAlpha = p.alpha;
+
+        const renderX = p.x - camera.x;
+        const renderY = p.y - camera.y;
+
+        ctx.moveTo(renderX + p.size, renderY);
+        ctx.arc(renderX, renderY, p.size, 0, Math.PI * 2);
+      }
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1.0; 
+  }
+
+  // (دالة عامة  لرسم الكائنات متعددة الفريمات (الانفجارات والحطام
+  renderExplosionAndDebrisBatch(ctx, camera) {
+    // ممر رسم الانفجارات المجمع
+    if (this.explosions.length > 0) {
+      for (let i = 0; i < this.explosions.length; i++) {
+        const exp = this.explosions[i];
+        if (exp.finished) continue;
+
+        ctx.save();
+        let alpha = 1 - exp.life / exp.maxLife;
+        ctx.globalAlpha = Math.max(0, alpha);
+
+        const renderX = exp.x - camera.x - exp.offsetX;
+        const renderY = exp.y - camera.y - exp.offsetY;
+
+        let frame;
+        if (exp.type === "player") frame = exp.frameEXplayer[exp.currentFrame];
+        else if (exp.type === "xilosVex")
+          frame = exp.xilosFrame[exp.currentFrame];
+        else frame = exp.frameEXenemy[exp.currentFrame];
+
+        if (frame)
+          ctx.drawImage(frame, renderX, renderY, exp.width, exp.height);
+        ctx.restore();
+      }
+    }
+
+    // ممر رسم الحطام المجمع
+    if (this.debris.length > 0) {
+      for (let i = 0; i < this.debris.length; i++) {
+        const deb = this.debris[i];
+        if (deb.finished) continue;
+
+        ctx.save();
+        ctx.globalAlpha = deb.alpha;
+
+        let frame = deb.debrisFrame[deb.currentDebris];
+        const renderX = deb.x - camera.x - deb.offsetX;
+        const renderY = deb.y - camera.y - deb.offsetY;
+
+        if (frame)
+          ctx.drawImage(frame, renderX, renderY, deb.width, deb.height);
+        ctx.restore();
+      }
+    }
   }
 }
