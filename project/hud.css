@@ -2,14 +2,16 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-
   pointer-events: none;
+
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }
 
 /*=================================
-   تنسيقات شريط صحة العدو الكبير
+   تنسيقات شريط صحة العدو الكبير (الزعيم)
  ===================================*/
-.enemyHealthBar {
+ .enemyHealthBar {
   width: 25%;
   display: flex;
   flex-direction: column;
@@ -18,11 +20,11 @@
   position: absolute;
   top: 16%;
   right: -50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateZ(0); /* تعزيز الأداء هنا أيضاً */
   text-align: center;
   color: var(--color-text-main);
-
   transition: var(--transition-slow);
+  will-change: transform;
 }
 
 .enemyHealthBar h3 {
@@ -31,11 +33,9 @@
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-
   color: var(--color-text-main);
-
-  text-shadow: 0 0 5px var(--color-danger), 0 0 12px var(--color-danger),
-    0 0 25px var(--color-secondary);
+  /* تخفيف توهج النص المعقد */
+  text-shadow: 0 0 5px var(--color-danger), 0 0 12px rgba(255, 0, 0, 0.6);
 }
 
 .healthBox {
@@ -44,44 +44,27 @@
   top: 63%;
   width: 100%;
   height: 1.5rem;
-
   border: 2px solid var(--color-danger);
-
-  box-shadow: var(--shadow-glow-danger);
-
   border-radius: 999px;
-
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(0, 0, 0, 0.3)
-  );
-
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.3));
   overflow: hidden;
 }
 
 .healthbar {
   display: block;
-  width: 100%;
+  width: 100%; /* العرض الآن ثابت 100% دائماً */
   height: 1.5rem;
-  transition: 0.3s ease;
-
+  transition: transform 0.2s ease-out; /* التحول عبر الأنيميشن السلس */
   position: relative;
-
   border-radius: 999px;
 
-  background: linear-gradient(
-    90deg,
-    #220000 0%,
-    #5a0505 20%,
-    #b81212 50%,
-    #ff2f00 80%,
-    #ff8a00 100%
-  );
+  /* 🔥 الخطوة 2: تحديد نقطة الارتكاز من اليسار ليعمل الـ scaleX بشكل صحيح */
+  transform-origin: left; 
+  will-change: transform;
 
-  box-shadow: 0 0 8px #ff1e00, 0 0 18px #ff3c00, 0 0 35px rgba(255, 50, 0, 0.85),
-    0 0 60px rgba(255, 120, 0, 0.35);
-
+  background: linear-gradient(90deg, #220000 0%, #5a0505 20%, #b81212 50%, #ff2f00 80%, #ff8a00 100%);
+  /* تحسين الظلال لتصبح نيوني خفيف دون مبالغة بكسلية */
+  box-shadow: 0 0 8px #ff1e00, 0 0 15px rgba(255, 60, 0, 0.5);
   overflow: hidden;
 }
 
@@ -120,19 +103,19 @@
 /* =====================================
 score Bar
 ===================================== */
-
 .scoreBar {
   position: absolute;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  left: -40%;
   top: 1.3rem;
-
   padding: var(--space-md);
-
   overflow: hidden;
-  transition: 1s ease-in-out;
+
+  transform: translateX(-120%) translateZ(0); 
+  
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
 }
 
 /* =========================
@@ -264,44 +247,27 @@ score Bar
 
 .playerHealthBox {
   position: relative;
-
   width: 240px;
-
   height: 1.5rem;
-
   border-radius: 999px;
-
   overflow: hidden;
-
   border: 2px solid var(--color-primary);
-
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(0, 0, 0, 0.4)
-  );
-
-  box-shadow: var(--shadow-glow-primary);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.4));
 }
 
 .playerHealthBar {
   display: block;
-
-  width: 100%;
-
+  width: 100%; 
   height: 100%;
-
   border-radius: 999px;
-
   background: linear-gradient(90deg, #004d7a 0%, #008cff 40%, #00f0ff 100%);
-
-  box-shadow: var(--shadow-glow-primary);
+  
+  transform-origin: left;
+  transition: transform 0.2s ease-out;
+  will-change: transform;
 
   position: relative;
-
   overflow: hidden;
-
-  transition: 0.3s ease;
 }
 
 /* لمعة الطاقة */

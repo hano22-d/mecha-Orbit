@@ -4,7 +4,7 @@ import { UpdateAnimationFrame } from "../utils/helpers";
 // ==========================================
 // 💎 الثوابت والاكواد السحرية المغتالة (Constants)
 // ==========================================
-const MAX_HEALTH = 300;
+const MAX_HEALTH = 100;
 const PLANE_WIDTH = 160;
 const PLANE_HEIGHT = 160;
 const PLANE_WIDTH_MOBILE = 80;

@@ -19,8 +19,8 @@ export class Hud {
   }
 
   update(game, canvas) {
-    this.healthBarChanged(game, canvas);
-    this.updateScoreAndhealth(game, canvas);
+    this.healthBarChanged(game);
+    this.updateScoreAndhealth(game);
   }
 
   showHud() {
@@ -44,41 +44,35 @@ export class Hud {
     });
   }
 
-  healthBarChanged(game, canvas) {
-    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
-
-    //شرط عرض شريط صحة زايلوس
+  healthBarChanged(game) {
+    // شرط عرض شريط صحة زايلوس
     if (game.bossStart) {
       this.enemyHealthBar.style.right = "-10%";
     } else {
       this.enemyHealthBar.style.right = "-100%";
     }
 
-    //ضبط عرض الشريط بحسب نسبة صحة زايلوس
+    // 🔥 ضبط شريط الزعيم باستخدام scaleX فائق السلاسة لحماية المعالج
     let healthRate = Math.max(0, game.boss.health / 300);
-    let healthbarWidth = healthRate * (isMobile ? 175 : 350);
-    this.healthbar.style.width = `${healthbarWidth}px`;
+    this.healthbar.style.transform = `scaleX(${healthRate})`;
   }
-
   showScoreBar(stateManager) {
     stateManager.stateOnchange((state) => {
       if (state === "playing") {
         setTimeout(() => {
-          this.scoreBar.style.left = "0";
+          this.scoreBar.style.transform = "translateX(0px) translateZ(0)";
         }, 1000);
       } else {
-        this.scoreBar.style.left = "-40%";
+        this.scoreBar.style.transform = "translateX(-120%) translateZ(0)";
       }
     });
   }
 
-  updateScoreAndhealth(game, canvas) {
-    const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
-
-    //تحديث الscore
+  updateScoreAndhealth(game) {
+    // تحديث الـ score
     this.scoreValue.textContent = game.score;
 
-    //اضافة نبضة لرم الscore
+    // إضافة نبضة لـ score
     if (game.score > this.lastScore) {
       this.scoreValue.style.animation = "none";
       void this.scoreValue.offsetWidth;
@@ -86,15 +80,14 @@ export class Hud {
       this.lastScore = game.score;
     }
 
-    //تحديث عرض شريط حياة اللاعب
+    // 🔥 الخطوة الكبرى: تحديث شريط حياة اللاعب عبر الـ GPU بدون حساب بكسلات
     let healthRate = Math.max(0, game.player.health / 100);
-    let playerBarWidth = healthRate * (isMobile ? 170 : 240);
-    this.playerHealthBar.style.width = `${playerBarWidth}px`;
+    this.playerHealthBar.style.transform = `scaleX(${healthRate})`;
 
-    //تحديث نسبة حياة اللاعب
-    this.healthPercent.textContent = `${healthRate * 100}%`;
+    // تحديث نسبة حياة اللاعب
+    this.healthPercent.textContent = `${Math.round(healthRate * 100)}%`;
 
-    //تحديث الصواريخ
+    // تحديث الصواريخ
     this.countNumber.textContent = game.player.missileCount;
   }
 }
