@@ -28,15 +28,4 @@ export class Particle {
     // تقليص الحجم تدريجياً بشكل متناسب
     if (this.size > 0.05) this.size -= 0.05;
   }
-/*
-  draw(ctx, camera) {
-    if (this.alpha <= 0) return;
-    ctx.save();
-    ctx.globalAlpha = this.alpha;
-    ctx.beginPath();
-    ctx.arc(this.x - camera.x, this.y - camera.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
-    ctx.fill();
-    ctx.restore();
-  } */
 }

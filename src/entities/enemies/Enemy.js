@@ -26,7 +26,6 @@ export class Enemy {
 
     const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
-
     this.width = isMobile ? baseWidth * 0.52 : baseWidth;
     this.height = isMobile ? baseHeight * 0.52 : baseHeight;
 
@@ -60,14 +59,18 @@ export class Enemy {
     this.bulletDamage = bulletDamage;
   }
 
-  update(time, deltaTime, game, camera) {
+  update(gameTimer, deltaTime, game, camera) {
     this.y += this.speed * deltaTime;
     for (let box of this.hitBox) {
       box.x = this.x + box.offsetX;
       box.y = this.y + box.offsetY;
     }
+
+    if (this.hit && gameTimer - this.lastHitTime > 200) {
+      this.hit = false;
+    }
   }
-/*
+  /*
   draw(ctx, camera) {
     if (!this.alive) return;
     this._drawHealthBar(ctx, camera);

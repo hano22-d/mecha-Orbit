@@ -106,31 +106,7 @@ export class Explosion {
       this.finished = true;
     }
   }
-/*
-  draw(ctx, camera) {
-    if (this.finished) return;
-
-    ctx.save();
-    let alpha = 1 - this.life / this.maxLife;
-    ctx.globalAlpha = Math.max(0, alpha);
-
-    const renderX = this.x - camera.x - this.offsetX;
-    const renderY = this.y - camera.y - this.offsetY;
-
-    if (this.type === "player") {
-      let frame = this.frameEXplayer[this.currentFrame];
-      if (frame) ctx.drawImage(frame, renderX, renderY, this.width, this.height);
-    } else if (this.type === "xilosVex") {
-      let frameXilos = this.xilosFrame[this.currentFrame];
-      if (frameXilos) ctx.drawImage(frameXilos, renderX, renderY, this.width, this.height);
-    } else {
-      let frameEXenemy = this.frameEXenemy[this.currentFrame];
-      if (frameEXenemy) ctx.drawImage(frameEXenemy, renderX, renderY, this.width, this.height);
-    }
-
-    ctx.restore();
-  } */
-
+  
   isDone() {
     return this.life > this.maxLife;
   }

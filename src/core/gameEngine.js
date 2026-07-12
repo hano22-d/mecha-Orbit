@@ -1,3 +1,4 @@
+// Game.js - الدفعة الأولى (المطهرة)
 import { Player } from "../entities/player";
 import { Enemy } from "../entities/enemies/Enemy";
 import { Chaser } from "../entities/enemies/Chaser";
@@ -19,14 +20,12 @@ import { hud } from "../ui/HUD";
 import { MissilePowerUp } from "../entities/powerUps/missilePowerUp";
 import { Missile } from "../weapons/Missile";
 import { Rocks } from "../entities/rocks";
-import { winUpdate } from "../ui/win";
 import { gameOverUi } from "../ui/gameOver";
 import { TouchButton } from "../entities/ToucheButton";
 
-//game manager class//
 export class Game {
   constructor(canvas, ctx, bgCanvas, bgCtx) {
-    //ادوات الرسم
+    // أدوات الرسم
     this.myCanvas = canvas;
     this.ctx = ctx;
     this.bgCanvas = bgCanvas;
@@ -35,9 +34,12 @@ export class Game {
     window.gameInstance = this;
     this.gameTimer = 0;
 
-    //الكائنات
+    // 🛸 الكائنات النشطة (تحتوي على اللاعب والمصفوفات الحركية)
     this.player = new Player(this.myCanvas);
-    this.boss = new Boss(this.myCanvas);
+
+    // 🧠 تأجيل إنشاء الزعيم لتوظيف طاقة المعالج (نضعه null الآن)
+    this.boss = null;
+
     this.enemies = [];
     this.bullets = [];
     this.enemiesBullets = [];
@@ -47,7 +49,7 @@ export class Game {
     this.missile = [];
     this.rocks = [];
 
-    //مؤقتات
+    // مؤقتات ت spawning
     this.lastEnemy = 0;
     this.enemyDelay = 2000;
 
@@ -63,10 +65,10 @@ export class Game {
     this.score = 0;
     this.credits = 0;
 
-    //بيانات واجهة الفوز
+    // بيانات واجهة الفوز
     this.bulletsFired = 0;
     this.bulletsColision = 0;
-    this.combo = 0; // عداد القتل المتتالي بدون تلقي ضرر (Combo 10)
+    this.combo = 0;
     this.enemyType = {
       normal: 0,
       chaser: 0,
@@ -74,68 +76,69 @@ export class Game {
       shooter: 0,
     };
 
-    // متحكمات مرحلة مواجهة زعيم اللعبة (Boss / Xilos Phase)
+    // متحكمات مرحلة مواجهة زعيم اللعبة (Boss Phase)
     this.remainingTimeBoss = 0;
     this.bossStart = false;
     this.bossMusicPlayed = false;
 
-    //( boos موضع بدء مجيء العدو) اخر موضع للكاميرا
     this.bossArenaX = null;
     this.bossArenaY = null;
 
-    //effect
-    this.camera = {
-      x: 0,
-      y: 0,
-    };
+    // تأثيرات الكاميرا والاهتزاز
+    this.camera = { x: 0, y: 0 };
+    this.shake = { power: 0, duration: 0 };
+    this.flash = { alpha: 0, color: "white" };
 
-    this.shake = {
-      power: 0,
-      duration: 0,
-    };
-
-    this.flash = {
-      alpha: 0,
-      color: "white",
-    };
-
+    // توليد الخلفية اعتماداً على كود الكانفاس المنطقي النظيف
     this.background = new Background(this.bgCanvas, this.camera);
 
-    //مصفوفة تخزين الازرار
+    // مصفوفة تخزين الأزرار الافتراضية للموبايل
     this.touchButtons = [];
-    //استدعاء دالة بناء الازرار لاول مرة
     this.initTouchControls();
 
-    // ضبط عدم خروج اللاعب من الشاشة + تحديث مواقع الازرار عند تغير في حجم الشاشة
-    window.addEventListener("resize", () => this.handleResize());
+    // 🛡️ معالجة الـ Resize بأمان حركي لمنع تسريب الذاكرة (Memory Leaks)
+    this._resizeHandler = () => this.handleResize();
+    window.addEventListener("resize", this._resizeHandler);
   }
+
+  // دالة تدميرية اختيارية لاستدعائها عند إغلاق اللعبة لضمان تنظيف المتصفح بالكامل
+  destroy() {
+    window.removeEventListener("resize", this._resizeHandler);
+  }
+
   update(input, time, deltaTime) {
     this.gameTimer += deltaTime;
 
-    //شرط الدخول لمرحلة زايلوس
-    if (this.gameTimer > 240000) {
+    if (this.gameTimer > 2400 && !this.bossStart) {
       this.bossStart = true;
+      this.boss = new Boss(this.myCanvas);
     }
 
+    // تحديث الاهتزاز
     if (this.shake.duration > 0) {
-      //تحديث الاهتزاز
       this.shake.duration -= deltaTime;
     } else {
       this.shake.power = 0;
     }
 
-    this.flash.alpha -= 0.01 * deltaTime; //تحديث الفلاش
+    // تحديث الفلاش
+    if (this.flash.alpha > 0) {
+      this.flash.alpha = Math.max(0, this.flash.alpha - 0.01 * deltaTime);
+    }
 
-    //تحديث مدة تاثير السلاح الحالي
-    let remaining = this.weaponEndTime - this.gameTimer;
-    let duration = 5000;
-    let progress = remaining / duration;
-    this.player.weaponProgressEffect = progress; //ارسال المدة المتبقية للاعب
+    // حسابات مدة تأثير السلاح الحالي
+    if (this.weaponEndTime) {
+      const progress = (this.weaponEndTime - this.gameTimer) / 5000;
+      this.player.weaponProgressEffect = Math.max(0, progress);
+    } else {
+      this.player.weaponProgressEffect = 0;
+    }
 
-    // == boos اعدادات تثبيت الكاميرا والموسيقى مع بداية ==//
+    // == اعدادات تثبيت الكاميرا والموسيقى مع بداية البوس ==//
     this.handleCameraAndBossPhase();
 
-    this.background.update(this.camera); //تحديث الخلفية
+    // تحديث الخلفية واللاعب بناءً على الأبعاد المنطقية
+    this.background.update(this.camera);
 
     this.player.update(
       input.keys,
@@ -146,13 +149,16 @@ export class Game {
       this.gameTimer
     );
 
+    // تحديثات حركة المقذوفات والأعداء
     this.spawnBulletPlayer(input, this.gameTimer);
     this.updateBullets(this.myCanvas, this.camera);
-
     this.updateEnemies(this.gameTimer, deltaTime, this.camera);
 
-    if (this.bossStart) this.boss.update(time, deltaTime, this);
+    if (this.bossStart && this.boss) {
+      this.boss.update(time, deltaTime, this);
+    }
 
+    // تحديث بقية عناصر اللعبة
     this.updateEnemyBullets(this.myCanvas, this.camera);
     this.updatePowerUp(this.gameTimer);
     this.updateExplosion(deltaTime);
@@ -160,55 +166,74 @@ export class Game {
     this.updateMissile(input, time, deltaTime);
     this.updateRocks(this.gameTimer, deltaTime);
 
-    if (this.touchButtons) {
-      this.touchButtons.forEach((button) => button.update(deltaTime));
+    // تحديث أزرار الموبايل إن وجدت
+    if (this.touchButtons.length > 0) {
+      const len = this.touchButtons.length;
+      for (let i = 0; i < len; i++) {
+        this.touchButtons[i].update(deltaTime);
+      }
     }
 
-    this.handleCollisions(time);
+    // معالجة التصادمات لواجهة اللعب
+    this.handleCollisions(this.gameTimer);
 
-    hud.update(this, this.myCanvas); //تحديث واجهة اللعب
+    // تحديث الـ HUD بناءً على واجهة الأبعاد المنطقية المستقرة
+    hud.update(this, this.myCanvas);
   }
 
   draw() {
-    let shakeX = 0;
-    let shakeY = 0;
+    const isShaking = this.shake.power > 0;
 
-    if (this.shake.power > 0) {
-      shakeX = (Math.random() - 0.5) * this.shake.power;
-      shakeY = (Math.random() - 0.5) * this.shake.power;
+    if (isShaking) {
+      this.ctx.save(); // بداية الـ Shake
+      const shakeX = (Math.random() - 0.5) * this.shake.power;
+      const shakeY = (Math.random() - 0.5) * this.shake.power;
+      this.ctx.translate(shakeX, shakeY);
     }
-
-    this.ctx.save(); //بداية shack
-    this.ctx.translate(shakeX, shakeY);
 
     this.background.draw(this.bgCtx, this.camera);
 
+    //  رسم كتل الأعداء واللاعب
     this.renderEnemyBatch(this.enemies, this.ctx, this.camera);
-
     this.player.draw(this.ctx, this.camera);
 
-    if (this.bossStart && this.boss.alive) {
+    //  رسم الزعيم بأمان تام (فحص الـ null أولاً لمنع انهيار اللعبة)
+    if (this.bossStart && this.boss && this.boss.alive) {
       this.boss.draw(this.ctx, this.camera);
     }
-    this.renderSpriteBatch(this.bullets, this.ctx, this.camera); //رسم الرصاصات
-    this.renderSpriteBatch(this.enemiesBullets, this.ctx, this.camera); //رسم رصاص العدو
-    this.renderSpriteBatch(this.powerUps, this.ctx, this.camera); // رسم الباور ابس
-    this.renderSpriteBatch(this.rocks, this.ctx, this.camera); //رسم الصخور
 
-    this.renderExplosionAndDebrisBatch(this.ctx, this.camera); // رسم الحطام والانفجارات
-    this.missile.forEach((m) => m.draw(this.ctx, this.camera, this)); // رسم الصواريخ
+    // رسم المقذوفات والعناصر على دفعات (Batch Rendering الفخم)
+    this.renderSpriteBatch(this.bullets, this.ctx, this.camera);
+    this.renderSpriteBatch(this.enemiesBullets, this.ctx, this.camera);
+    this.renderSpriteBatch(this.powerUps, this.ctx, this.camera);
+    this.renderSpriteBatch(this.rocks, this.ctx, this.camera);
 
-    this.ctx.restore(); //نهاية الshack
+    // رسم الحطام والانفجارات
+    this.renderExplosionAndDebrisBatch(this.ctx, this.camera);
 
-    this.touchButtons.forEach((button) => {
-      button.draw(this.ctx);
-    });
+    const missileLen = this.missile.length;
+    if (missileLen > 0) {
+      for (let i = 0; i < missileLen; i++) {
+        this.missile[i].draw(this.ctx, this.camera, this);
+      }
+    }
 
-    this.drawFlash(this.ctx, this.myCanvas); //رسم الفلاش
+    if (isShaking) {
+      this.ctx.restore(); // نهاية الـ Shake
+    }
+
+    const btnLen = this.touchButtons.length;
+    if (btnLen > 0) {
+      for (let i = 0; i < btnLen; i++) {
+        this.touchButtons[i].draw(this.ctx);
+      }
+    }
+
+    this.drawFlash(this.ctx, this.myCanvas);
   }
-  //دالة اطلاق الرصاص
+
+  // دالة إطلاق الرصاص
   spawnBulletPlayer(input, gameTimer) {
-    //حماية استقرار السلاح
     if (!this.player.weapon || typeof this.player.weapon.shoot !== "function") {
       this.player.weapon = new NormalWeapon(this.player);
     }
@@ -219,18 +244,23 @@ export class Game {
       audioManager.poolPlay("fire");
     }
   }
-  //دالة تحديث الرصاص
+
+  // دالة تحديث الرصاص
   updateBullets(canvas, camera) {
-    this.bullets.forEach((bullet) => {
-      if (bullet) bullet.update();
-    });
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const bullet = this.bullets[i];
 
-    //فلترة المصفوفة بحذف الرصاصات الخارجة من الشاشة
-    this.bullets = this.bullets.filter(
-      (bullet) => bullet && !bullet.isOffScreen(canvas, camera)
-    );
+      if (bullet) {
+        bullet.update();
+
+        if (bullet.isOffScreen(canvas, camera)) {
+          this.bullets.splice(i, 1);
+        }
+      } else {
+        this.bullets.splice(i, 1);
+      }
+    }
   }
-
   //تابع توليد الاعداء
   spawnEnemy(gameTimer) {
     //زيادة نسب الاعداء المتطورين وسرعتهم حسب الزمن
@@ -321,22 +351,29 @@ export class Game {
   }
   //دالة تحديث الاعداء
   updateEnemies(gameTimer, deltaTime, camera) {
-    this.enemies.forEach((enemy) => {
-      if (enemy) enemy.update(gameTimer, deltaTime, this, camera);
-    });
+    for (let i = this.enemies.length - 1; i >= 0; i--) {
+      const enemy = this.enemies[i];
 
-    this.enemies = this.enemies.filter(
-      (enemy) => enemy && !enemy.isOffScreen(this.myCanvas, camera)
-    );
+      if (enemy) {
+        enemy.update(gameTimer, deltaTime, this, camera);
 
-    //زيادة معدل التوليد حسب الزمن
+        if (enemy.isOffScreen(this.myCanvas, camera)) {
+          this.enemies.splice(i, 1);
+        }
+      } else {
+        this.enemies.splice(i, 1);
+      }
+    }
+
+    // زيادة معدل التوليد حسب خط الزمن
     if (gameTimer > 45000) {
       this.enemyDelay = 1000; // تكثيف شديد قبل الزعيم
     } else if (gameTimer > 25000) {
       this.enemyDelay = 1500; // صعوبة متوسطة
     } else {
-      this.enemyDelay = 2000; // البداية الهادئة للعبة
+      this.enemyDelay = 2000; // البداية الهادئة
     }
+
     if (gameTimer - this.lastEnemy > this.enemyDelay && !this.bossStart) {
       this.spawnEnemy(gameTimer);
       this.lastEnemy = gameTimer;
@@ -385,13 +422,19 @@ export class Game {
   }
   // دالة تحديث رصاصات العدو
   updateEnemyBullets(canvas, camera) {
-    this.enemiesBullets.forEach((bullet) => {
-      if (bullet) bullet.update();
-    });
+    for (let i = this.enemiesBullets.length - 1; i >= 0; i--) {
+      const bullet = this.enemiesBullets[i];
 
-    this.enemiesBullets = this.enemiesBullets.filter(
-      (bullet) => bullet && !bullet.isOffScreen(canvas, camera)
-    );
+      if (bullet) {
+        bullet.update();
+
+        if (bullet.isOffScreen(canvas, camera)) {
+          this.enemiesBullets.splice(i, 1);
+        }
+      } else {
+        this.enemiesBullets.splice(i, 1);
+      }
+    }
   }
 
   //دالة توليد المكافات
@@ -420,28 +463,33 @@ export class Game {
 
   //تحديث المكافات
   updatePowerUp(gameTimer) {
-    //تحديث
-    this.powerUps.forEach((powerup) => {
-      if (powerup) powerup.update();
-    });
+    for (let i = this.powerUps.length - 1; i >= 0; i--) {
+      const powerup = this.powerUps[i];
 
-    // حذف المكافات الخارجة من الشاشة
-    this.powerUps = this.powerUps.filter(
-      (powerup) => powerup && !powerup.isOffScreen(this.myCanvas, this.camera)
-    );
+      if (powerup) {
+        powerup.update();
+
+        if (powerup.isOffScreen(this.myCanvas, this.camera)) {
+          this.powerUps.splice(i, 1);
+        }
+      } else {
+        this.powerUps.splice(i, 1);
+      }
+    }
 
     if (gameTimer - this.lastPowerUp > this.powerDelay && !this.bossStart) {
       this.spawnPoweUp();
       this.lastPowerUp = gameTimer;
     }
-    //زمن المكافات
+
     if (this.shieldActive && gameTimer > this.shieldEndTime) {
       this.shieldActive = false;
       this.player.shieldEffect = false;
     }
+
     if (this.player.weaponEffect && gameTimer > this.weaponEndTime) {
       this.player.weapon = new NormalWeapon(this.player);
-      this.player.weaponEffect = false; // تصفير الحالة فوراً ليتوقف الشرط في الفريم القادم
+      this.player.weaponEffect = false;
     }
   }
 
@@ -454,22 +502,28 @@ export class Game {
       new Explosion(this.myCanvas, targetCenterX, targetCenterY, typeName)
     );
   }
-
   // دالة تحديث الانفجارات
   updateExplosion(deltaTime) {
-    this.explosions.forEach((explosion) => {
-      if (explosion) explosion.update(deltaTime);
-    });
+    for (let i = this.explosions.length - 1; i >= 0; i--) {
+      const explosion = this.explosions[i];
 
-    this.explosions = this.explosions.filter(
-      (explosion) => explosion && !explosion.isDone()
-    );
+      if (explosion) {
+        explosion.update(deltaTime);
+
+        if (explosion.isDone()) {
+          this.explosions.splice(i, 1);
+        }
+      } else {
+        this.explosions.splice(i, 1);
+      }
+    }
   }
+
   spawnMissile(input, time, deltaTime) {
     if (this.player.missileCount <= 0) return;
 
     if (this.player.canShootMissile(input.keys, deltaTime)) {
-      let launchData = this.player.getMissileLaunchPositions();
+      const launchData = this.player.getMissileLaunchPositions();
       let spawnX, spawnY;
 
       if (this.player.missileCount === 2) {
@@ -480,7 +534,7 @@ export class Game {
         spawnY = launchData.left.y;
       }
 
-      let newMissile = new Missile(
+      const newMissile = new Missile(
         this.myCanvas,
         spawnX,
         spawnY,
@@ -490,25 +544,28 @@ export class Game {
 
       audioManager.volume("missileSound", 0.5);
       audioManager.play("missileSound");
-
-      console.log("true");
     }
   }
+
   updateMissile(input, time, deltaTime) {
     this.spawnMissile(input, time, deltaTime);
 
-    //المصفوفة الكلية للاعداء والتي تتضمن زايلوس
-    let allEnemies = [...this.enemies];
+    for (let i = this.missile.length - 1; i >= 0; i--) {
+      const m = this.missile[i];
 
-    if (this.bossStart && this.boss && this.boss.alive) {
-      allEnemies.push(this.boss);
+      if (m) {
+        const bossTarget =
+          this.bossStart && this.boss && this.boss.alive ? this.boss : null;
+
+        m.update(deltaTime, this.enemies, bossTarget);
+
+        if (!m.alive) {
+          this.missile.splice(i, 1);
+        }
+      } else {
+        this.missile.splice(i, 1);
+      }
     }
-
-    this.missile.forEach((m) => {
-      if (m) m.update(deltaTime, allEnemies);
-    });
-
-    this.missile = this.missile.filter((m) => m && m.alive);
 
     if (this.missile.length === 0) {
       audioManager.pause("missileSound");
@@ -516,165 +573,146 @@ export class Game {
   }
 
   handleCollisions(gameTimer) {
-    //تصادم ال boss مع الرصاص
-    if (this.boss.alive) {
-      this.bullets = this.bullets.filter((bullet) => {
-        if (!bullet) return false;
+    // 🛸 [قسم الزعيم]: يتم فحصه فقط وحصرياً إذا كان الزعيم موجوداً وحياً في الذاكرة
+    if (this.boss && this.boss.alive) {
+      const bossHitBoxes = this.boss.hitBox || this.boss.htiBox;
 
-        const hasCollided = this.boss.htiBox.some((bossBox) => {
-          return collisionsSystem(bossBox, bullet);
-        });
+      if (bossHitBoxes) {
+        // 1️⃣ تصادم الزعيم مع رصاص اللاعب
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+          const bullet = this.bullets[i];
+          if (!bullet) continue;
 
-        if (hasCollided) {
-          if (this.boss.health <= 0) return false;
-
-          // تطبيق الضرر
-          this.boss.health -= bullet.damage;
-          this.bulletsColision++; // زيادة عداد تصادم الرصاص
-
-          if (this.boss.health <= 0) {
-            this.boss.alive = false;
-
-            if (typeof this.boss.delete === "function") this.boss.delete();
-
-            // توليد انفجار مركزي سينمائي للزعيم
-            this.spawnExplosion(this.boss, "xilosVex");
-
-            // تشغيل أصوات الانفجار الملحمية
-            audioManager.play("explotionXilos1");
-            audioManager.play("explotionXilos2");
-
-            // تأخير الانتقال لشاشة الفوز لمنح الانفجار وقته البصري
-            setTimeout(() => {
-              // التأكد من أن اللاعب ما زال حياً ولم يمت مع الزعيم في نفس اللحظة
-              if (!this.player.alive || this.player.health <= 0) return;
-
-              stateManager.setState("win");
-              audioManager.pause("bossSound");
-              audioManager.play("winSound");
-
-              if (typeof winUpdate === "function") winUpdate(this);
-            }, 2000);
+          let bulletCollided = false;
+          for (let j = 0; j < bossHitBoxes.length; j++) {
+            if (collisionsSystem(bossHitBoxes[j], bullet)) {
+              bulletCollided = true;
+              break;
+            }
           }
 
-          return false; // حذف الرصاصة من المصفوفة لأنها اصطدمت
+          if (bulletCollided) {
+            if (this.boss.health > 0) {
+              this.boss.health -= bullet.damage;
+              this.bulletsColision++;
+              if (this.boss.health <= 0) this.triggerBossDefeat();
+            }
+            this.bullets.splice(i, 1);
+          }
         }
 
-        return true; // إبقاء الرصاصة في الجو إذا لم تصطدم
-      });
-    }
-    //تصادم الboss مع الصواريخ
-    if (this.boss.alive) {
-      this.missile = this.missile.filter((missile) => {
-        if (!missile) return false;
+        // 2️⃣ تصادم الزعيم مع صواريخ اللاعب
+        for (let i = this.missile.length - 1; i >= 0; i--) {
+          const missile = this.missile[i];
+          if (!missile || !missile.alive) continue;
 
-        const hasCollided = missile.hitBox.some((missileBox) => {
-          return this.boss.htiBox.some((bossBox) => {
-            return collisionsSystem(bossBox, missileBox);
-          });
-        });
-
-        if (hasCollided) {
-          if (this.boss.health <= 0) return false;
-
-          this.boss.health -= missile.damage;
-          this.bulletsColision++;
-
-          missile.alive = false;
-
-          audioManager.volume("explosionEnemy", 0.8);
-          audioManager.play("explosionEnemy");
-
-          if (this.boss.health <= 0) {
-            this.boss.alive = false;
-
-            if (typeof this.boss.delete === "function") this.boss.delete();
-
-            this.spawnExplosion(this.boss, "xilosVex");
-
-            audioManager.play("explotionXilos1");
-            audioManager.play("explotionXilos2");
-
-            setTimeout(() => {
-              if (!this.player.alive || this.player.health <= 0) return;
-
-              stateManager.setState("win");
-              audioManager.pause("bossSound");
-              audioManager.play("winSound");
-
-              if (typeof winUpdate === "function") winUpdate(this);
-            }, 2000);
+          let missileCollided = false;
+          for (let m = 0; m < missile.hitBox.length; m++) {
+            for (let b = 0; b < bossHitBoxes.length; b++) {
+              if (collisionsSystem(bossHitBoxes[b], missile.hitBox[m])) {
+                missileCollided = true;
+                break;
+              }
+            }
+            if (missileCollided) break;
           }
 
-          return false;
+          if (missileCollided) {
+            if (this.boss.health > 0) {
+              this.boss.health -= missile.damage;
+              this.bulletsColision++;
+              missile.alive = false;
+              audioManager.volume("explosionEnemy", 0.8);
+              audioManager.play("explosionEnemy");
+              if (this.boss.health <= 0) this.triggerBossDefeat();
+            }
+            this.missile.splice(i, 1);
+          }
+        }
+      }
+    } // 👈 نهاية كتل شرط الزعيم بأمان! المعالج سيكمل الآن للأسفل دائماً
+
+    // ==========================================
+    // 🎮 [قسم اللعب العام والأعداء والصخور العادية]
+    // ==========================================
+
+    // 1️⃣ تصادم الأعداء مع رصاص اللاعب
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const bullet = this.bullets[i];
+      if (!bullet) continue;
+
+      let bulletCollided = false;
+
+      for (let j = this.enemies.length - 1; j >= 0; j--) {
+        const enemy = this.enemies[j];
+        if (!enemy || !enemy.alive) continue;
+
+        let hasCollided = false;
+        const enemyBoxes = enemy.hitBox;
+        for (let k = 0; k < enemyBoxes.length; k++) {
+          if (collisionsSystem(enemyBoxes[k], bullet)) {
+            hasCollided = true;
+            break;
+          }
         }
 
-        return true;
-      });
-    }
-
-    //تصادم الاعداء مع الرصاص
-    this.bullets = this.bullets.filter((bullet) => {
-      if (!bullet) return false;
-      let bulletSurvived = true;
-
-      this.enemies.forEach((enemy) => {
-        if (!enemy || !enemy.alive || !bulletSurvived) return;
-
-        // فحص التصادم مع صناديق تصادم العدو
-        const hasCollided = enemy.hitBox.some((enemyBox) => {
-          return collisionsSystem(enemyBox, bullet);
-        });
-
         if (hasCollided) {
-          bulletSurvived = false;
+          bulletCollided = true;
           this.bulletsColision++;
 
           enemy.hit = true;
-          setTimeout(() => {
-            if (enemy) enemy.hit = false;
-          }, 200);
+          enemy.lastHitTime = gameTimer;
 
           enemy.health -= bullet.damage;
 
           if (enemy.health <= 0) {
             enemy.alive = false;
-
             this.spawnExplosion(enemy, "enemy");
             this.spawnDebris(enemy);
-
             this.score++;
             this.combo++;
+
             if (typeof this.updateCredits === "function")
               this.updateCredits(enemy);
 
-            //تحديث إحصائيات نوع العدو المقتول
             if (this.enemyType && this.enemyType[enemy.type] !== undefined) {
               this.enemyType[enemy.type]++;
             }
 
             audioManager.volume("explosionEnemy", 0.7);
             audioManager.play("explosionEnemy");
+
+            this.enemies.splice(j, 1);
           }
+          break;
         }
-      });
+      }
 
-      return bulletSurvived; // إبقاء الرصاصة إذا لم تصطدم بأي عدو
-    });
+      if (bulletCollided) {
+        this.bullets.splice(i, 1);
+      }
+    }
 
-    // التنظيف النهائي والموحد لمصفوفة الأعداء)
-    this.enemies = this.enemies.filter((enemy) => enemy && enemy.alive);
-
-    //تصادم اللاعب مع الاعداء
+    // 2️⃣ تصادم اللاعب مع الأعداء
     if (this.player.alive) {
-      this.enemies.forEach((enemy) => {
-        if (!enemy || !enemy.alive || !this.player.alive) return;
+      const playerBoxes = this.player.hitBox;
 
-        const hasCollided = enemy.hitBox.some((enemyBox) => {
-          return this.player.hitBox.some((playerBox) => {
-            return collisionsSystem(enemyBox, playerBox);
-          });
-        });
+      for (let j = this.enemies.length - 1; j >= 0; j--) {
+        const enemy = this.enemies[j];
+        if (!enemy || !enemy.alive) continue;
+
+        let hasCollided = false;
+        const enemyBoxes = enemy.hitBox;
+
+        for (let e = 0; e < enemyBoxes.length; e++) {
+          for (let p = 0; p < playerBoxes.length; p++) {
+            if (collisionsSystem(enemyBoxes[e], playerBoxes[p])) {
+              hasCollided = true;
+              break;
+            }
+          }
+          if (hasCollided) break;
+        }
 
         if (hasCollided) {
           enemy.alive = false;
@@ -683,26 +721,23 @@ export class Game {
             if (typeof this.player.takeDamage === "function") {
               this.player.takeDamage(enemy);
             }
-
             if (typeof this.triggerShacke === "function") {
               this.triggerShacke(5 + (enemy.damage || 5) * 2, 200);
             }
-          } else {
-            // 💡 هنا يمكنك استدعاء صوت أو تأثير ارتداد الدرع لاحقاً
-            // audioManager.play("shieldHit");
           }
 
           this.spawnExplosion(enemy, "enemy");
           audioManager.volume("explosionEnemy", 0.6);
           audioManager.play("explosionEnemy");
 
+          this.enemies.splice(j, 1);
+
           if (this.player.health <= 0) {
             this.player.alive = false;
-
             this.spawnExplosion(this.player, "player");
             if (typeof this.player.delete === "function") this.player.delete();
 
-            let progressPercent = (this.gameTimer / 240000) * 100;
+            const progressPercent = (this.gameTimer / 240000) * 100;
             this.remainingTimeBoss = Math.max(
               0,
               Math.min(progressPercent, 100)
@@ -716,67 +751,76 @@ export class Game {
             }, 1500);
           }
         }
-      });
-
-      this.enemies = this.enemies.filter((enemy) => enemy && enemy.alive);
+      }
     }
 
-    //تصادم ال powerUps مع اللاعب
-    this.powerUps = this.powerUps.filter((powerUp) => {
-      if (!powerUp || !this.player.alive) return false;
+    // 3️⃣ تصادم الـ powerUps مع اللاعب
+    if (this.player.alive) {
+      const playerBoxes = this.player.hitBox;
 
-      const hasCollided = this.player.hitBox.some((playerBox) => {
-        return powerUp.hitBox.some((powerBox) => {
-          return collisionsSystem(playerBox, powerBox);
-        });
-      });
+      for (let i = this.powerUps.length - 1; i >= 0; i--) {
+        const powerUp = this.powerUps[i];
+        if (!powerUp) continue;
 
-      if (hasCollided) {
-        if (typeof powerUp.apply === "function") {
-          powerUp.apply(this.player, this.gameTimer, this);
+        let powerUpCollided = false;
+        const powerBoxes = powerUp.hitBox || [];
+
+        for (let p = 0; p < playerBoxes.length; p++) {
+          for (let pw = 0; pw < powerBoxes.length; pw++) {
+            if (collisionsSystem(playerBoxes[p], powerBoxes[pw])) {
+              powerUpCollided = true;
+              break;
+            }
+          }
+          if (powerUpCollided) break;
         }
 
-        audioManager.volume("powerUp", 0.7);
-        audioManager.play("powerUp");
-
-        return false;
+        if (powerUpCollided) {
+          if (typeof powerUp.apply === "function") {
+            powerUp.apply(this.player, this.gameTimer, this);
+          }
+          audioManager.volume("powerUp", 0.7);
+          audioManager.play("powerUp");
+          this.powerUps.splice(i, 1);
+        }
       }
+    }
 
-      return true;
-    });
-
-    //تصادم اللاعب مع رصاصات العدو
+    // 4️⃣ تصادم اللاعب مع رصاصات العدو
     if (this.player.alive) {
-      this.enemiesBullets = this.enemiesBullets.filter((bullet) => {
-        if (!bullet || !this.player.alive) return false;
+      const playerBoxes = this.player.hitBox;
 
-        const hasCollided = this.player.hitBox.some((playerBox) => {
-          return collisionsSystem(bullet, playerBox);
-        });
+      for (let i = this.enemiesBullets.length - 1; i >= 0; i--) {
+        const bullet = this.enemiesBullets[i];
+        if (!bullet) continue;
 
-        if (hasCollided) {
+        let bulletCollided = false;
+        for (let p = 0; p < playerBoxes.length; p++) {
+          if (collisionsSystem(bullet, playerBoxes[p])) {
+            bulletCollided = true;
+            break;
+          }
+        }
+
+        if (bulletCollided) {
           if (!this.shieldActive) {
             if (typeof this.player.takeDamage === "function") {
               this.player.takeDamage(bullet);
             }
-
             if (typeof this.triggerShacke === "function") {
               this.triggerShacke(10, 200);
             }
-
             if (this.combo < 10) this.combo = 0;
-          } else {
-            // 💡 مساحة مخصصة لتأثيرات الدرع لاحقاً
           }
+
+          this.enemiesBullets.splice(i, 1);
 
           if (this.player.health <= 0) {
             this.player.alive = false;
-
             this.spawnExplosion(this.player, "player");
             if (typeof this.player.delete === "function") this.player.delete();
 
-            // حساب نسبة التقدم قبل ظهور الزعيم
-            let progressPercent = (this.gameTimer / 240000) * 100;
+            const progressPercent = (this.gameTimer / 240000) * 100;
             this.remainingTimeBoss = Math.max(
               0,
               Math.min(progressPercent, 100)
@@ -788,41 +832,46 @@ export class Game {
                 gameOverUi.update(this);
               }
             }, 1500);
+            break;
           }
-
-          return false;
         }
-
-        return true;
-      });
+      }
     }
 
-    // تصادم العدو مع الصواريخ
-    this.missile = this.missile.filter((missile) => {
-      if (!missile || !missile.alive) return false;
-      let missileSurvived = true;
+    // 5️⃣ تصادم الأعداء مع الصواريخ الموجّهة
+    for (let i = this.missile.length - 1; i >= 0; i--) {
+      const missile = this.missile[i];
+      if (!missile || !missile.alive) continue;
 
-      this.enemies.forEach((enemy) => {
-        if (!enemy || !enemy.alive || !missileSurvived) return;
+      let missileCollided = false;
 
-        const hasCollided = enemy.hitBox.some((enemyBox) => {
-          return missile.hitBox.some((missileBox) => {
-            return collisionsSystem(enemyBox, missileBox);
-          });
-        });
+      for (let j = this.enemies.length - 1; j >= 0; j--) {
+        const enemy = this.enemies[j];
+        if (!enemy || !enemy.alive) continue;
+
+        let hasCollided = false;
+        const enemyBoxes = enemy.hitBox;
+        const missileBoxes = missile.hitBox;
+
+        for (let m = 0; m < missileBoxes.length; m++) {
+          for (let e = 0; e < enemyBoxes.length; e++) {
+            if (collisionsSystem(enemyBoxes[e], missileBoxes[m])) {
+              hasCollided = true;
+              break;
+            }
+          }
+          if (hasCollided) break;
+        }
 
         if (hasCollided) {
-          missileSurvived = false;
+          missileCollided = true;
           missile.alive = false;
-
           enemy.health -= missile.damage || 50;
 
           if (enemy.health <= 0) {
             enemy.alive = false;
-
             this.spawnExplosion(enemy, "enemy");
             this.spawnDebris(enemy);
-
             this.score++;
             if (typeof this.updateCredits === "function")
               this.updateCredits(enemy);
@@ -831,56 +880,62 @@ export class Game {
               this.enemyType[enemy.type]++;
             }
 
-            // تشغيل صوت التدمير
             audioManager.volume("explosionEnemy", 0.5);
             audioManager.play("explosionEnemy");
+            this.enemies.splice(j, 1);
           }
+          break;
         }
-      });
+      }
 
-      return missileSurvived;
-    });
+      if (missileCollided) {
+        this.missile.splice(i, 1);
+      }
+    }
 
-    this.enemies = this.enemies.filter((enemy) => enemy && enemy.alive);
-
-    //تصادم اللاعب مع الصخور
+    // 6️⃣ تصادم اللاعب مع الصخور
     if (this.player.alive) {
-      this.rocks = this.rocks.filter((rock) => {
-        if (!rock || !this.player.alive) return false;
+      const playerBoxes = this.player.hitBox;
 
-        const hasCollided = this.player.hitBox.some((playerBox) => {
-          return rock.hitBox.some((rockBox) => {
-            return collisionsSystem(playerBox, rockBox);
-          });
-        });
+      for (let i = this.rocks.length - 1; i >= 0; i--) {
+        const rock = this.rocks[i];
+        if (!rock) continue;
 
-        if (hasCollided) {
+        let rockCollided = false;
+        const rockBoxes = rock.hitBox || [];
+
+        for (let p = 0; p < playerBoxes.length; p++) {
+          for (let r = 0; r < rockBoxes.length; r++) {
+            if (collisionsSystem(playerBoxes[p], rockBoxes[r])) {
+              rockCollided = true;
+              break;
+            }
+          }
+          if (rockCollided) break;
+        }
+
+        if (rockCollided) {
           rock.alive = false;
 
           if (!this.shieldActive) {
             if (typeof this.player.takeDamage === "function") {
               this.player.takeDamage(rock);
             }
-
             if (typeof this.triggerShacke === "function") {
               this.triggerShacke(10, 200);
             }
-            this.triggerShacke;
-          } else {
-            // 💡 مساحة مخصصة لتأثيرات الدرع ضد الصخور لاحقاً
           }
 
           audioManager.volume("explosionEnemy", 0.6);
           audioManager.play("explosionEnemy");
+          this.rocks.splice(i, 1);
 
           if (this.player.health <= 0) {
             this.player.alive = false;
-
             this.spawnExplosion(this.player, "player");
             if (typeof this.player.delete === "function") this.player.delete();
 
-            // حساب نسبة التقدم المستقرة قبل ظهور الزعيم
-            let progressPercent = (this.gameTimer / 240000) * 100;
+            const progressPercent = (this.gameTimer / 240000) * 100;
             this.remainingTimeBoss = Math.max(
               0,
               Math.min(progressPercent, 100)
@@ -892,48 +947,78 @@ export class Game {
                 gameOverUi.update(this);
               }
             }, 1500);
+            break;
           }
-
-          return false;
         }
-
-        return true;
-      });
+      }
     }
 
-    //تصادم رصاصات اللاعب مع الصخور
-    this.bullets = this.bullets.filter((bullet) => {
-      if (!bullet) return false;
-      let bulletSurvived = true;
+    // 7️⃣ تصادم رصاصات اللاعب مع الصخور
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const bullet = this.bullets[i];
+      if (!bullet) continue;
 
-      this.rocks.forEach((rock) => {
-        if (!rock || !rock.alive || !bulletSurvived) return;
+      let bulletCollided = false;
 
-        const hasCollided = rock.hitBox.some((rockBox) => {
-          return collisionsSystem(bullet, rockBox);
-        });
+      for (let j = this.rocks.length - 1; j >= 0; j--) {
+        const rock = this.rocks[j];
+        if (!rock || !rock.alive) continue;
+
+        let hasCollided = false;
+        const rockBoxes = rock.hitBox || [];
+
+        for (let r = 0; r < rockBoxes.length; r++) {
+          if (collisionsSystem(bullet, rockBoxes[r])) {
+            hasCollided = true;
+            break;
+          }
+        }
 
         if (hasCollided) {
-          bulletSurvived = false;
+          bulletCollided = true;
           rock.alive = false;
-
           this.spawnExplosion(rock, "rockExplosion");
-          if (typeof this.spawnDebris === "function") {
-            this.spawnDebris(rock);
-          }
+          if (typeof this.spawnDebris === "function") this.spawnDebris(rock);
 
           this.bulletsColision++;
-
           audioManager.volume("explosionEnemy", 0.7);
           audioManager.play("explosionEnemy");
+          this.rocks.splice(j, 1);
+          break;
         }
-      });
+      }
 
-      return bulletSurvived;
-    });
-
-    this.rocks = this.rocks.filter((rock) => rock && rock.alive);
+      if (bulletCollided) {
+        this.bullets.splice(i, 1);
+      }
+    }
   }
+
+  triggerBossDefeat() {
+    this.boss.alive = false;
+
+    if (typeof this.boss.delete === "function") this.boss.delete();
+
+    // توليد انفجار مركزي سينمائي للزعيم
+    this.spawnExplosion(this.boss, "xilosVex");
+
+    // تشغيل أصوات الانفجار الملحمية
+    audioManager.play("explotionXilos1");
+    audioManager.play("explotionXilos2");
+
+    // تأخير الانتقال لشاشة الفوز بأمان
+    setTimeout(() => {
+      // التأكد من أن اللاعب ما زال حياً ولم يمت مع الزعيم في نفس اللحظة
+      if (!this.player.alive || this.player.health <= 0) return;
+
+      stateManager.setState("win");
+      audioManager.pause("bossSound");
+      audioManager.play("winSound");
+
+      if (typeof winUpdate === "function") winUpdate(this);
+    }, 2000);
+  }
+
   updateCredits(enemy) {
     if (enemy.color === "red") {
       this.credits++;
@@ -945,7 +1030,7 @@ export class Game {
       this.credits += 4;
     }
   }
-  //دالة تفريغ الكائنات
+  // 🔄 دالة تفريغ الكائنات وإعادة التعيين الآمنة بنسبة 100%
   reset() {
     this.gameTimer = 0;
     this.score = 0;
@@ -953,6 +1038,7 @@ export class Game {
     this.bulletsFired = 0;
     this.bulletsColision = 0;
 
+    // تفريغ كامل للمصفوفات لضمان عدم تسريب كائنات من الجيم السابق
     this.bullets = [];
     this.enemies = [];
     this.enemiesBullets = [];
@@ -962,25 +1048,18 @@ export class Game {
     this.missile = [];
     this.debris = [];
 
+    // إعادة خلق اللاعب من جديد بنقاط حياته الأصلية
     this.player = new Player(this.myCanvas);
 
     this.shieldActive = false;
+    this.bossStart = false;
+    this.bossMusicPlayed = false;
+
+    // 🛡️ التطهير الجذري للزعيم: نعيده إلى null لتبدأ الدورة الزمنية للعبة بشكل نقي تماماً
+    this.boss = null;
 
     this.bossArenaX = 0;
     this.bossArenaY = 0;
-
-    if (this.boss) {
-      this.bossStart = false;
-      this.boss.alive = true;
-      this.boss.health = 300;
-      this.bossMusicPlayed = false;
-
-      this.boss.x =
-        this.bossArenaX +
-        this.myCanvas.logicalWidth / 2 -
-        (this.boss.width / 2 || 100);
-      this.boss.y = this.bossArenaY - 700;
-    }
 
     this.lastEnemy = 0;
     this.lastPowerUp = 0;
@@ -1011,18 +1090,26 @@ export class Game {
     if (audioManager) {
       audioManager.pause("bossSound");
       audioManager.pause("winSound");
+      // يمكنك هنا إعادة تشغيل موسيقى الخلفية العادية للمرحلة إذا أردت
     }
   }
+
+  // 🫨 اهتزاز الشاشة
   triggerShacke(power, duration) {
     this.shake.power = power;
     this.shake.duration = duration;
   }
+
+  // 💥 توليد الحطام المتناثر عند تدمير الأعداء
   spawnDebris(enemy) {
+    if (!enemy) return;
     const enemyCenterX = enemy.x + enemy.width / 2;
     const enemyCenterY = enemy.y + enemy.height / 2;
 
     this.debris.push(new Debris(this.myCanvas, enemyCenterX, enemyCenterY));
   }
+
+  // 🪨 توليد الصخور العشوائية خارج حدود الكاميرا العلوية
   spawnRocks(gameTimer) {
     if (gameTimer - this.lastRock > this.rockDelay && !this.bossStart) {
       const isMobile =
@@ -1031,36 +1118,46 @@ export class Game {
       const maxRockWidth = isMobile ? 55 : 110;
       const padding = 15;
 
-      let x =
+      const x =
         this.camera.x +
         padding +
         Math.random() *
           (this.myCanvas.logicalWidth - padding * 2 - maxRockWidth);
-      let y = this.camera.y - maxRockWidth;
+      const y = this.camera.y - maxRockWidth;
 
       this.rocks.push(new Rocks(this.myCanvas, x, y));
       this.lastRock = gameTimer;
     }
   }
+
+  // 🔄 تحديث الصخور بحلقات فور سريعة ومنخفضة التكلفة
   updateRocks(gameTimer, deltaTime) {
     this.spawnRocks(gameTimer);
-    this.rocks.forEach((r) => r.update(deltaTime));
+
+    // تم استبدال forEach بحلقة for تقليدية فائقة السرعة
+    for (let i = 0; i < this.rocks.length; i++) {
+      if (this.rocks[i]) this.rocks[i].update(deltaTime);
+    }
   }
+
+  // 🔄 تحديث الحطام بحلقات فور سريعة
   updateDebris(deltaTime) {
-    this.debris.forEach((d) => d.update(deltaTime));
+    for (let i = 0; i < this.debris.length; i++) {
+      if (this.debris[i]) this.debris[i].update(deltaTime);
+    }
   }
+
+  // 🎨 رسم تأثير الفلاش الأبيض (مثلاً عند تلقي ضرر قوي)
   drawFlash(ctx, canvas) {
     if (this.flash.alpha <= 0) return;
 
     ctx.save();
-
     ctx.globalAlpha = this.flash.alpha;
     ctx.fillStyle = this.flash.color;
-
     ctx.fillRect(0, 0, canvas.logicalWidth, canvas.logicalHeight);
-
     ctx.restore();
   }
+
   handleCameraAndBossPhase() {
     if (this.bossStart) {
       // إذا بدأت مواجهة الزعيم ولم نثبت الحلبة بعد
@@ -1068,44 +1165,54 @@ export class Game {
         this.bossArenaX = this.camera.x;
         this.bossArenaY = this.camera.y;
 
-        // الإحداثيات الأولية للزعيم
-        this.boss.x =
-          this.bossArenaX +
-          this.myCanvas.logicalWidth / 2 -
-          this.boss.width / 2;
+        // 🛡️ جدار حماية لمنع الانهيار: نتحقق من وجود الزعيم أولاً قبل حساب أبعاده وموقعه
+        if (this.boss) {
+          this.boss.x =
+            this.bossArenaX +
+            this.myCanvas.logicalWidth / 2 -
+            (this.boss.width / 2 || 100);
 
-        this.boss.y = this.bossArenaY - this.myCanvas.logicalHeight;
+          this.boss.y = this.bossArenaY - this.myCanvas.logicalHeight;
+        }
       }
 
-      // تثبيت الكاميرا في الحلبة
+      // تثبيت الكاميرا في الحلبة لمنعها من تتبع اللاعب خارج المعركة
       this.camera.x = this.bossArenaX;
       this.camera.y = this.bossArenaY;
 
-      // تشغيل الصوتيات لمرة واحدة
+      // تشغيل الصوتيات لمرة واحدة عند دخول الزعيم
       if (!this.bossMusicPlayed) {
-        audioManager.pause("bg");
-        audioManager.play("bossSound");
-        audioManager.play("bossSentance");
+        if (audioManager) {
+          audioManager.pause("bg");
+          audioManager.play("bossSound");
+          audioManager.play("bossSentance");
+        }
         this.bossMusicPlayed = true;
       }
     } else {
-      // حركة الكاميرا الطبيعية الملاحقة للاعب
-      this.camera.x = this.player.x - this.myCanvas.logicalWidth * 0.45;
-      this.camera.y = this.player.y - this.myCanvas.logicalHeight * 0.6;
+      // حركة الكاميرا الطبيعية الملاحقة للاعب أثناء الطيران العادي
+      if (this.player) {
+        this.camera.x = this.player.x - this.myCanvas.logicalWidth * 0.45;
+        this.camera.y = this.player.y - this.myCanvas.logicalHeight * 0.6;
+      }
     }
   }
-  //دالة تجاوب ابعاد اللاعب والازرار اللمسية عند تغير ابعاد الكانفاس (مثل قلب الهاتف)
+
+  // 📱 2️⃣ دالة الاستجابة عند تغير أبعاد الكانفاس (مثل قلب الهاتف أو تغيير حجم المتصفح)
   handleResize() {
-    // 1️⃣ إجبار اللاعب على إعادة فحص حدوده فوراً بناءً على الأبعاد الجديدة
-    if (this.player) {
-      this.player._constrainMovement(this.camera, this.myCanvas);
+    // إجبار اللاعب على إعادة فحص حدوده فوراً بناءً على الأبعاد الجديدة بشرط أن يكون حياً
+    if (this.player && this.player.alive) {
+      if (typeof this.player._constrainMovement === "function") {
+        this.player._constrainMovement(this.camera, this.myCanvas);
+      }
     }
 
-    // 2️⃣ إعادة حساب مواقع الأزرار اللمسية ديناميكياً لتتبع الزوايا الجديدة فوراً
+    // إعادة حساب مواقع الأزرار اللمسية ديناميكياً لتتبع الزوايا الجديدة فوراً
     if (typeof this.initTouchControls === "function") {
       this.initTouchControls();
     }
   }
+
   //دالة توليد الازرار
   initTouchControls() {
     this.touchButtons.length = 0;
@@ -1174,7 +1281,6 @@ export class Game {
     );
   }
 
-
   // ========================================================= //
   //===========  Batch Rendering دالات الرسم العامة ========== //
   // ========================================================== //
@@ -1196,10 +1302,9 @@ export class Game {
         ctx.rotate(e.angle);
       }
 
-
       ctx.drawImage(e.image, -e.width / 2, -e.height / 2, e.width, e.height);
 
-      ctx.restore(); 
+      ctx.restore();
     }
   }
 
@@ -1258,7 +1363,7 @@ export class Game {
       }
       ctx.fill();
     }
-    ctx.globalAlpha = 1.0; 
+    ctx.globalAlpha = 1.0;
   }
 
   // (دالة عامة  لرسم الكائنات متعددة الفريمات (الانفجارات والحطام

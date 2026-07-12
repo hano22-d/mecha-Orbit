@@ -20,7 +20,7 @@
   position: absolute;
   top: 16%;
   right: -50%;
-  transform: translateX(-50%) translateZ(0); /* تعزيز الأداء هنا أيضاً */
+  transform: translateX(-50%) translateZ(0);
   text-align: center;
   color: var(--color-text-main);
   transition: var(--transition-slow);
@@ -34,7 +34,6 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--color-text-main);
-  /* تخفيف توهج النص المعقد */
   text-shadow: 0 0 5px var(--color-danger), 0 0 12px rgba(255, 0, 0, 0.6);
 }
 
@@ -52,18 +51,16 @@
 
 .healthbar {
   display: block;
-  width: 100%; /* العرض الآن ثابت 100% دائماً */
+  width: 100%; 
   height: 1.5rem;
-  transition: transform 0.2s ease-out; /* التحول عبر الأنيميشن السلس */
+  transition: transform 0.2s ease-out;
   position: relative;
   border-radius: 999px;
 
-  /* 🔥 الخطوة 2: تحديد نقطة الارتكاز من اليسار ليعمل الـ scaleX بشكل صحيح */
   transform-origin: left; 
   will-change: transform;
 
   background: linear-gradient(90deg, #220000 0%, #5a0505 20%, #b81212 50%, #ff2f00 80%, #ff8a00 100%);
-  /* تحسين الظلال لتصبح نيوني خفيف دون مبالغة بكسلية */
   box-shadow: 0 0 8px #ff1e00, 0 0 15px rgba(255, 60, 0, 0.5);
   overflow: hidden;
 }

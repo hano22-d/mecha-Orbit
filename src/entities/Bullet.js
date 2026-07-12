@@ -32,27 +32,7 @@ export class Bullet {
     this.x += this.velocityX;
     this.y += this.velocityY;
   }
-/*
-  draw(ctx, camera) {
-    ctx.save();
-
-    const screenX = this.x - camera.x + this.width / 2;
-    const screenY = this.y - camera.y + this.height / 2;
-
-    ctx.translate(screenX, screenY);
-    ctx.rotate(this.angle);
-
-    ctx.drawImage(
-      this.image,
-      -this.width / 2,
-      -this.height / 2,
-      this.width,
-      this.height
-    );
-
-    ctx.restore();
-  } */
-
+  
   isOffScreen(canvas, camera) {
     const isTooFarLeft = this.x < camera.x - SCREEN_OFFBOUNDS_PADDING;
     const isTooFarRight =

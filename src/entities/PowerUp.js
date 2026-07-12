@@ -23,28 +23,15 @@ export class PowerUp {
       box.x = this.x + box.offsetX;
       box.y = this.y + box.offsetY;
     }
-  }
-/*
-  draw(ctx, camera) {
-    if (!this.alive) return;
-    if (this.image) {
-      ctx.drawImage(
-        this.image,
-        this.x - camera.x,
-        this.y - camera.y,
-        this.width,
-        this.height
-      );
-    }
-  } */
+}
 
-  isOffScreen(canvas, camera) {
-    const padding = 50;
-    return (
-      this.x < camera.x - padding ||
-      this.x > canvas.logicalWidth + camera.x + padding ||
-      this.y < camera.y - padding ||
-      this.y > camera.y + canvas.logicalHeight + padding
-    );
-  } 
+isOffScreen(canvas, camera) {
+  const padding = 50;
+  return (
+    this.x < camera.x - padding ||
+    this.x > canvas.logicalWidth + camera.x + padding ||
+    this.y < camera.y - padding ||
+    this.y > camera.y + canvas.logicalHeight + padding
+  );
+} 
 }

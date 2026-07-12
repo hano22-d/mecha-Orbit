@@ -45,17 +45,21 @@ export class Hud {
   }
 
   healthBarChanged(game) {
-    // شرط عرض شريط صحة زايلوس
     if (game.bossStart) {
       this.enemyHealthBar.style.right = "-10%";
     } else {
       this.enemyHealthBar.style.right = "-100%";
     }
 
-    // 🔥 ضبط شريط الزعيم باستخدام scaleX فائق السلاسة لحماية المعالج
-    let healthRate = Math.max(0, game.boss.health / 300);
+    let healthRate = 0;
+    
+    if (game.boss && game.boss.alive) {
+      healthRate = Math.max(0, game.boss.health / 300);
+    }
+
     this.healthbar.style.transform = `scaleX(${healthRate})`;
   }
+
   showScoreBar(stateManager) {
     stateManager.stateOnchange((state) => {
       if (state === "playing") {
@@ -80,7 +84,6 @@ export class Hud {
       this.lastScore = game.score;
     }
 
-    // 🔥 الخطوة الكبرى: تحديث شريط حياة اللاعب عبر الـ GPU بدون حساب بكسلات
     let healthRate = Math.max(0, game.player.health / 100);
     this.playerHealthBar.style.transform = `scaleX(${healthRate})`;
 

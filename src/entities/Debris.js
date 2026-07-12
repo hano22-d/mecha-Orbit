@@ -41,22 +41,4 @@ export class Debris {
 
     this.alpha = Math.max(0, this.alpha - 0.02);
   }
-
- /* draw(ctx, camera) {
-    if (this.finished) return;
-
-    ctx.save();
-    ctx.globalAlpha = this.alpha;
-
-    let frame = this.debrisFrame[this.currentDebris];
-
-    const renderX = this.x - camera.x - this.offsetX;
-    const renderY = this.y - camera.y - this.offsetY;
-
-    if (frame) {
-      ctx.drawImage(frame, renderX, renderY, this.width, this.height);
-    }
-    
-    ctx.restore();
-  } */
 }
