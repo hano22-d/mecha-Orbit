@@ -1,7 +1,7 @@
 const HEALTH_BAR_HEIGHT = 5;
 const NORMAL_ENEMY_IMAGE = new Image();
 NORMAL_ENEMY_IMAGE.src =
-  "/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_t_0_5ab76d0e-5f0d-455b-9aa6-9119708664e9_0.png";
+  "/assets/normalEnemy.png";
 
 export class Enemy {
   constructor({

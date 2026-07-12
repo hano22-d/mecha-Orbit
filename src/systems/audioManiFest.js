@@ -33,7 +33,7 @@ export function initAllGameSounds() {
   );
 
   //جملة زايلوس
-  audioManager.loadSound("bossSentance", "/assets/xailosVex.mp3");
+  audioManager.loadSound("bossSentance", "/assets/audio/xailosVex.mp3");
 
   //صوت انفجار زايلوس الاول
   audioManager.loadSound("explotionXilos1", "/assets/audio/explosion1.flac");

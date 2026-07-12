@@ -2,7 +2,7 @@ import { Enemy } from "./Enemy";
 
 const DODGER_IMAGE = new Image();
 DODGER_IMAGE.src =
-  "/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_n_0_436172b1-61fd-46f3-850b-f4f4c403f432_0.png";
+  "/assets/dodger.png";
 
 export class Dodger extends Enemy {
   constructor(config) {

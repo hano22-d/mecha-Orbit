@@ -1,7 +1,6 @@
 import { UpdateAnimationFrame } from "../../utils/helpers";
 
 export class Boss {
-  // 💾 تخزين الصور بشكل ساكن (Static) لمنع تكرار التحميل في الذاكرة عند كل تصفير
   static baseFrames = [];
   static damageFrames = [];
   static imagesPreloaded = false;
@@ -20,7 +19,6 @@ export class Boss {
     this.lastShoot = 0;
     this.shootDelay = 2000;
 
-    // 🛡️ توحيد المسمى برمجياً إلى hitBox واستخدام النسب المئوية الصافية
     this.hitBox = [
       { 
         x: 0, y: 0, 
@@ -28,21 +26,21 @@ export class Boss {
         height: this.height * 0.92,    
         offsetX: this.width * 0.375,   
         offsetY: this.height * 0.12    
-      }, // المربع العمودي الرئيسي
+      }, 
       { 
         x: 0, y: 0, 
         width: this.width * 0.9,       
         height: this.height * 0.32,    
         offsetX: this.width * 0.125,   
         offsetY: this.height * 0.2     
-      }, // المربع الأفقي العريض
+      }, 
       { 
         x: 0, y: 0, 
         width: this.width * 0.55,      
         height: this.height * 0.32,    
         offsetX: this.width * 0.31,    
         offsetY: this.height * 0.56    
-      }  // المربع الثالث الأفقي القصير
+      }  
     ];
 
     this.imgBullet = new Image();
@@ -53,7 +51,10 @@ export class Boss {
     this.hit = false;
     this.bulletDamage = 30;
 
-    // تهيئة الصور لمرة واحدة فقط لمنع تسريب الذاكرة (Memory Leak Protection)
+    // 🔥 الخطوة 1: تهيئة التدرج الدائري (الهالة الضوئية) مرة واحدة فقط في الـ constructor لراحة الذاكرة
+    this.bossGlowGradient = null;
+    this._initGlowGradient(canvas);
+
     if (!Boss.imagesPreloaded) {
       Boss.baseFrames = ["/assets/bossFrame1.png", "/assets/bossFrame2.png"].map((src) => {
         const image = new Image();
@@ -74,14 +75,12 @@ export class Boss {
       Boss.imagesPreloaded = true;
     }
 
-    // إعدادات الأنيميشن الأساسية للزعيم
     this.bossFrameSettings = {
       currentFrame: 0,
       frameInterval: 1000,
       frameTimer: 0,
     };
 
-    // إعدادات أنيميشن أعمدة الدخان والتضرر
     this.bossDamageFrameSettings = {
       currentFrame: 0,
       frameInterval: 70,
@@ -89,15 +88,23 @@ export class Boss {
     };
   }
 
+  // دالة مخصصة لبناء التدرج المحلي الثابت (مركزه 0,0) لمرة واحدة فقط
+  _initGlowGradient(canvas) {
+    // نستخدم السياق الافتراضي المؤقت لبناء التدرج
+    const tempCtx = canvas.getContext("2d");
+    this.bossGlowGradient = tempCtx.createRadialGradient(0, 0, 10, 0, 0, 300);
+    this.bossGlowGradient.addColorStop(0, "rgba(255, 68, 0, 0.35)");
+    this.bossGlowGradient.addColorStop(0.5, "rgba(200, 0, 0, 0.15)");
+    this.bossGlowGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+  }
+
   update(time, deltaTime, game) {
     if (!this.alive) return;
 
-    // 🛸 حركة الزعيم: الهبوط السلس لمنطقة المعركة وتثبيته هندسياً
     const targetY = game.camera.y + 50;
     if (this.y >= targetY) {
-      this.y = targetY; // التثبيت النظيف لمنع الارتجاج
+      this.y = targetY; 
 
-      // الذكاء الاصطناعي للحركة الأفقية بين حواف الكانفاس
       if (this.x < game.camera.x) {
         this.direction = 1;
       } else if (this.x > game.camera.x + game.myCanvas.logicalWidth - this.width) {
@@ -105,11 +112,9 @@ export class Boss {
       }
       this.x += this.speed * deltaTime * this.direction;
     } else {
-      // الهبوط تدريجياً لأسفل حتى يدخل الشاشة
       this.y += this.speed * deltaTime;
     }
 
-    // 🔫 حساب مسافة الإطلاق التكتيكي باتجاه اللاعب
     if (game.player && game.player.alive) {
       const dx = game.player.x - this.x;
       const dy = game.player.y - this.y;
@@ -123,13 +128,11 @@ export class Boss {
       }
     }
 
-    // 🛡️ تحديث مواقع علب الاصطدام بشكل رياضي نظيف وخالٍ من الإزاحات العشوائية
     for (let i = 0; i < this.hitBox.length; i++) {
       this.hitBox[i].x = this.x + this.hitBox[i].offsetX;
       this.hitBox[i].y = this.y + this.hitBox[i].offsetY;
     }
 
-    // تحديث فريمات الحركة والوميض والدخان
     UpdateAnimationFrame(this.bossFrameSettings, Boss.baseFrames, deltaTime);
     UpdateAnimationFrame(this.bossDamageFrameSettings, Boss.damageFrames, deltaTime);
   }
@@ -137,19 +140,15 @@ export class Boss {
   draw(ctx, camera) {
     if (!this.alive) return;
 
-    // 🟠 رسم الهالة أو السحابة الضوئية المحيطة بالزعيم (تقريب رياضي كامل)
-    ctx.save();
     const centerX = Math.round(this.x + this.width / 2 - camera.x);
     const centerY = Math.round(this.y + this.height / 2 - camera.y);
 
-    const gradient = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, 300);
-    gradient.addColorStop(0, "rgba(255, 68, 0, 0.35)");
-    gradient.addColorStop(0.5, "rgba(200, 0, 0, 0.15)");
-    gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-    
-    ctx.fillStyle = gradient;
+    // 🔥 الخطوة 2: رسم الهالة الضوئية باستخدام التدرج المخزن (Cache) وبأعلى كفاءة رسومية لكرت الشاشة
+    ctx.save();
+    ctx.translate(centerX, centerY); // الانتقال لمركز الزعيم
+    ctx.fillStyle = this.bossGlowGradient; // استدعاء التدرج الجاهز فوراً
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 300, 0, Math.PI * 2);
+    ctx.arc(0, 0, 300, 0, Math.PI * 2); // الرسم حول نقطة الصفر المحلية
     ctx.fill();
     ctx.restore();
 

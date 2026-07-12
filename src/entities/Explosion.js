@@ -63,21 +63,14 @@ export class Explosion {
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0005.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0007.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0009.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0011.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0013.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0015.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0017.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0019.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0020.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0022.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0024.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0026.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0028.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0030.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0032.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0034.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0036.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0038.png",
       "/assets/explotionFrame/xilosexplotionFrame/explosion1_0040.png",
     ].map((src) => {
       let img = new Image();
@@ -106,7 +99,7 @@ export class Explosion {
       this.finished = true;
     }
   }
-  
+
   isDone() {
     return this.life > this.maxLife;
   }

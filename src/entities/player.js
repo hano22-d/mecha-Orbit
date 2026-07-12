@@ -109,7 +109,7 @@ export class Player {
     // صورة الطائرة الأساسية
     this.planeImg = new Image();
     this.planeImg.src =
-      "/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_h_0_f9c8efea-de69-412a-8cb1-d8a94ba66635_0.png";
+      "/assets/player.png";
 
     // فريمات الشيلد
     const shieldSources = [
@@ -149,6 +149,7 @@ export class Player {
       frameTimer: 0,
     };
   }
+
   update(keys, deltaTime, bossStart, camera, canvas) {
     if (!this.alive) return;
 
@@ -247,8 +248,7 @@ export class Player {
       }
     }
   }
-
-  draw(ctx, camera) {
+draw(ctx, camera) {
     if (!this.alive) return;
 
     // 1️⃣ رسم الترايل أولاً ليكون تحت الطائرة بصرياً خلف الكواليس
@@ -264,27 +264,44 @@ export class Player {
       ctx.globalAlpha = 0.5 + Math.sin(Date.now() * 0.05) * 0.5;
     }
 
-    // تطبيق توهج هالة الشفاء الخضراء
-    if (this.healthEffect) {
-      ctx.shadowColor = "lime";
-      ctx.shadowBlur = 20;
-    }
+  if (this.healthEffect) {
+    ctx.save();
+    
+    let pulse = 1 + Math.sin(Date.now() * 0.01) * 0.15; 
+    let glowRadius = this.width * 0.8 * pulse;
+
+    let centerX = Math.round(-this.width / 12 + this.width / 2);
+    let centerY = Math.round(-this.height / 10 + this.height / 2);
+
+    // إنشاء التدرج الدائري في المركز الجديد تماماً
+    let healthGlow = ctx.createRadialGradient(centerX, centerY, this.width * 0.1, centerX, centerY, glowRadius);
+    healthGlow.addColorStop(0, "rgba(0, 255, 0, 0.6)");  
+    healthGlow.addColorStop(0.5, "rgba(0, 255, 0, 0.2)");
+    healthGlow.addColorStop(1, "rgba(0, 255, 0, 0)");    
+
+    ctx.fillStyle = healthGlow;
+    ctx.beginPath();
+    // رسم الدائرة في الإحداثيات المركزية الصحيحة
+    ctx.arc(centerX, centerY, glowRadius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.restore();
+  }
 
     // رسم الصواريخ المحملة على الأجنحة برمجياً
     this._drawEquippedMissiles(ctx);
 
-    // رسم السبرايت الأساسي للطائرة
+    // رسم السبرايت الأساسي للطائرة (الآن يرسم بحرية وبدون قيود الظلال الثقيلة!)
     ctx.drawImage(
       this.planeImg,
       Math.round(-this.width / 12),
       Math.round(-this.height / 10),
       Math.round(this.width),
       Math.round(this.height)
-  );
+    );
 
-    // إعادة ضبط الشفافية والتوهج لحماية العناصر التالية
+    // إعادة ضبط الشفافية لحماية العناصر التالية
     ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
 
     // رسم لهب المحركات النفاثة المتفاعل مع السرعة الحالية
     this._drawThrusterFlames(ctx);

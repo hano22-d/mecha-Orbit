@@ -1,7 +1,7 @@
 import { Enemy } from "./Enemy";
 
 const CHASER_IMAGE = new Image();
-CHASER_IMAGE.src = "/assets/Default_Prompt_Flat_2D_topdown_perspective_game_asset_sprite_h_0_997ddf4a-5f4f-4dd2-bb64-101dcfc5ed77_0.png";
+CHASER_IMAGE.src = "/assets/chaser.png";
 
 export class Chaser extends Enemy {
   constructor(config) {
