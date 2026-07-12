@@ -109,7 +109,7 @@ export class Game {
   update(input, time, deltaTime) {
     this.gameTimer += deltaTime;
 
-    if (this.gameTimer > 24000 && !this.bossStart) {
+    if (this.gameTimer > 240000 && !this.bossStart) {
       this.bossStart = true;
       this.boss = new Boss(this.myCanvas);
     }
