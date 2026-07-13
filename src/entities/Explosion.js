@@ -1,4 +1,9 @@
 export class Explosion {
+  static enemyFrames = [];
+  static playerFrames = [];
+  static xilosFrames = [];
+  static assetsLoaded = false;
+
   constructor(canvas, x, y, type) {
     this.x = x;
     this.y = y;
@@ -9,6 +14,7 @@ export class Explosion {
 
     const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
+    // تحديد الأبعاد منطقياً بناءً على نوع الانفجار ونوع الجهاز
     if (this.type === "player") {
       this.width = isMobile ? 150 : 300;
       this.height = isMobile ? 150 : 300;
@@ -20,87 +26,75 @@ export class Explosion {
       this.height = isMobile ? 140 : 350;
     }
 
+    // نقطة الارتكاز المركزية (نصف العرض والارتفاع) ليتم الرسم في المنتصف تماماً
     this.offsetX = this.width / 2;
     this.offsetY = this.height / 2;
 
-    // فريمات انفجار اللاعب
-    this.frameEXplayer = [
-     "/assets/explotionFrame/enemyExFrame/Explosion_1.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_2.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_3.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_4.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_5.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_6.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_7.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_8.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_9.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_10.png",
-    ].map((src) => {
-      let img = new Image();
-      img.src = src;
-      return img;
-    });
+    // استدعاء دالة التحميل المسبق للأصول
+    this._preloadAssets();
 
-    // فريمات انفجار الاعداء
-    this.frameEXenemy = [
-      "/assets/explotionFrame/enemyExFrame/Explosion_1.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_2.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_3.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_4.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_5.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_6.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_7.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_8.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_9.png",
-      "/assets/explotionFrame/enemyExFrame/Explosion_10.png",
-    ].map((src) => {
-      let img = new Image();
-      img.src = src;
-      return img;
-    });
-
-    this.xilosFrame = [
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0005.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0007.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0009.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0013.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0017.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0019.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0022.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0026.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0028.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0032.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0036.png",
-      "/assets/explotionFrame/xilosexplotionFrame/explosion1_0040.png",
-    ].map((src) => {
-      let img = new Image();
-      img.src = src;
-      return img;
-    });
-
-    // ادوات التحكم بفريمات الانفجارات
+    // أدوات التحكم بالأنيميشن والفريمات
     this.currentFrame = 0;
     this.frameTimer = 0;
-    this.frameInterval = 150;
+    this.frameInterval = 40; // سرعة الانتقال بين الفريمات بالمللي ثانية
     this.finished = false;
+  }
+
+  // دالة داخلية مقفلة لتحميل الصور في الذاكرة الساكنة لمنع تسريب الذاكرة (Memory Leaks)
+  _preloadAssets() {
+    if (!Explosion.assetsLoaded) {
+      const commonExplosionPaths = Array.from({ length: 10 }, (_, i) => 
+        `/assets/explotionFrame/enemyExFrame/Explosion_${i + 1}.png`
+      );
+
+      Explosion.enemyFrames = commonExplosionPaths.map((src) => {
+        const img = new Image();
+        img.src = src;
+        return img;
+      });
+
+      // توجيه مرجع اللاعب لنفس مصفوفة الأعداء لأن الصور متطابقة تماماً
+      Explosion.playerFrames = Explosion.enemyFrames; 
+
+      // 2. فريمات انفجار الزعيم الضخم XilosVex
+      const xilosPaths = [
+        "0005", "0007", "0009", "0013", "0017", "0019", "0022", "0026", "0028", "0032", "0036", "0040"
+      ];
+
+      Explosion.xilosFrames = xilosPaths.map((num) => {
+        const img = new Image();
+        img.src = `/assets/explotionFrame/xilosexplotionFrame/explosion1_${num}.png`;
+        return img;
+      });
+
+      Explosion.assetsLoaded = true;
+    }
+  }
+
+  // دالة جلب طول المصفوفة الحالية لمعرفة متى ينتهي الأنيميشن
+  _getFramesCount() {
+    if (this.type === "player") return Explosion.playerFrames.length;
+    if (this.type === "xilosVex") return Explosion.xilosFrames.length;
+    return Explosion.enemyFrames.length;
   }
 
   update(deltaTime) {
     this.life += deltaTime;
     this.frameTimer += deltaTime;
 
+    // تحديث الفريم الحالي بناءً على الوقت المنقضي
     if (this.frameTimer > this.frameInterval) {
       this.currentFrame++;
       this.frameTimer = 0;
     }
     
-    const currentFrameArray = this.type === "player" ? this.frameEXplayer : (this.type === "xilosVex" ? this.xilosFrame : this.frameEXenemy);
-    if (this.currentFrame >= currentFrameArray.length) {
+    // التحقق من انتهاء جميع الفريمات لإيقاف الرسم وتدمير الكائن
+    if (this.currentFrame >= this._getFramesCount()) {
       this.finished = true;
     }
   }
 
   isDone() {
-    return this.life > this.maxLife;
+    return this.finished || this.life > this.maxLife;
   }
 }

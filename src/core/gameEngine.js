@@ -1369,7 +1369,8 @@ export class Game {
   renderExplosionAndDebrisBatch(ctx, camera) {
     // ممر رسم الانفجارات المجمع
     if (this.explosions.length > 0) {
-      for (let i = 0; i < this.explosions.length; i++) {
+      const expLen = this.explosions.length;
+      for (let i = 0; i < expLen; i++) {
         const exp = this.explosions[i];
         if (exp.finished) continue;
 
@@ -1377,36 +1378,55 @@ export class Game {
         let alpha = 1 - exp.life / exp.maxLife;
         ctx.globalAlpha = Math.max(0, alpha);
 
-        const renderX = exp.x - camera.x - exp.offsetX;
-        const renderY = exp.y - camera.y - exp.offsetY;
+        const renderX = Math.round(exp.x - camera.x - exp.offsetX);
+        const renderY = Math.round(exp.y - camera.y - exp.offsetY);
 
         let frame;
-        if (exp.type === "player") frame = exp.frameEXplayer[exp.currentFrame];
-        else if (exp.type === "xilosVex")
-          frame = exp.xilosFrame[exp.currentFrame];
-        else frame = exp.frameEXenemy[exp.currentFrame];
+        if (exp.type === "player") {
+          frame = Explosion.playerFrames[exp.currentFrame];
+        } else if (exp.type === "xilosVex") {
+          frame = Explosion.xilosFrames[exp.currentFrame];
+        } else {
+          frame = Explosion.enemyFrames[exp.currentFrame];
+        }
 
-        if (frame)
-          ctx.drawImage(frame, renderX, renderY, exp.width, exp.height);
+        if (frame) {
+          ctx.drawImage(
+            frame,
+            renderX,
+            renderY,
+            Math.round(exp.width),
+            Math.round(exp.height)
+          );
+        }
         ctx.restore();
       }
     }
 
-    // ممر رسم الحطام المجمع
+    // 🛸 ممر رسم الحطام المجمع المطهّر
     if (this.debris.length > 0) {
-      for (let i = 0; i < this.debris.length; i++) {
+      const debLen = this.debris.length;
+      for (let i = 0; i < debLen; i++) {
         const deb = this.debris[i];
         if (deb.finished) continue;
 
         ctx.save();
         ctx.globalAlpha = deb.alpha;
 
-        let frame = deb.debrisFrame[deb.currentDebris];
-        const renderX = deb.x - camera.x - deb.offsetX;
-        const renderY = deb.y - camera.y - deb.offsetY;
+        // 🟢 التعديل الجوهري: القراءة مباشرة من المصفوفة الساكنة لكلاس الشظايا
+        let frame = Debris.frames[deb.currentDebris];
+        const renderX = Math.round(deb.x - camera.x - deb.offsetX);
+        const renderY = Math.round(deb.y - camera.y - deb.offsetY);
 
-        if (frame)
-          ctx.drawImage(frame, renderX, renderY, deb.width, deb.height);
+        if (frame) {
+          ctx.drawImage(
+            frame,
+            renderX,
+            renderY,
+            Math.round(deb.width),
+            Math.round(deb.height)
+          );
+        }
         ctx.restore();
       }
     }
