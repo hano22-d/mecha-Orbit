@@ -1,5 +1,4 @@
-const ROCK_IMAGE = new Image();
-ROCK_IMAGE.src = "/assets/rock2.png"; // تحميل الصورة مرة واحدة في الذاكرة العالمية
+import { assetsManager } from "../systems/AssetsManager";
 
 export class Rocks {
   constructor(canvas, x, y) {
@@ -13,7 +12,7 @@ export class Rocks {
     this.width = isMobile ? baseRandomWidth * 0.5 : baseRandomWidth;
     this.height = this.width;
 
-    this.image = ROCK_IMAGE;
+    this.image = assetsManager.getImage("rock");
     
     const baseSpeed = 0.05;
     this.speed = isMobile ? baseSpeed * 0.75 : baseSpeed;

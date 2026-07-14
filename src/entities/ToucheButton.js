@@ -9,8 +9,7 @@ export class TouchButton {
     this.radius = radius;
     this.isPressed = false;
 
-    this.image = new Image();
-    this.image.src = imageSrc;
+    this.image = imageSrc
     this.isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     // 🎨 متغيرات الشفافية

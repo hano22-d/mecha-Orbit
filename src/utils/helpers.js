@@ -1,46 +1,37 @@
-const ranks = [
-  "/assets/UI/rankIcon/ChatGPT Image 1 يونيو 2026، 08_07_57 م (1).png",
-  "/assets/UI/rankIcon/22.png",
-  "/assets/UI/rankIcon/13.png",
-  "/assets/UI/rankIcon/2-1.png",
-  "/assets/UI/rankIcon/rookie2.png",
-  "/assets/UI/rankIcon/rookie3.png",
-  "/assets/UI/rankIcon/pilot1.png",
-  "/assets/UI/rankIcon/pilot2.png",
-  "/assets/UI/rankIcon/pilot3.png",
-  "/assets/UI/rankIcon/veteran1.png",
-  "/assets/UI/rankIcon/veteran2.png",
-  "/assets/UI/rankIcon/veteran3.png",
-  "/assets/UI/rankIcon/ace1.png",
-  "/assets/UI/rankIcon/ace2.png",
-  "/assets/UI/rankIcon/ace3.png",
-  "/assets/UI/rankIcon/eliteAce1.png",
-  "/assets/UI/rankIcon/eliteAce2.png",
-  "/assets/UI/rankIcon/eliteAce3.png",
-  "/assets/UI/rankIcon/squadron1.png",
-  "/assets/UI/rankIcon/squadron2.png",
-  "/assets/UI/rankIcon/squadron3.png",
-  "/assets/UI/rankIcon/starcommander1.png",
-  "/assets/UI/rankIcon/starcommander3.png",
-  "/assets/UI/rankIcon/guardian1.png",
-  "/assets/UI/rankIcon/gua.png",
-  "/assets/UI/rankIcon/guardian3.png",
-  "/assets/UI/rankIcon/legend1.png",
-  "/assets/UI/rankIcon/legend2.png",
-  "/assets/UI/rankIcon/legend3.png",
+import { assetsManager } from "../systems/AssetsManager";
+
+// 🟢 مصفوفة المفاتيح (Keys) المرتبة تِبعاً لنفس الترتيب القديم للصور لديك
+const rankKeys = [
+  "rank1-1", "rank1-2", "rank1-3",
+  "rank2-1", "rank2-2", "rank2-3",
+  "rank3-1", "rank3-2", "rank3-3",
+  "rank4-1", "rank4-2", "rank4-3",
+  "rank5-1", "rank5-2", "rank5-3",
+  "rank6-1", "rank6-2", "rank6-3",
+  "rank7-1", "rank7-2", "rank7-3",
+  "rank8-1", "rank8-2", // هنا لديك مفتاحان فقط في هذه الفئة بناءً على مصفوفتك
+  "rank9-1", "rank9-2", "rank9-3",
+  "rank10-1", "rank10-2", "rank10-3"
 ];
 
-//دالة تحديد مستوى اللاعب
+// دالة تحديد مستوى اللاعب وتحديث واجهة المستخدم فوراً
 export function playerRank(showScore, score) {
   const pointsPerLevel = 100;
 
   const totalLevel = Math.floor(score / pointsPerLevel);
   const rankIndex = Math.floor(totalLevel);
-  const safeRankIndex = Math.min(rankIndex, ranks.length - 1);
+  const safeRankIndex = Math.min(rankIndex, rankKeys.length - 1);
 
-  const rankName = ranks[safeRankIndex];
+  // 1️⃣ جلب المفتاح المقابل لمستوى اللاعب الحالي
+  const currentRankKey = rankKeys[safeRankIndex];
 
-  showScore.src = rankName;
+  // 2️⃣ سحب كائن الصورة الجاهز فوراً من الذاكرة الرام
+  const rankImageObject = assetsManager.getImage(currentRankKey);
+
+  if (rankImageObject && showScore) {
+    // 3️⃣ تمرير الصورة المحملة مسبقاً لعنصر الواجهة ليتم عرضها بلمح البصر دون تحميل
+    showScore.src = rankImageObject.src;
+  }
 }
 
 //دالة ادارة فريمات الانيميشن

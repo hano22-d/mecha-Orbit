@@ -1,4 +1,5 @@
 import { UpdateAnimationFrame } from "../../utils/helpers";
+import { assetsManager } from "../../systems/AssetsManager";
 
 export class Boss {
   static baseFrames = [];
@@ -43,33 +44,32 @@ export class Boss {
       }  
     ];
 
-    this.imgBullet = new Image();
-    this.imgBullet.src = "/assets/weapon/laserRed08.png";
+    // 🟢 جلب صورة رصاصة الزعيم من الذاكرة مباشرة
+    this.imgBullet = assetsManager.getImage("bossBullet");
     this.color = "red";
     this.speed = 0.06;
     this.health = 300;
     this.hit = false;
     this.bulletDamage = 30;
 
-    // 🔥 الخطوة 1: تهيئة التدرج الدائري (الهالة الضوئية) مرة واحدة فقط في الـ constructor لراحة الذاكرة
+    // تهيئة التدرج الدائري (الهالة الضوئية) مرة واحدة فقط
     this.bossGlowGradient = null;
     this._initGlowGradient(canvas);
 
+    // 🟢 سحب الأصول الجاهزة وتخزينها كمتغيرات ساكنة (Static)
     if (!Boss.imagesPreloaded) {
-      Boss.baseFrames = ["/assets/bossFrame1.png", "/assets/bossFrame2.png"].map((src) => {
-        const image = new Image();
-        image.src = src;
-        return image;
-      });
+      
+      // 1️⃣ جلب فريمات الحركة الأساسية للزعيم
+      Boss.baseFrames = [
+        assetsManager.getImage("bossFrame1"),
+        assetsManager.getImage("bossFrame2")
+      ];
 
-      Boss.damageFrames = [
-        "0009", "0010", "0011", "0012", "0013", "0014", "0015", "0017", 
-        "0019", "0021", "0023", "0025", "0026", "0028", "0030", "0032", 
-        "0033", "0035", "0037", "0039", "0041", "0043", "0045", "0046"
-      ].map((num) => {
-        const image = new Image();
-        image.src = `/assets/explotionFrame/xilosexplotionFrame/${num}.png`;
-        return image;
+      // 2️⃣ جلب فريمات الضرر من الذاكرة تِبعاً لمفاتيحك الجديدة (explosionB)
+      // مصفوفتك القديمة كانت تحتوي على 24 فريم، والآن لدينا 17 فريم من نوع B
+      Boss.damageFrames = Array.from({ length: 17 }, (_, i) => {
+        const key = `explosionB${i + 1}`;
+        return assetsManager.getImage(key);
       });
 
       Boss.imagesPreloaded = true;

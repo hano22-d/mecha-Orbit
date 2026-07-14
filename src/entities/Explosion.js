@@ -1,3 +1,5 @@
+import { assetsManager } from "../systems/AssetsManager";
+
 export class Explosion {
   static enemyFrames = [];
   static playerFrames = [];
@@ -30,7 +32,7 @@ export class Explosion {
     this.offsetX = this.width / 2;
     this.offsetY = this.height / 2;
 
-    // استدعاء دالة التحميل المسبق للأصول
+    // استدعاء دالة جلب الأصول المسرعة من الذاكرة
     this._preloadAssets();
 
     // أدوات التحكم بالأنيميشن والفريمات
@@ -40,31 +42,23 @@ export class Explosion {
     this.finished = false;
   }
 
-  // دالة داخلية مقفلة لتحميل الصور في الذاكرة الساكنة لمنع تسريب الذاكرة (Memory Leaks)
-  _preloadAssets() {
+  // 🟢 دالة داخلية مطهرة بالكامل تجلب الأصول الجاهزة فوراً من الرام
+  static _preloadAssets() {
     if (!Explosion.assetsLoaded) {
-      const commonExplosionPaths = Array.from({ length: 10 }, (_, i) => 
-        `/assets/explotionFrame/enemyExFrame/Explosion_${i + 1}.png`
-      );
-
-      Explosion.enemyFrames = commonExplosionPaths.map((src) => {
-        const img = new Image();
-        img.src = src;
-        return img;
+      
+      // 1️⃣ جلب فريمات انفجار الأعداء العاديين (من 1 إلى 10)
+      Explosion.enemyFrames = Array.from({ length: 10 }, (_, i) => {
+        return assetsManager.getImage(`explosion${i + 1}`);
       });
 
-      // توجيه مرجع اللاعب لنفس مصفوفة الأعداء لأن الصور متطابقة تماماً
+      // توجيه مرجع اللاعب لنفس مصفوفة الأعداء لتوفير الذاكرة
       Explosion.playerFrames = Explosion.enemyFrames; 
 
-      // 2. فريمات انفجار الزعيم الضخم XilosVex
-      const xilosPaths = [
-        "0005", "0007", "0009", "0013", "0017", "0019", "0022", "0026", "0028", "0032", "0036", "0040"
-      ];
-
-      Explosion.xilosFrames = xilosPaths.map((num) => {
-        const img = new Image();
-        img.src = `/assets/explotionFrame/xilosexplotionFrame/explosion1_${num}.png`;
-        return img;
+      // 2️⃣ جلب فريمات انفجار الزعيم الضخم XilosVex (من 1 إلى 17)
+      Explosion.xilosFrames = Array.from({ length: 17 }, (_, i) => {
+        // معاملة خاصة للفريم الثاني بسبب تسمية المفتاح الشاذة لديك "explosionC"
+        const key = `explosionC${i + 1}`;
+        return assetsManager.getImage(key);
       });
 
       Explosion.assetsLoaded = true;

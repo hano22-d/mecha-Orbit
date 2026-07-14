@@ -1,5 +1,6 @@
+import { assetsManager } from "../systems/AssetsManager";
+
 export class Debris {
-  // 💾 ذاكرة ساكنة لحفظ مصفوفة الصور لمرة واحدة فقط ومنع التكرار والـ Lag
   static frames = [];
   static assetsLoaded = false;
 
@@ -18,7 +19,7 @@ export class Debris {
 
     this.alpha = 1;
 
-    // تحميل الصور بشكل ساكن وآمن
+    // تحميل الصور بشكل ساكن وآمن من الذاكرة الرام
     this._preloadAssets();
 
     this.currentDebris = 0;
@@ -27,22 +28,18 @@ export class Debris {
     this.finished = false;
   }
 
-  // دالة داخلية لشحن الصور داخل الـ Static Scope لمرة واحدة
-  _preloadAssets() {
+  // 🟢 دالة داخلية مطهرة لجلب الصور الجاهزة فوراً دون طلبات شبكة
+  static _preloadAssets() {
     if (!Debris.assetsLoaded) {
-      const debrisSources = [
-        "/assets/playerShip1_damage3.png",
-        "/assets/playerShip1_damage2.png",
-        "/assets/playerShip1_damage1.png",
+      // جلب الصور من الذاكرة بناءً على مفاتيحها بترتيب الضرر التنازلي
+      Debris.frames = [
+        assetsManager.getImage("debris3"), // الأكثر تضرراً
+        assetsManager.getImage("debris2"),
+        assetsManager.getImage("debris1")  // الأقل تضرراً
       ];
 
-      Debris.frames = debrisSources.map((src) => {
-        const img = new Image();
-        img.src = src;
-        return img;
-      });
-
       Debris.assetsLoaded = true;
+      console.log("💥 تم ربط فريمات الشظايا بنجاح من الذاكرة!");
     }
   }
 

@@ -1,4 +1,5 @@
 import { Particle } from "../entities/particle";
+import { assetsManager } from "../systems/AssetsManager";
 
 export class Missile {
   constructor(canvas, x, y, angle) {
@@ -23,8 +24,7 @@ export class Missile {
     ];
     this.damage = 50;
 
-    this.image = new Image();
-    this.image.src = "/assets/weapon/5c9c6832-b15e-4cab-8c4c-ed2ad41ec331.png";
+    this.image = assetsManager.getImage("missile");
 
     this.target = null;
     this.speed = 0;

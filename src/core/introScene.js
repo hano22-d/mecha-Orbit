@@ -1,6 +1,7 @@
 import { UpdateAnimationFrame } from "../utils/helpers";
 import { stateManager } from "./state";
 import { dialog } from "../ui/introUi";
+import { assetsManager } from "../systems/AssetsManager";
 
 export class IntroScene {
 
@@ -29,21 +30,23 @@ export class IntroScene {
     this.playerScale = 0.05;
     this.targetScale = 1.0; 
 
-    // 🔥 الخطوة 1: إنشاء التدرج اللوني وتخزينه كـ Cache مرة واحدة فقط لراحة المعالج
+    // 🔥 إنشاء التدرج اللوني وتخزينه كـ Cache مرة واحدة فقط لراحة المعالج
     this.spaceGradient = null;
     this._initGradient();
 
+    // 🟢 جلب الأصول المسرعة فوراً من الذاكرة الرام ومنع الـ Lag عند إقلاع المشهد
     if (!IntroScene.imagesPreloaded) {
-      IntroScene.planeImage = new Image();
-      IntroScene.planeImage.src = "/assets/player.png";
+      
+      // 1️⃣ جلب صورة الطائرة الأساسية عبر مفتاحها الثابت
+      IntroScene.planeImage = assetsManager.getImage("playerShip");
 
-      IntroScene.fireFrames = ["/assets/fire01.png", "/assets/fire02.png", "/assets/fire03.png"].map((src) => {
-        const image = new Image();
-        image.src = src;
-        return image;
+      // 2️⃣ جلب فريمات لهب المحرك الثلاثة (fire1, fire2, fire3) بنظام مصفوفة مدمج ونظيف
+      IntroScene.fireFrames = Array.from({ length: 3 }, (_, i) => {
+        return assetsManager.getImage(`fire${i + 1}`);
       });
 
       IntroScene.imagesPreloaded = true;
+      console.log("🎬 تم شحن صور وفريمات مشهد الإنترو من الذاكرة بنجاح كامل!");
     }
 
     this.fireframeSettings = {

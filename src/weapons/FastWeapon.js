@@ -1,11 +1,11 @@
 import { Weapon } from "./Weapon";
 import { Bullet } from "../entities/Bullet";
+import { assetsManager } from "../systems/AssetsManager";
 
 export class FastWeapon extends Weapon {
   constructor(...arg) {
     super(...arg);
-    this.image = new Image();
-    this.image.src = "/assets/weapon/laserGreen13.png";
+    this.image = assetsManager.getImage("fastW");
   }
 
   shoot(bullets, canvas) {

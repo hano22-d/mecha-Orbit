@@ -1,12 +1,11 @@
+import { assetsManager } from "../../systems/AssetsManager";
 import { PowerUp } from "../PowerUp";
 
-const missilePowerUpImage = new Image();
-missilePowerUpImage.src = "/assets/powerUp/missilePowerUp.png";
 
 export class MissilePowerUp extends PowerUp {
   constructor(canvas, x, y) {
     super(canvas, x, y, 70, 120); 
-    this.image = missilePowerUpImage;
+    this.image = assetsManager.getImage("missilwP");
 
     this.hitBox = [
       { 

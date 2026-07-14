@@ -1,7 +1,6 @@
+import { assetsManager } from "../../systems/AssetsManager";
+
 const HEALTH_BAR_HEIGHT = 5;
-const NORMAL_ENEMY_IMAGE = new Image();
-NORMAL_ENEMY_IMAGE.src =
-  "/assets/normalEnemy.png";
 
 export class Enemy {
   constructor({
@@ -54,7 +53,7 @@ export class Enemy {
     this.health = health;
     this.maxHealth = maxHealth;
     this.hit = false;
-    this.image = imageElement || NORMAL_ENEMY_IMAGE;
+    this.image = imageElement || assetsManager.getImage("enemyNormal");
     this.damage = 20;
     this.bulletDamage = bulletDamage;
   }

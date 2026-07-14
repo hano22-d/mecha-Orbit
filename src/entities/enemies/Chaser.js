@@ -1,7 +1,6 @@
+import { assetsManager } from "../../systems/AssetsManager";
 import { Enemy } from "./Enemy";
 
-const CHASER_IMAGE = new Image();
-CHASER_IMAGE.src = "/assets/chaser.png";
 
 export class Chaser extends Enemy {
   constructor(config) {
@@ -12,7 +11,7 @@ export class Chaser extends Enemy {
       baseHeight: 125,
       health: 30,
       maxHealth: 30,
-      imageElement: CHASER_IMAGE,
+      imageElement: assetsManager.getImage("enemyChaser"),
       bulletDamage: 10,
       
       hitBoxRatio: [

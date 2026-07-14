@@ -1,13 +1,10 @@
+import { assetsManager } from "../../systems/AssetsManager";
 import { PowerUp } from "../PowerUp";
-
-//تحميل الصورة مرة واحدة
-const healthImage = new Image();
-healthImage.src = "/assets/powerUp/powerupGreen_bolt.png";
 
 export class HealthPowerUp extends PowerUp {
   constructor(canvas,x, y) {
     super(canvas,x, y); 
-    this.image = healthImage;
+    this.image = assetsManager.getImage("healthP");
   }
 
   apply(player, gameTimer, game) {

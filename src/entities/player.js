@@ -1,5 +1,6 @@
 import { audioManager } from "../systems/SoundsSystem";
 import { UpdateAnimationFrame } from "../utils/helpers";
+import { assetsManager } from "../systems/AssetsManager";
 
 const MAX_HEALTH = 100;
 const PLANE_WIDTH = 160;
@@ -75,25 +76,25 @@ export class Player {
 
   _initAssets() {
     if (!Player.assetsLoaded) {
-      Player.missileImage = new Image();
-      Player.missileImage.src = "/assets/weapon/5c9c6832-b15e-4cab-8c4c-ed2ad41ec331.png";
+      // 1️⃣ جلب صورة الصاروخ مباشرة عبر مفتاحها (ملاحظة: تأكد من تسجيل مفتاح "missile" في شاشة التحميل)
+      Player.missileImage = assetsManager.getImage("missile");
 
-      Player.planeImg = new Image();
-      Player.planeImg.src = "/assets/player.png";
+      // 2️⃣ جلب صورة الطائرة الأساسية
+      Player.planeImg = assetsManager.getImage("playerShip");
 
-      Player.shieldFrames = Array.from({ length: 10 }, (_, i) => {
-        const img = new Image();
-        img.src = `/assets/powerUp/0${i}.png`;
-        return img;
+      // 3️⃣ جلب فريمات درع الحماية (Sheild) الـ 11 الجاهزة من الذاكرة
+      // قمنا بتعديل الـ Loop ليبدأ من 1 إلى 11 ليتطابق مع المفاتيح المرفوعة (sheildFrame1 إلى sheildFrame11)
+      Player.shieldFrames = Array.from({ length: 11 }, (_, i) => {
+        return assetsManager.getImage(`sheildFrame${i + 1}`);
       });
 
-      Player.fireFrames = ["fire01.png", "fire02.png", "fire03.png"].map((src) => {
-        const img = new Image();
-        img.src = `/assets/${src}`;
-        return img;
+      // 4️⃣ جلب فريمات لهب المحرك (Fire) الثلاثة الجاهزة (fire1, fire2, fire3)
+      Player.fireFrames = Array.from({ length: 3 }, (_, i) => {
+        return assetsManager.getImage(`fire${i + 1}`);
       });
 
       Player.assetsLoaded = true;
+      console.log("🛸 تم ربط صور الطائرة وملحقاتها من الذاكرة بنجاح!");
     }
   }
 

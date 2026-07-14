@@ -1,0 +1,80 @@
+#loading-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #0d1b2a 0%, #010811 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* لضمان ظهورها فوق الكانفاس دائماً */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.8s ease, visibility 0.8s ease; /* تأثير تلاشي ناعم وانتقال ذكي */
+  }
+  /* الحاوية المركزية للعناصر */
+  .loading-container {
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+  }
+  
+  /* عنوان اللعبة الفخم */
+  .game-title {
+    color: #00f0ff;
+    font-size: 3rem;
+    letter-spacing: 5px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+    animation: pulse 2s infinite alternate; /* حركة نبض بصري للعنوان */
+  }
+  
+  /* الحاوية الخارجية للشريط */
+  .progress-bar-container {
+    width: 100%;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* شريط التحميل الداخلي المتحرك */
+  #progress-bar {
+    width: 0%; /* سيتغير برمجياً عبر الـ JS من 0 إلى 100 */
+    height: 100%;
+    background: linear-gradient(90deg, #0077b6, #00f0ff);
+    box-shadow: 0 0 15px #00f0ff;
+    border-radius: 6px;
+    transition: width 0.1s ease; /* تجعل حركة امتلاء الشريط ناعمة جداً */
+  }
+  
+  /* النصوص المرافقة (الحالة والنسبة) */
+  .loading-status {
+    display: flex;
+    justify-content: space-between;
+    color: #e0e1dd;
+    font-size: 0.9rem;
+    margin-top: 12px;
+    direction: rtl; /* لتنسيق الكلمات العربية */
+  }
+  
+  #loading-percentage {
+    color: #00f0ff;
+    font-weight: bold;
+  }
+  
+ .hide {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important; /* يمنع الشاشة بعد التلاشي من حجب النقرات عن اللعبة والكانفاس */
+  }
+  
+  /* أنيميشن نبض العنوان الفضائي */
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.03); opacity: 1; }
+  }

@@ -1,11 +1,15 @@
 import { Weapon } from "./Weapon";
 import { Bullet } from "../entities/Bullet";
+import { assetsManager } from "../systems/AssetsManager";
+
+// 🛑 قمنا بحذف السطر القديم من هنا لمنع جلبه قبل اكتمال التحميل
 
 export class NormalWeapon extends Weapon {
   constructor(...arg) {
     super(...arg);
-    this.image = new Image();
-    this.image.src = "/assets/weapon/laserBlue06.png";
+    // 🟢 نجلب الصورة هنا داخل الباني (Constructor) 
+    // لأن الباني لا يُستدعى إلا بعد انتهاء شاشة التحميل وبدء اللعبة، مما يضمن وجود الصورة!
+    this.image = assetsManager.getImage("normalW");
   }
 
   shoot(bullets, canvas) {
@@ -47,9 +51,9 @@ export class NormalWeapon extends Weapon {
         y: spawnY,
         velocityX: velocityX,
         velocityY: velocityY,
-        width: bulletW,  
-        height: bulletH, 
-        image: this.image,
+        width: bulletW,
+        height: bulletH,
+        image: this.image, // 🟢 ستمرر الصورة الآن ككائن HTMLImageElement سليم تماماً!
         damage: 10,
         angle: fireAngle,
       })

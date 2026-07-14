@@ -1,4 +1,4 @@
-// Game.js - الدفعة الأولى (المطهرة)
+// Game.js - النسخة المطهرة مع شاشة التحميل
 import { Player } from "../entities/player";
 import { Enemy } from "../entities/enemies/Enemy";
 import { Chaser } from "../entities/enemies/Chaser";
@@ -23,6 +23,10 @@ import { Rocks } from "../entities/rocks";
 import { gameOverUi } from "../ui/gameOver";
 import { TouchButton } from "../entities/ToucheButton";
 
+// 🟢 استيراد مدير الأصول المشترك
+import { LoadingScene } from "../ui/loading";
+import { assetsManager } from "../systems/AssetsManager";
+
 export class Game {
   constructor(canvas, ctx, bgCanvas, bgCtx) {
     // أدوات الرسم
@@ -34,10 +38,12 @@ export class Game {
     window.gameInstance = this;
     this.gameTimer = 0;
 
-    // 🛸 الكائنات النشطة (تحتوي على اللاعب والمصفوفات الحركية)
-    this.player = new Player(this.myCanvas);
+    // 🔒 متغير منطقي لمنع تحديث اللعبة حتى ينتهي التحميل تماماً
+    this.isGameReady = false;
 
-    // 🧠 تأجيل إنشاء الزعيم لتوظيف طاقة المعالج (نضعه null الآن)
+    // 🛸 الكائنات الحركية (تجهيز المتغيرات فارغة، وسيتم إنشاؤها فور انتهاء التحميل)
+    this.player = null;
+    this.background = null;
     this.boss = null;
 
     this.enemies = [];
@@ -49,19 +55,17 @@ export class Game {
     this.missile = [];
     this.rocks = [];
 
-    // مؤقتات ت spawning
+    // مؤقتات الـ spawning
     this.lastEnemy = 0;
     this.enemyDelay = 2000;
-
     this.lastPowerUp = 0;
     this.powerDelay = 10000;
-
     this.lastRock = 0;
     this.rockDelay = 7000;
 
     this.shieldActive = false;
 
-    // نظام النقاط والعملات (Economy System)
+    // نظام النقاط والعملات
     this.score = 0;
     this.credits = 0;
 
@@ -69,44 +73,49 @@ export class Game {
     this.bulletsFired = 0;
     this.bulletsColision = 0;
     this.combo = 0;
-    this.enemyType = {
-      normal: 0,
-      chaser: 0,
-      dodger: 0,
-      shooter: 0,
-    };
+    this.enemyType = { normal: 0, chaser: 0, dodger: 0, shooter: 0 };
 
-    // متحكمات مرحلة مواجهة زعيم اللعبة (Boss Phase)
+    // متحكمات الزعيم
     this.remainingTimeBoss = 0;
     this.bossStart = false;
     this.bossMusicPlayed = false;
-
     this.bossArenaX = null;
     this.bossArenaY = null;
 
-    // تأثيرات الكاميرا والاهتزاز
+    // تأثيرات الكاميرا
     this.camera = { x: 0, y: 0 };
     this.shake = { power: 0, duration: 0 };
     this.flash = { alpha: 0, color: "white" };
 
-    // توليد الخلفية اعتماداً على كود الكانفاس المنطقي النظيف
-    this.background = new Background(this.bgCanvas, this.camera);
-
     // مصفوفة تخزين الأزرار الافتراضية للموبايل
     this.touchButtons = [];
-    this.initTouchControls();
 
-    // 🛡️ معالجة الـ Resize بأمان حركي لمنع تسريب الذاكرة (Memory Leaks)
+    // معالجة الـ Resize بأمان
     this._resizeHandler = () => this.handleResize();
     window.addEventListener("resize", this._resizeHandler);
+
+    const loadingScene = new LoadingScene(() => {
+      // هذه الدالة ستقوم شاشة التحميل بمناداتها فوراً عند وصول العداد لـ 100%
+      this.player = new Player(this.myCanvas);
+      this.background = new Background(this.bgCanvas, this.camera);
+      this.isGameReady = true; // انطلاق الـ Game Loop!
+
+      stateManager.setState("menu")
+
+      this.initTouchControls();
+    });
+
+    loadingScene.start(); // انطلق!
   }
 
-  // دالة تدميرية اختيارية لاستدعائها عند إغلاق اللعبة لضمان تنظيف المتصفح بالكامل
   destroy() {
     window.removeEventListener("resize", this._resizeHandler);
   }
 
   update(input, time, deltaTime) {
+    
+    if (stateManager.getState() === "loading") return;
+
     this.gameTimer += deltaTime;
 
     if (this.gameTimer > 240000 && !this.bossStart) {
@@ -134,12 +143,10 @@ export class Game {
       this.player.weaponProgressEffect = 0;
     }
 
-    // == اعدادات تثبيت الكاميرا والموسيقى مع بداية البوس ==//
     this.handleCameraAndBossPhase();
 
-    // تحديث الخلفية واللاعب بناءً على الأبعاد المنطقية
+    // تحديث الخلفية واللاعب
     this.background.update(this.camera);
-
     this.player.update(
       input.keys,
       deltaTime,
@@ -158,7 +165,6 @@ export class Game {
       this.boss.update(time, deltaTime, this);
     }
 
-    // تحديث بقية عناصر اللعبة
     this.updateEnemyBullets(this.myCanvas, this.camera);
     this.updatePowerUp(this.gameTimer);
     this.updateExplosion(deltaTime);
@@ -166,7 +172,6 @@ export class Game {
     this.updateMissile(input, time, deltaTime);
     this.updateRocks(this.gameTimer, deltaTime);
 
-    // تحديث أزرار الموبايل إن وجدت
     if (this.touchButtons.length > 0) {
       const len = this.touchButtons.length;
       for (let i = 0; i < len; i++) {
@@ -174,10 +179,7 @@ export class Game {
       }
     }
 
-    // معالجة التصادمات لواجهة اللعب
     this.handleCollisions(this.gameTimer);
-
-    // تحديث الـ HUD بناءً على واجهة الأبعاد المنطقية المستقرة
     hud.update(this, this.myCanvas);
   }
 
@@ -1239,7 +1241,7 @@ export class Game {
       new TouchButton({
         canvas: this.myCanvas,
         type: "JOY_BASE",
-        imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_52_23 م.png",
+        imageSrc: assetsManager.getImage("baseG"),
         relativeX: joyX,
         relativeY: joyY,
         radius: joyRadius,
@@ -1250,7 +1252,7 @@ export class Game {
       new TouchButton({
         canvas: this.myCanvas,
         type: "JOY_KNOB",
-        imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_50_08 م.png",
+        imageSrc: assetsManager.getImage("knobG"),
         relativeX: joyX,
         relativeY: joyY - 5,
         radius: joyRadius * 0.5, // المقبض نصف حجم القاعدة
@@ -1261,7 +1263,7 @@ export class Game {
       new TouchButton({
         canvas: this.myCanvas,
         type: "SHOOT",
-        imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_33_51 م.png",
+        imageSrc: assetsManager.getImage("bulletButton"),
         relativeX: shootX,
         relativeY: shootY,
         radius: btnRadius,
@@ -1272,7 +1274,7 @@ export class Game {
       new TouchButton({
         canvas: this.myCanvas,
         type: "MISSILE",
-        imageSrc: "/assets/UI/ChatGPT Image 9 يوليو 2026، 09_39_11 م.png",
+        imageSrc: assetsManager.getImage("missileButton"),
         relativeX: missileX,
         relativeY: missileY,
         radius: btnRadius * 0.8,

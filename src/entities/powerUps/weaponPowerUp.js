@@ -1,16 +1,14 @@
 import { PowerUp } from "../PowerUp";
 import { FastWeapon } from "../../weapons/FastWeapon";
 import { HeavyWeapon } from "../../weapons/HeavyWeapon";
-
-const weaponPowerUpImage = new Image();
-weaponPowerUpImage.src = "/assets/powerUp/things_gold.png";
+import { assetsManager } from "../../systems/AssetsManager";
 
 const WEAPON_DURATION = 5000; // مدة السلاح الخارق
 
 export class WeaponPowerUp extends PowerUp {
   constructor(canvas,x, y) {
     super(canvas,x, y);
-    this.image = weaponPowerUpImage;
+    this.image = assetsManager.getImage("weaponP");
   }
 
   apply(player, gameTimer, game) {

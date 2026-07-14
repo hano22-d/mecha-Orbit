@@ -1,14 +1,12 @@
+import { assetsManager } from "../../systems/AssetsManager";
 import { PowerUp } from "../PowerUp";
-
-const shieldImage = new Image();
-shieldImage.src = "/assets/powerUp/shield_bronze.png";
 
 const SHIELD_DURATION = 5000; // مدة الدرع
 
 export class ShieldPowerUp extends PowerUp {
   constructor(canvas,x, y) {
     super(canvas,x, y);
-    this.image = shieldImage;
+    this.image = assetsManager.getImage("sheildP");
   }
 
   apply(player, gameTimer, game) {

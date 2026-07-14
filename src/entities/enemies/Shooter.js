@@ -1,11 +1,6 @@
+import { assetsManager } from "../../systems/AssetsManager";
 import { Enemy } from "./Enemy";
 
-const SHOOTER_IMAGE = new Image();
-SHOOTER_IMAGE.src =
-  "/assets/shooter.png";
-
-const SHOOTER_BULLET_IMAGE = new Image();
-SHOOTER_BULLET_IMAGE.src = "/assets/weapon/02.png";
 
 //shooter Enemy class
 export class Shooter extends Enemy {
@@ -17,7 +12,7 @@ export class Shooter extends Enemy {
       health: 50,
       maxHealth: 50,
       bulletDamage: 10,
-      imageElement: SHOOTER_IMAGE,
+      imageElement: assetsManager.getImage("enemyShooter"),
       
       hitBoxRatio: [
         { wRatio: 0.2,   hRatio: 0.771, oxRatio: 0.4,   oyRatio: 0.114 }, // المربع الرأسي الرئيسي (35/175, 135/175, 70/175, 20/175)
@@ -31,7 +26,7 @@ export class Shooter extends Enemy {
     this.attackRange = isMobile ? 200 : 300;
     this.lastShoot = 0;
     this.shootDelay = 2000;
-    this.imgBullet = SHOOTER_BULLET_IMAGE;
+    this.imgBullet = assetsManager.getImage("enemyW");
   }
 
   update(time, deltaTime, game, camera) {

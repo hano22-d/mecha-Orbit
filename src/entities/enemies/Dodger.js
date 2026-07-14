@@ -1,8 +1,7 @@
+import { assetsManager } from "../../systems/AssetsManager";
 import { Enemy } from "./Enemy";
 
-const DODGER_IMAGE = new Image();
-DODGER_IMAGE.src =
-  "/assets/dodger.png";
+
 
 export class Dodger extends Enemy {
   constructor(config) {
@@ -12,7 +11,7 @@ export class Dodger extends Enemy {
       baseHeight: 170,
       health: 20,
       maxHealth: 20,
-      imageElement: DODGER_IMAGE,
+      imageElement: assetsManager.getImage("enemyDodger"),
       bulletDamage: 10,
       
       hitBoxRatio: [

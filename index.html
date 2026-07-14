@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="project/win.css" />
     <link rel="stylesheet" href="project/gameOver.css" />
     <link rel="stylesheet" href="project/pause.css" />
+    <link rel="stylesheet" href="project/loading.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--خط اللعبة لاساسي-->
@@ -32,6 +33,22 @@
   </head>
   <body>
     <div class="gameContainer">
+
+      <!--Loading screen-->
+      <div id="loading-screen">
+        <div class="loading-container">
+          <h1 class="game-title">MECHA-ORBIT</h1>
+          
+          <div class="progress-bar-container">
+            <div id="progress-bar"></div>
+          </div>
+          
+          <div class="loading-status">
+            <span id="loading-text">جاري شحن محركات الليزر...</span>
+            <span id="loading-percentage">0%</span>
+          </div>
+        </div>
+      </div>
       
       <canvas id="backgroundCanvas"></canvas>
       <canvas id="myCanvas"></canvas>
@@ -235,7 +252,7 @@
         <div class="main">
           <img
             class="imageMenu"
-            src="/assets/UI/5 يوليو 2026، 09_13_26 م (1).png"
+            src="/assets/UI/menuImage.png"
             alt=""
           />
           <div class="mainList">
