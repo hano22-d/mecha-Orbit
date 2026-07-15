@@ -14,12 +14,11 @@ export class LoadingScene {
 
     // الجمل العشوائية التشويقية
     this.hints = [
-      "جاري فحص أنظمة الدفع النفاث...",
-      "جاري شحن ليزر البلازما المتطور...",
-      "جاري استدعاء إحداثيات الزعيم XilosVex...",
-      "جاري تهيئة كبسولات الطاقة والدروع البصرية...",
+      "Calibrating thruster propulsion systems...",
+      "Charging advanced plasma lasers...",
+      "Triangulating boss XilosVex coordinates...",
+      "Initializing energy cores and optical shields...",
     ];
-
     // قائمة الأصول المركزية الخاصة باللعبة
 
     // 📋 مصفوفة البيانات المركزية لجميع صور اللعبة (سهلة التعديل والإضافة مستقبلاً)

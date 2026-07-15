@@ -33,7 +33,7 @@ export class Explosion {
     this.offsetY = this.height / 2;
 
     // استدعاء دالة جلب الأصول المسرعة من الذاكرة
-    this._preloadAssets();
+    Explosion._preloadAssets();
 
     // أدوات التحكم بالأنيميشن والفريمات
     this.currentFrame = 0;

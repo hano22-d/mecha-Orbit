@@ -20,7 +20,7 @@ export class Debris {
     this.alpha = 1;
 
     // تحميل الصور بشكل ساكن وآمن من الذاكرة الرام
-    this._preloadAssets();
+    Debris._preloadAssets();
 
     this.currentDebris = 0;
     this.debrisTimer = 0;

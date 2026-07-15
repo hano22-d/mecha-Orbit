@@ -9,6 +9,8 @@ export function menu(stateManager, game) {
   const startGamebtn = document.getElementById("btn");
   const rank = document.getElementById("rank-name");
 
+  const playyes = document.getElementById("playYES");
+
   let lastTotalScore = localStorage.getItem("totalScore") || 0;
 
   totalScore.textContent = lastTotalScore;
@@ -16,6 +18,10 @@ export function menu(stateManager, game) {
   credits.textContent = localStorage.getItem("credits") || 0;
 
   playerRank(rank, lastTotalScore); //دالة حساب الشارة الحالية
+
+  playyes.addEventListener("click", () => {
+    enterFullScreen()
+  })
 
   startGamebtn.addEventListener("click", () => {
     enterFullScreen()

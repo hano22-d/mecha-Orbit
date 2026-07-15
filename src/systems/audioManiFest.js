@@ -9,8 +9,8 @@ export function initAllGameSounds() {
   audioManager.registerSound("bossSound", assetsManager.getSound("zilosBgSound"));
   audioManager.registerSound("bossSentance", assetsManager.getSound("zilos"));
   audioManager.registerSound("explotionXilos1", assetsManager.getSound("bossExp"));
-  audioManager.registerSound("explotionXilos2", assetsManager.getSound("bossExp"));
   audioManager.registerSound("missileSound", assetsManager.getSound("missileSound"));
+  audioManager.registerSound("playerExp",assetsManager.getSound("playerExp"))
   audioManager.registerSound("explosionEnemy", assetsManager.getSound("bossExp")); 
   audioManager.registerSound("damageSound", assetsManager.getSound("playerHit"));
   audioManager.registerSound("powerUp", assetsManager.getSound("powerUps"));
@@ -23,6 +23,4 @@ export function initAllGameSounds() {
   // 🟢 ثانياً: ربط الأصوات المتكررة (Pools) بلمسة واحدة
   audioManager.registerPoolSound("fire", assetsManager.getSound("bulletPlayer"), 10);
   audioManager.registerPoolSound("EnemyWeapon", assetsManager.getSound("bulletEnemy"), 10);
-
-  console.log("🔊 نظام الأصوات المطور جاهز للعمل بالكامل من الذاكرة الرام!");
 }

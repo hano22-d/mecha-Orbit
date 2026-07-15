@@ -5,13 +5,13 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  /* 🟢 استبدل المسار أدناه بمسار الصورة الجديدة التي قمت بتوليدها وحفظها في مشروعك */
-  background: url('/assets/UI/ChatGPT Image 14 يوليو 2026، 11_20_07 م.png') no-repeat center center;
+  background: url("/assets/UI/ChatGPT Image 14 يوليو 2026، 11_20_07 م (1).png")
+    no-repeat center center;
   background-size: cover;
   display: flex;
   justify-content: center;
-  align-items: flex-end; /* وضع الحاوية في الأسفل لكي لا تغطي على الطائرة واسم اللعبة في المنتصف */
-  padding-bottom: 5vh;  /* ترك مسافة أمان صغيرة من الحافة السفلية */
+  align-items: flex-end;
+  padding-bottom: 5vh;
   z-index: 9999;
   transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
 }
@@ -26,14 +26,21 @@
 .loading-container {
   width: 80%;
   max-width: 600px;
-  background: rgba(10, 10, 25, 0.6); /* خلفية داكنة نصف شفافة تدمجها مع السديم */
-  backdrop-filter: blur(8px);       /* تأثير زجاجي ضبابي حديث */
+  background: rgba(
+    10,
+    10,
+    25,
+    0.6
+  ); /* خلفية داكنة نصف شفافة تدمجها مع السديم */
+  backdrop-filter: blur(8px); /* تأثير زجاجي ضبابي حديث */
   -webkit-backdrop-filter: blur(8px);
   padding: 15px 25px;
   border-radius: 12px;
   border: 1px solid rgba(0, 240, 255, 0.2); /* إطار متوهج أزرق خفيف جداً */
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
+  margin-bottom: 7rem;
+  letter-spacing: 1px;
 }
 
 /* حاوية شريط التقدم */
@@ -51,7 +58,11 @@
 #progress-bar {
   height: 100%;
   width: 0%; /* يتغير برمجياً بواسطة JS */
-  background: linear-gradient(90deg, #ff7b00, #00f0ff); /* تدرج ألوان رائع من البرتقالي للأزرق النيون */
+  background: linear-gradient(
+    90deg,
+    #ff7b00,
+    #00f0ff
+  ); /* تدرج ألوان رائع من البرتقالي للأزرق النيون */
   box-shadow: 0 0 10px rgba(0, 240, 255, 0.8); /* توهج ليزري للشريط */
   transition: width 0.1s linear;
   border-radius: 5px;
@@ -62,7 +73,6 @@
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
   color: #e0e0ff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); /* تباين قوي للقراءة فوق أي سديم ملون */
@@ -78,7 +88,7 @@
 /* دعم شاشات الهواتف الصغيرة في الوضع الأفقي */
 @media (max-height: 450px) {
   .loading-container {
-    width: 90%;
+    width: 70%;
     padding: 10px 15px;
   }
   .progress-bar-container {

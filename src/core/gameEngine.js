@@ -38,9 +38,6 @@ export class Game {
     window.gameInstance = this;
     this.gameTimer = 0;
 
-    // 🔒 متغير منطقي لمنع تحديث اللعبة حتى ينتهي التحميل تماماً
-    this.isGameReady = false;
-
     // 🛸 الكائنات الحركية (تجهيز المتغيرات فارغة، وسيتم إنشاؤها فور انتهاء التحميل)
     this.player = null;
     this.background = null;
@@ -95,14 +92,12 @@ export class Game {
     window.addEventListener("resize", this._resizeHandler);
 
     const loadingScene = new LoadingScene(() => {
-      // هذه الدالة ستقوم شاشة التحميل بمناداتها فوراً عند وصول العداد لـ 100%
       this.player = new Player(this.myCanvas);
       this.background = new Background(this.bgCanvas, this.camera);
-      this.isGameReady = true; // انطلاق الـ Game Loop!
+      this.isGameReady = true;
+      this.initTouchControls();
 
       stateManager.setState("menu")
-
-      this.initTouchControls();
     });
 
     loadingScene.start(); // انطلق!
@@ -113,7 +108,7 @@ export class Game {
   }
 
   update(input, time, deltaTime) {
-    
+
     if (stateManager.getState() === "loading") return;
 
     this.gameTimer += deltaTime;
@@ -1006,7 +1001,6 @@ export class Game {
 
     // تشغيل أصوات الانفجار الملحمية
     audioManager.play("explotionXilos1");
-    audioManager.play("explotionXilos2");
 
     // تأخير الانتقال لشاشة الفوز بأمان
     setTimeout(() => {

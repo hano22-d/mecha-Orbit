@@ -346,8 +346,7 @@ export class Player {
 
   delete() {
     this.alive = false;
-    audioManager.loadSound("expolsionPlayerSound", "/assets/audio/cannon_hit.ogg");
-    audioManager.play("expolsionPlayerSound");
+    audioManager.play("playerExp");
   }
 
   getMissileLaunchPositions() {
