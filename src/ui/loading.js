@@ -6,6 +6,8 @@ export class LoadingScene {
   constructor(onCompleteCallback) {
     this.onCompleteCallback = onCompleteCallback;
 
+    this.isStarted = false
+
     // الإمساك بعناصر الـ HTML مرة واحدة فقط عند البناء
     this.progressBar = document.getElementById("progress-bar");
     this.loadingPercentage = document.getElementById("loading-percentage");
@@ -367,33 +369,38 @@ export class LoadingScene {
         src: "/assets/audio/xailosVex.mp3",
       },
     ];
+
   }
 
-  // دالة تشغيل خط إنتاج التحميل
-  start(canvas) {
+ // داخل كلاس LoadingScene
+ start(canvas) {
+  // 🟢 حارس 1: إذا بدأ التحميل بالفعل، لا تفعل شيئاً
+  if (this.isStarted) return; 
 
-    if (canvas.logicalWidth < 500) return
-    // 1. تسجيل الصور تلقائياً
-    const imagesLen = this.gameImages.length;
-    for (let i = 0; i < imagesLen; i++) {
-      assetsManager.queueImage(this.gameImages[i].key, this.gameImages[i].src);
-    }
+  // 🟢 حارس 2: إذا كانت الأبعاد عمودية (أصغر من 500 مثلاً)، نخرج ولا نبدأ التحميل
+  if (canvas.logicalWidth < 500) return;
 
-    // 2. تسجيل الأصوات تلقائياً
-    const soundsLen = this.gameSounds.length;
-    for (let i = 0; i < soundsLen; i++) {
-      assetsManager.queueSound(this.gameSounds[i].key, this.gameSounds[i].src);
-    }
+  // بمجرد عبور الحراس، نعلن بدء عملية التحميل
+  this.isStarted = true;
 
-    // 3. إطلاق عملية التحميل الفعلي
-    assetsManager.startLoading(
-      // الـ Callback الخاص بالتقدم وتحديث الـ DOM
-      (percentage) => this.updateUI(percentage),
-
-      // الـ Callback الخاص بالانتهاء والتلاشي
-      () => this.finish()
-    );
+  // 1. تسجيل الصور تلقائياً
+  const imagesLen = this.gameImages.length;
+  for (let i = 0; i < imagesLen; i++) {
+    assetsManager.queueImage(this.gameImages[i].key, this.gameImages[i].src);
   }
+
+  // 2. تسجيل الأصوات تلقائياً
+  const soundsLen = this.gameSounds.length;
+  for (let i = 0; i < soundsLen; i++) {
+    assetsManager.queueSound(this.gameSounds[i].key, this.gameSounds[i].src);
+  }
+
+  // 3. إطلاق عملية التحميل الفعلي
+  assetsManager.startLoading(
+    (percentage) => this.updateUI(percentage),
+    () => this.finish()
+  );
+}
 
   // تحديث عناصر الـ HTML برمجياً بشكل مستقل وخارج كلاس الـ Game
   updateUI(percentage) {

@@ -91,7 +91,7 @@ export class Game {
     this._resizeHandler = () => this.handleResize();
     window.addEventListener("resize", this._resizeHandler);
 
-    const loadingScene = new LoadingScene(() => {
+    this.loadingScene = new LoadingScene(() => {
       this.player = new Player(this.myCanvas);
       this.background = new Background(this.bgCanvas, this.camera);
       this.isGameReady = true;
@@ -100,7 +100,7 @@ export class Game {
       stateManager.setState("menu");
     });
 
-    loadingScene.start(this.myCanvas);
+    this.loadingScene.start(this.myCanvas);
   }
 
   destroy() {
@@ -1193,19 +1193,25 @@ export class Game {
   }
 
   // 📱 2️⃣ دالة الاستجابة عند تغير أبعاد الكانفاس (مثل قلب الهاتف أو تغيير حجم المتصفح)
-  handleResize() {
-    // إجبار اللاعب على إعادة فحص حدوده فوراً بناءً على الأبعاد الجديدة بشرط أن يكون حياً
-    if (this.player && this.player.alive) {
-      if (typeof this.player._constrainMovement === "function") {
-        this.player._constrainMovement(this.camera, this.myCanvas);
-      }
-    }
-
-    // إعادة حساب مواقع الأزرار اللمسية ديناميكياً لتتبع الزوايا الجديدة فوراً
-    if (typeof this.initTouchControls === "function") {
-      this.initTouchControls();
+handleResize() {
+  // إجبار اللاعب على إعادة فحص حدوده فوراً بناءً على الأبعاد الجديدة بشرط أن يكون حياً
+  if (this.player && this.player.alive) {
+    if (typeof this.player._constrainMovement === "function") {
+      this.player._constrainMovement(this.camera, this.myCanvas);
     }
   }
+
+  // إعادة حساب مواقع الأزرار اللمسية ديناميكياً لتتبع الزوايا الجديدة فوراً
+  if (typeof this.initTouchControls === "function") {
+    this.initTouchControls();
+  }
+
+  // 🟢 الإضافة الذهبية الجديدة:
+  // إذا كانت شاشة التحميل موجودة ولم تبدأ بعد، نأمرها بالتحقق والبدء فوراً بمجرد تدوير الشاشة!
+  if (this.loadingScene && typeof this.loadingScene.start === "function") {
+    this.loadingScene.start(this.myCanvas);
+  }
+}
 
   //دالة توليد الازرار
   initTouchControls() {
