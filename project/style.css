@@ -54,7 +54,7 @@ img:not([src]), img[src=""] {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #05050a; /* لون مستقبلي غامق متناسق مع اللعبة */
+  background-color: #35240f; /* لون مستقبلي غامق متناسق مع اللعبة */
   z-index: 9999; /* للتأكد من أنها فوق الكانفاس وفوق كل شيء */
   color: #fff;
   justify-content: center;
@@ -71,10 +71,24 @@ img:not([src]), img[src=""] {
   margin-bottom: 15px;
 }
 
+#playYES {
+border: 1px solid #00ff66;
+border-radius: 5px ;
+padding: 10px;
+font-family: 'Courier New', Courier, monospace;
+font-weight: 600;
+font-size: 16px;
+color: #9be8ff;
+
+}
+
 /* السحر هنا: إذا كانت الشاشة في الوضع العمودي (الطولي) على الموبايل */
 @media (orientation: portrait) and (max-width: 1024px) {
   #orientation-warning {
     display: flex; /* تظهر الرسالة فوراً وتغطي الشاشة */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 }
 
