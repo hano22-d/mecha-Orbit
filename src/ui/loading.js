@@ -370,7 +370,9 @@ export class LoadingScene {
   }
 
   // دالة تشغيل خط إنتاج التحميل
-  start() {
+  start(canvas) {
+
+    if (canvas.logicalWidth < 500) return
     // 1. تسجيل الصور تلقائياً
     const imagesLen = this.gameImages.length;
     for (let i = 0; i < imagesLen; i++) {
