@@ -2,7 +2,6 @@ import { InputsHandle } from "../src/systems/InputHandler";
 import { Game } from "../src/core/gameEngine";
 import { stateManager } from "../src/core/state";
 import { IntroScene } from "../src/core/introScene";
-import { initAllGameSounds } from "../src/systems/audioManiFest";
 import { setupAudioAndEnvironment } from "../src/systems/gameAudioContruller";
 import { initAllGameUI } from "../src/systems/UiManager";
 import { myCanvas, bgCanvas, ctx, bgCtx } from "../src/systems/canvasManager";
@@ -11,9 +10,6 @@ export const game = new Game(myCanvas, ctx, bgCanvas, bgCtx, stateManager);
 const input = new InputsHandle(myCanvas, game.touchButtons);
 const intro = new IntroScene(myCanvas, ctx);
 
-//=== توليد جميع اصوات اللعبة ===//
-initAllGameSounds();
-// ===============================//
 
 // === دالة تشغيل اصوات الخلفية + ادارة حالة اغلاق التبويب === //
 setupAudioAndEnvironment(stateManager);

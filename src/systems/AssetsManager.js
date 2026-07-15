@@ -10,6 +10,17 @@ export class AssetsManager {
     this.onCompleteCallback = null; // دالة نخبر بها اللعبة أن التحميل انتهى تماماً
   }
 
+  // 🟢 دالة التطهير والتصفير الجديدة لمنع تراكم الأصول أو التضارب عند إعادة التشغيل
+  reset() {
+    this.images = {};
+    this.sounds = {};
+    this.totalAssets = 0;
+    this.loadedAssets = 0;
+    this.onProgressCallback = null;
+    this.onCompleteCallback = null;
+    console.log("🔄 تم إعادة تهيئة وتصفير مدير الأصول بنجاح.");
+  }
+
   // 1️⃣ دالة لتسجيل المسارات قبل بدء التحميل
   queueImage(key, src) {
     this.images[key] = { src: src, item: null };
@@ -103,16 +114,13 @@ export class AssetsManager {
 
   // التحقق من وصول نسبة التحميل إلى مرحلة النهاية الآمنة
   _checkCompletion() {
-    // 🟢 حل وقائي: إذا وصلنا لـ 98% أو أعلى، نعتبر اللعبة جاهزة لتجنب قيود المتصفح على الأصوات
     const completionRate = this.loadedAssets / this.totalAssets;
 
     if (this.loadedAssets >= this.totalAssets || completionRate >= 0.98) {
       if (this.onCompleteCallback) {
-        // فك الارتباط لضمان عدم تكرار الاستدعاء
         const callback = this.onCompleteCallback;
         this.onCompleteCallback = null;
 
-        // ننتظر لمحة بصرية بسيطة (200 مللي ثانية) لضمان اكتمال حركة الـ Progress Bar بصرياً أمام اللاعب
         setTimeout(() => {
           callback();
         }, 200);
@@ -130,5 +138,4 @@ export class AssetsManager {
   }
 }
 
-// تصدير نسخة موحدة وجاهزة للاستخدام في كل ملفات المشروع (Singleton Pattern)
 export const assetsManager = new AssetsManager();

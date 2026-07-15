@@ -1,6 +1,7 @@
 import { assetsManager } from "../systems/AssetsManager.js";
 import { Explosion } from "../entities/Explosion.js";
 import { Debris } from "../entities/Debris.js";
+import { initAllGameSounds } from "../systems/audioManiFest.js";
 
 export class LoadingScene {
   constructor(onCompleteCallback) {
@@ -372,33 +373,42 @@ export class LoadingScene {
 
   }
 
- // داخل كلاس LoadingScene
- start(canvas) {
-  // 🟢 حارس 1: إذا بدأ التحميل بالفعل، لا تفعل شيئاً
-  if (this.isStarted) return; 
-
-  // 🟢 حارس 2: إذا كانت الأبعاد عمودية (أصغر من 500 مثلاً)، نخرج ولا نبدأ التحميل
+start(canvas) {
+  if (this.isStarted) return;
   if (canvas.logicalWidth < 500) return;
 
-  // بمجرد عبور الحراس، نعلن بدء عملية التحميل
   this.isStarted = true;
 
-  // 1. تسجيل الصور تلقائياً
+  // 🟢 خطوة 1: تصفير مدير الأصول تماماً لتجنب تراكم العدادات
+  assetsManager.reset(); 
+
+  // خطوة 2: تسجيل الصور
   const imagesLen = this.gameImages.length;
   for (let i = 0; i < imagesLen; i++) {
     assetsManager.queueImage(this.gameImages[i].key, this.gameImages[i].src);
   }
 
-  // 2. تسجيل الأصوات تلقائياً
+  // خطوة 3: تسجيل الأصوات
   const soundsLen = this.gameSounds.length;
   for (let i = 0; i < soundsLen; i++) {
     assetsManager.queueSound(this.gameSounds[i].key, this.gameSounds[i].src);
   }
 
-  // 3. إطلاق عملية التحميل الفعلي
+  // خطوة 4: إطلاق عملية التحميل الفعلي
   assetsManager.startLoading(
     (percentage) => this.updateUI(percentage),
-    () => this.finish()
+    () => {
+      // 🟢 خطوة الأمان الفائقة: لا نربط الأصوات بـ audioManager إلا هنا بعد أن اكتمل تحميلها تماماً!
+      try {
+        initAllGameSounds(); 
+        console.log("🔊 تم ربط كافة أصوات اللعبة بالـ AudioManager بنجاح بعد اكتمال التحميل!");
+      } catch (error) {
+        console.error("🚨 فشل في ربط الأصوات:", error);
+      }
+
+      // إنهاء التحميل وإخفاء الشاشة
+      this.finish(); 
+    }
   );
 }
 
