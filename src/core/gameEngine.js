@@ -91,7 +91,7 @@ export class Game {
     this._resizeHandler = () => this.handleResize();
     window.addEventListener("resize", this._resizeHandler);
 
-    const loadingScene = new LoadingScene(() => {
+    this.loadingScene = new LoadingScene(() => {
       this.player = new Player(this.myCanvas);
       this.background = new Background(this.bgCanvas, this.camera);
       this.isGameReady = true;
@@ -100,7 +100,7 @@ export class Game {
       stateManager.setState("menu")
     });
 
-    loadingScene.start(); // انطلق!
+
   }
 
   destroy() {
@@ -1206,6 +1206,7 @@ export class Game {
     if (typeof this.initTouchControls === "function") {
       this.initTouchControls();
     }
+    this.loadingScene.start(); // انطلق!
   }
 
   //دالة توليد الازرار
