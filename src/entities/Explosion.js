@@ -1,4 +1,5 @@
 import { assetsManager } from "../systems/AssetsManager";
+import { settingsManager } from "../systems/settingsManager";
 
 export class Explosion {
   static enemyFrames = [];
@@ -16,7 +17,6 @@ export class Explosion {
 
     const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
-    // تحديد الأبعاد منطقياً بناءً على نوع الانفجار ونوع الجهاز
     if (this.type === "player") {
       this.width = isMobile ? 150 : 300;
       this.height = isMobile ? 150 : 300;
@@ -28,35 +28,39 @@ export class Explosion {
       this.height = isMobile ? 140 : 350;
     }
 
-    // نقطة الارتكاز المركزية (نصف العرض والارتفاع) ليتم الرسم في المنتصف تماماً
     this.offsetX = this.width / 2;
     this.offsetY = this.height / 2;
 
-    // استدعاء دالة جلب الأصول المسرعة من الذاكرة
     Explosion._preloadAssets();
 
-    // أدوات التحكم بالأنيميشن والفريمات
     this.currentFrame = 0;
     this.frameTimer = 0;
-    this.frameInterval = 40; // سرعة الانتقال بين الفريمات بالمللي ثانية
+    
+    // 👈 2. تعديل زمن وسلوك الفريمات بناءً على الجودة
+    const quality = settingsManager.getGraphicsQuality();
+    if (quality === "low") {
+      this.frameInterval = 60; // تسريع زمن نهاية الانفجار لتوفير الفريمات
+      this.frameStep = 2;      // قفز فريمين كل مرة (توفير 50% من عمليات الرسم)
+    } else if (quality === "medium") {
+      this.frameInterval = 50; 
+      this.frameStep = 1;
+    } else {
+      this.frameInterval = 40; // الجودة العالية: سلاسة كاملة
+      this.frameStep = 1;
+    }
+
     this.finished = false;
   }
 
-  // 🟢 دالة داخلية مطهرة بالكامل تجلب الأصول الجاهزة فوراً من الرام
   static _preloadAssets() {
     if (!Explosion.assetsLoaded) {
-      
-      // 1️⃣ جلب فريمات انفجار الأعداء العاديين (من 1 إلى 10)
       Explosion.enemyFrames = Array.from({ length: 10 }, (_, i) => {
         return assetsManager.getImage(`explosion${i + 1}`);
       });
 
-      // توجيه مرجع اللاعب لنفس مصفوفة الأعداء لتوفير الذاكرة
       Explosion.playerFrames = Explosion.enemyFrames; 
 
-      // 2️⃣ جلب فريمات انفجار الزعيم الضخم XilosVex (من 1 إلى 17)
       Explosion.xilosFrames = Array.from({ length: 17 }, (_, i) => {
-        // معاملة خاصة للفريم الثاني بسبب تسمية المفتاح الشاذة لديك "explosionC"
         const key = `explosionC${i + 1}`;
         return assetsManager.getImage(key);
       });
@@ -65,7 +69,6 @@ export class Explosion {
     }
   }
 
-  // دالة جلب طول المصفوفة الحالية لمعرفة متى ينتهي الأنيميشن
   _getFramesCount() {
     if (this.type === "player") return Explosion.playerFrames.length;
     if (this.type === "xilosVex") return Explosion.xilosFrames.length;
@@ -76,13 +79,12 @@ export class Explosion {
     this.life += deltaTime;
     this.frameTimer += deltaTime;
 
-    // تحديث الفريم الحالي بناءً على الوقت المنقضي
+    // 👈 3. استخدام frameStep المخصص للجودة
     if (this.frameTimer > this.frameInterval) {
-      this.currentFrame++;
+      this.currentFrame += this.frameStep; // القفز بناءً على الجودة (1 أو 2)
       this.frameTimer = 0;
     }
     
-    // التحقق من انتهاء جميع الفريمات لإيقاف الرسم وتدمير الكائن
     if (this.currentFrame >= this._getFramesCount()) {
       this.finished = true;
     }

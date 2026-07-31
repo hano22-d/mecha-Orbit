@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="project/win.css" />
     <link rel="stylesheet" href="project/gameOver.css" />
     <link rel="stylesheet" href="project/pause.css" />
-    <link rel="stylesheet" href="project/loading.css">
+    <link rel="stylesheet" href="project/loading.css" />
+    <link rel="stylesheet" href="project/settings.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--خط اللعبة لاساسي-->
@@ -33,21 +34,20 @@
   </head>
   <body>
     <div class="gameContainer">
-
       <!--Loading screen-->
       <div id="loading-screen">
         <div class="loading-container">
           <div class="progress-bar-container">
             <div id="progress-bar"></div>
           </div>
-          
+
           <div class="loading-status">
             <span id="loading-text">جاري شحن محركات الليزر...</span>
             <span id="loading-percentage">0%</span>
           </div>
         </div>
       </div>
-      
+
       <canvas id="backgroundCanvas"></canvas>
       <canvas id="myCanvas"></canvas>
 
@@ -109,7 +109,6 @@
 
       <!--Hud-->
       <div class="hud" id="hud">
-
         <button id="pauseBtn" class="btnStyle">
           <span class="wave"></span>
           <span class="text" data-text="pause">Pause</span>
@@ -122,7 +121,6 @@
         </div>
 
         <div class="scoreBar" id="scoreBar">
-
           <div class="playerHealthContainer">
             <div class="playerInfo">
               <span class="playerName">Health</span>
@@ -135,7 +133,6 @@
           </div>
 
           <div class="scoreDisplay">
-
             <div class="hud-circle-wrapper score-theme">
               <div class="radar-line"></div>
               <div class="hud-circle-inner">
@@ -249,11 +246,7 @@
         </div>
 
         <div class="main">
-          <img
-            class="imageMenu"
-            src="/assets/UI/menuImage.png"
-            alt=""
-          />
+          <img class="imageMenu" src="/assets/UI/menuImage.png" alt="" />
           <div class="mainList">
             <button id="btn" class="btnStyle">
               <span class="wave"></span
@@ -292,7 +285,7 @@
                 ></span
               >
             </button>
-            <button class="btnStyle">
+            <button id="btn-main-settings" class="btnStyle">
               <span class="wave"></span
               ><span class="content"
                 ><span class="icon"><i class="fa-solid fa-gear"></i></span
@@ -484,6 +477,217 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      
+      <!-- 🌌 MECHA-ORBIT ULTIMATE SETTINGS OVERLAY 🌌 -->
+      <div id="settings-overlay" class="settings-overlay">
+        <div class="settings-modal">
+          <!-- 🔝 Header Area -->
+          <header class="settings-header">
+            <h2 class="settings-title">⚙️ SYSTEM CONFIG</h2>
+            <button
+              id="btn-close-settings"
+              class="btn-icon-close"
+              aria-label="Close Settings"
+            >
+              &times;
+            </button>
+          </header>
+
+          <!-- 📑 Navigation Tabs -->
+          <nav class="settings-tabs">
+            <button class="tab-btn active" data-tab="tab-graphics">
+              <span>🎮 GRAPHICS & FPS</span>
+            </button>
+            <button class="tab-btn" data-tab="tab-audio">
+              <span>🔊 AUDIO & SOUND</span>
+            </button>
+            <button class="tab-btn" data-tab="tab-controls">
+              <span>🕹️ CONTROLS & HUD</span>
+            </button>
+          </nav>
+
+          <!-- 📦 Modal Content Body -->
+          <main class="settings-body">
+            <!-- ========================================== -->
+            <!-- TAB 1: GRAPHICS & PERFORMANCE (شغال حالياً) -->
+            <!-- ========================================== -->
+            <section id="tab-graphics" class="tab-content active">
+              <!-- FPS Setting -->
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label class="setting-label">FPS LIMIT</label>
+                  <span class="setting-desc"
+                    >اختر معدل الإطارات المستهدف للتحكم بسلاسة اللعبة واستهلاك
+                    الطاقة</span
+                  >
+                </div>
+                <div class="setting-control">
+                  <select id="select-fps" class="hud-select">
+                    <option value="30">30 FPS (Power Saver)</option>
+                    <option value="60" selected>60 FPS (Balanced)</option>
+                    <option value="120">120 FPS (High Smooth)</option>
+                    <option value="unlimited">UNLIMITED (Max Speed)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Graphics Quality Setting -->
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label class="setting-label">GRAPHICS QUALITY</label>
+                  <span class="setting-desc"
+                    >التحكم بكثافة الشظايا (Debris) وتأثيرات الانفجارات
+                    والجزيئات</span
+                  >
+                </div>
+                <div class="setting-control">
+                  <div class="radio-group">
+                    <label class="radio-btn">
+                      <input type="radio" name="graphics-quality" value="low" />
+                      <span class="radio-tile">LOW</span>
+                    </label>
+                    <label class="radio-btn">
+                      <input
+                        type="radio"
+                        name="graphics-quality"
+                        value="medium"
+                      />
+                      <span class="radio-tile">MED</span>
+                    </label>
+                    <label class="radio-btn">
+                      <input
+                        type="radio"
+                        name="graphics-quality"
+                        value="high"
+                        checked
+                      />
+                      <span class="radio-tile">HIGH</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB 2: AUDIO & SOUND (للمرحلة القادمة)       -->
+            <!-- ========================================== -->
+            <section id="tab-audio" class="tab-content">
+              <!-- Master Volume -->
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label class="setting-label">MASTER VOLUME</label>
+                  <span class="setting-desc">مستوى الصوت العام للعبة</span>
+                </div>
+                <div class="setting-control range-control">
+                  <input
+                    type="range"
+                    id="slider-master-volume"
+                    class="hud-slider"
+                    min="0"
+                    max="100"
+                    value="80"
+                  />
+                  <span class="range-value" id="val-master-volume">80%</span>
+                </div>
+              </div>
+
+              <!-- Music Volume -->
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label class="setting-label">BACKGROUND MUSIC</label>
+                  <span class="setting-desc"
+                    >موسيقى الخلفية والمقاطع الحماسية</span
+                  >
+                </div>
+                <div class="setting-control range-control">
+                  <input
+                    type="range"
+                    id="slider-music-volume"
+                    class="hud-slider"
+                    min="0"
+                    max="100"
+                    value="70"
+                  />
+                  <span class="range-value" id="val-music-volume">70%</span>
+                </div>
+              </div>
+
+              <!-- SFX Volume -->
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label class="setting-label">SOUND EFFECTS (SFX)</label>
+                  <span class="setting-desc"
+                    >أصوات الانفجارات والإطلاق والمحركات</span
+                  >
+                </div>
+                <div class="setting-control range-control">
+                  <input
+                    type="range"
+                    id="slider-sfx-volume"
+                    class="hud-slider"
+                    min="0"
+                    max="100"
+                    value="90"
+                  />
+                  <span class="range-value" id="val-sfx-volume">90%</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB 3: CONTROLS & BUTTONS (للمرحلة الثالثة) -->
+            <!-- ========================================== -->
+            <section id="tab-controls" class="tab-content">
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label class="setting-label"
+                    >CUSTOMIZE BUTTON POSITIONS</label
+                  >
+                  <span class="setting-desc"
+                    >تعديل أماكن وأحجام أزرار التحكم باللمس على الشاشة</span
+                  >
+                </div>
+                <div class="setting-control">
+                  <button id="btn-edit-layout" class="hud-btn secondary">
+                    <span>📐 EDIT HUD LAYOUT</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <label class="setting-label">TOUCH BUTTON OPACITY</label>
+                  <span class="setting-desc"
+                    >درجة شفافية الأزرار الظاهرة على الشاشة</span
+                  >
+                </div>
+                <div class="setting-control range-control">
+                  <input
+                    type="range"
+                    id="slider-btn-opacity"
+                    class="hud-slider"
+                    min="10"
+                    max="100"
+                    value="50"
+                  />
+                  <span class="range-value" id="val-btn-opacity">50%</span>
+                </div>
+              </div>
+            </section>
+          </main>
+
+          <!-- 🔻 Footer Actions Area -->
+          <footer class="settings-footer">
+            <button id="btn-reset-settings" class="hud-btn danger">
+              RESET ALL
+            </button>
+            <button id="btn-save-settings" class="hud-btn primary">
+              SAVE & CLOSE
+            </button>
+          </footer>
         </div>
       </div>
     </div>

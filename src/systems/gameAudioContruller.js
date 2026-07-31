@@ -37,7 +37,6 @@ export function setupAudioAndEnvironment(stateManager) {
         audioManager.pause("menuSound")
       }
     } else {
-      console.log("game resume");
       audioManager.play("menuSound")
     }
   });

@@ -1,0 +1,275 @@
+/* ==========================================================================
+   🌌 MECHA-ORBIT ULTIMATE SETTINGS STYLES 🌌
+   ========================================================================== */
+
+/* الخلفية المظلمة الشفافة المضللة للواجهة كاملة */
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--color-bg-overlay);
+    backdrop-filter: var(--layer-blur);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity var(--transition-normal);
+  }
+  
+  /* النافذة المنبثقة الصندوق الرئيسي */
+  .settings-modal {
+    width: 90%;
+    max-width: var(--box-max-width2);
+    background: var(--color-bg-dark);
+    border: var(--border-glow-primary);
+    border-radius: var(--radius-standard);
+    box-shadow: var(--shadow-glow-primary);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalSlideIn var(--transition-normal);
+  }
+  
+  @keyframes modalSlideIn {
+    from {
+      transform: translateY(20px) scale(0.97);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* الهيدر والعنوان */
+  .settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(0, 217, 255, 0.05);
+    border-bottom: var(--border-glow-info);
+  }
+  
+  .settings-title {
+    font-size: var(--font-size-sub);
+    color: var(--color-primary);
+    margin: 0;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+  }
+  
+  .btn-icon-close {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+  }
+  
+  .btn-icon-close:hover {
+    color: var(--color-danger);
+  }
+  
+  /* التبويبات Tabs Header */
+  .settings-tabs {
+    display: flex;
+    background: rgba(5, 10, 15, 0.8);
+    border-bottom: 1px solid rgba(102, 136, 170, 0.2);
+  }
+  
+  .tab-btn {
+    flex: 1;
+    padding: var(--space-sm) var(--space-xs);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-hud);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  
+  .tab-btn:hover {
+    color: var(--color-text-main);
+  }
+  
+  .tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    background: rgba(0, 217, 255, 0.08);
+  }
+  
+  /* محتوى الإعدادات */
+  .settings-body {
+    padding: var(--space-lg);
+    min-height: 220px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .tab-content {
+    display: none;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  
+  .tab-content.active {
+    display: flex;
+  }
+  
+  /* صف الإعدادات الفردي */
+  .setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px dashed rgba(102, 136, 170, 0.15);
+    gap: var(--space-md);
+  }
+  
+  .setting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+  
+  .setting-label {
+    color: var(--color-text-main);
+    font-size: var(--font-size-body);
+    font-weight: bold;
+  }
+  
+  .setting-desc {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-hud);
+  }
+  
+  /* قائمة الـ Select الخاص بـ FPS */
+  .hud-select {
+    background: var(--color-bg-dark);
+    color: var(--color-primary);
+    border: var(--border-glow-primary);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-standard);
+    font-size: var(--font-size-hud);
+    outline: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-glow-primary);
+  }
+  
+  /* Radio Group لشاشة الجرافيكس */
+  .radio-group {
+    display: flex;
+    gap: var(--space-xs);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 3px;
+    border-radius: var(--radius-standard);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+  }
+  
+  .radio-btn {
+    cursor: pointer;
+  }
+  
+  .radio-btn input {
+    display: none;
+  }
+  
+  .radio-tile {
+    display: block;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-hud);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-standard);
+    transition: all var(--transition-fast);
+    font-weight: bold;
+  }
+  
+  .radio-btn input:checked + .radio-tile {
+    background: var(--color-primary);
+    color: var(--color-bg-dark);
+    box-shadow: var(--shadow-glow-primary);
+  }
+  
+  /* شريط السحب Range Sliders للصوتيات */
+  .range-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  
+  .hud-slider {
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+  
+  .range-value {
+    color: var(--color-secondary);
+    font-size: var(--font-size-hud);
+    min-width: 35px;
+    text-align: right;
+    font-weight: bold;
+  }
+  
+  /* الأزرار العامة في الأسفل */
+  .settings-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(0, 0, 0, 0.4);
+    border-top: 1px solid rgba(102, 136, 170, 0.2);
+  }
+  
+  .hud-btn {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-standard);
+    font-size: var(--font-size-hud);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  
+  .hud-btn.primary {
+    background: var(--color-primary);
+    color: var(--color-bg-dark);
+    border: var(--border-glow-primary);
+    box-shadow: var(--shadow-glow-primary);
+  }
+  
+  .hud-btn.primary:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+  }
+  
+  .hud-btn.secondary {
+    background: transparent;
+    color: var(--color-secondary);
+    border: var(--border-glow-secondary);
+  }
+  
+  .hud-btn.secondary:hover {
+    background: rgba(255, 179, 89, 0.1);
+  }
+  
+  .hud-btn.danger {
+    background: transparent;
+    color: var(--color-secondary);
+    border: var(--border-glow-secondary);
+  }
+  
+  .hud-btn.danger:hover {
+    box-shadow: var(--shadow-glow-secondary);
+  }
+
+@media (max-width: 900px) {
+    .settings-modal {
+        max-width: var(--box-max-width);
+      }
+}

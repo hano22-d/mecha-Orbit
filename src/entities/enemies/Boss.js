@@ -45,7 +45,7 @@ export class Boss {
     ];
 
     // 🟢 جلب صورة رصاصة الزعيم من الذاكرة مباشرة
-    this.imgBullet = assetsManager.getImage("bossBullet");
+    this.imgBullet = assetsManager.getImage("bossW");
     this.color = "red";
     this.speed = 0.06;
     this.health = 300;

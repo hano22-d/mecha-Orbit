@@ -22,6 +22,7 @@ import { Missile } from "../weapons/Missile";
 import { Rocks } from "../entities/rocks";
 import { gameOverUi } from "../ui/gameOver";
 import { TouchButton } from "../entities/ToucheButton";
+import { settingsManager } from "../systems/settingsManager";
 
 // 🟢 استيراد مدير الأصول المشترك
 import { LoadingScene } from "../ui/loading";
@@ -490,15 +491,25 @@ export class Game {
   }
 
   // توليد الانفجارات
-  spawnExplosion(target, typeName) {
-    const targetCenterX = target.x + (target.width ? target.width / 2 : 0);
-    const targetCenterY = target.y + (target.height ? target.height / 2 : 0);
+spawnExplosion(target, typeName) {
+  if (!target) return;
 
-    this.explosions.push(
-      new Explosion(this.myCanvas, targetCenterX, targetCenterY, typeName)
-    );
+  const quality = settingsManager.getGraphicsQuality();
+
+  // إذا كنا في الوضع المنخفض وكان الانفجار لعدو عادي وهناك أكثر من 5 انفجارات متزامنة
+  // نتجاهل الانفجارات الجديدة لتخفيف الحمل فوراً على المعالج
+  if (quality === "low" && typeName !== "player" && typeName !== "xilosVex") {
+    if (this.explosions.length >= 5) return;
   }
-  // دالة تحديث الانفجارات
+
+  const targetCenterX = target.x + (target.width ? target.width / 2 : 0);
+  const targetCenterY = target.y + (target.height ? target.height / 2 : 0);
+
+  this.explosions.push(
+    new Explosion(this.myCanvas, targetCenterX, targetCenterY, typeName)
+  );
+}
+
   updateExplosion(deltaTime) {
     for (let i = this.explosions.length - 1; i >= 0; i--) {
       const explosion = this.explosions[i];
@@ -1095,13 +1106,24 @@ export class Game {
   }
 
   // 💥 توليد الحطام المتناثر عند تدمير الأعداء
-  spawnDebris(enemy) {
-    if (!enemy) return;
-    const enemyCenterX = enemy.x + enemy.width / 2;
-    const enemyCenterY = enemy.y + enemy.height / 2;
+// 💥 توليد الحطام المتناثر عند تدمير الأعداء بناءً على جودة الجرافيكس
+spawnDebris(enemy) {
+  if (!enemy) return;
 
-    this.debris.push(new Debris(this.myCanvas, enemyCenterX, enemyCenterY));
-  }
+  const graphics = settingsManager.getGraphicsQuality();
+
+  // 1️⃣ في الوضع المنخفض (Low): إلغاء الشظايا تماماً لتوفير أعلى أداء
+  if (graphics === "low") return;
+
+  // 2️⃣ في الوضع المتوسط (Medium): إظهار الشظايا بنسبة 50% فقط من الانفجارات
+  if (graphics === "medium" && Math.random() > 0.5) return;
+
+  // 3️⃣ في الوضع العالي (High) أو الحالات المتبقية: إنشاء الشظية بكامل قوّتها
+  const enemyCenterX = enemy.x + enemy.width / 2;
+  const enemyCenterY = enemy.y + enemy.height / 2;
+
+  this.debris.push(new Debris(this.myCanvas, enemyCenterX, enemyCenterY));
+}
 
   // 🪨 توليد الصخور العشوائية خارج حدود الكاميرا العلوية
   spawnRocks(gameTimer) {

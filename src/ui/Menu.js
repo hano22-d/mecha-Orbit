@@ -1,5 +1,8 @@
 import { audioManager } from "../systems/SoundsSystem";
 import { playerRank } from "../utils/helpers";
+import { SettingsUI } from "./settingsUi";
+
+export const settingsUI = new SettingsUI();
 
 export function menu(stateManager, game) {
   const menu = document.getElementById("menu");
@@ -8,6 +11,8 @@ export function menu(stateManager, game) {
   const credits = document.getElementById("credits-amount");
   const startGamebtn = document.getElementById("btn");
   const rank = document.getElementById("rank-name");
+  const settingsBtn = document.getElementById("btn-main-settings");
+
 
   const playyes = document.getElementById("playYES");
 
@@ -37,6 +42,12 @@ export function menu(stateManager, game) {
       menu.style.display = "none";
     }
   });
+
+  if (settingsBtn) {
+    settingsBtn.addEventListener("click", () => {
+      settingsUI.show(); // فتح شاشة الإعدادات فور الضغط!
+    });
+  }
 }
 
 // دالة لتفعيل ملء الشاشة بالكامل متوافقة مع جميع الهواتف والمتصفحات
