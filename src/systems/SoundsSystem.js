@@ -6,64 +6,116 @@ class AudioManager {
     this.poolSounds = {};
 
     this.musicKeys = ["bg", "menuSound", "winSound", "bossSound"];
+
+    // 🎯 حفظ النسب الحالية داخل المدير (قيم من 0.0 إلى 1.0)
+    this.masterVolume = 0.8;
+    this.musicVolume = 0.8;
+    this.sfxVolume = 0.8;
   }
 
-  // 1️⃣ تسجيل الأصوات الفردية الجاهزة من الذاكرة
+  // 🎯 دالة مساعدة لحساب حجم الصوت الفعلي المدموج مع الماستر
+  getEffectiveVolume(type) {
+    if (type === "music") return this.masterVolume * this.musicVolume;
+    if (type === "sfx") return this.masterVolume * this.sfxVolume;
+    return this.masterVolume;
+  }
+
+  // 1️⃣ تسجيل الأصوات الفردية الجاهزة وتطبيق الصوت الفعلي فوراً (يحل مشكلة التوقيت)
   registerSound(name, audioElement) {
     if (audioElement) {
       this.sounds[name] = audioElement;
+
+      // 🎯 تطبيق حجم الصوت فور التسجيل حسب نوع الصوت
+      const isMusic = this.musicKeys.includes(name);
+      const effectiveVol = this.getEffectiveVolume(isMusic ? "music" : "sfx");
+      this.sounds[name].volume = effectiveVol;
     }
   }
 
-  // 2️⃣ تسجيل الأصوات المتكررة الجاهزة وتحويلها لـ Pool
+  // 2️⃣ تسجيل الأصوات المتكررة (Pools) وتطبيق الصوت الفعلي فوراً
   registerPoolSound(name, audioElement, size = 10) {
     if (audioElement) {
-      this.poolSounds[name] = new PoolishSound(audioElement, size);
+      const pool = new PoolishSound(audioElement, size);
+      this.poolSounds[name] = pool;
+
+      const isMusic = this.musicKeys.includes(name);
+      const effectiveVol = this.getEffectiveVolume(isMusic ? "music" : "sfx");
+      pool.setVolume(effectiveVol);
     }
   }
 
-  // 🎵 1. دالة تحديث حجم صوت الموسيقى فقط
+  // 🔊 دالة تحديث الماستر فوليوم
+  setMasterVolume(vol) {
+    this.masterVolume = vol > 1 ? vol / 100 : vol;
+    this.updateAllVolumes();
+  }
+
+  // 🎵 1. دالة تحديث حجم صوت الموسيقى
   setMusicVolume(vol) {
+    this.musicVolume = vol > 1 ? vol / 100 : vol;
+    this.updateMusicVolumes();
+  }
+
+  // 💥 2. دالة تحديث حجم صوت كافة المؤثرات الصوتية
+  setSfxVolume(vol) {
+    this.sfxVolume = vol > 1 ? vol / 100 : vol;
+    this.updateSfxVolumes();
+  }
+
+  // تحديث أصوات الموسيقى المسجلة حالياً
+  updateMusicVolumes() {
+    const effectiveVol = this.getEffectiveVolume("music");
     this.musicKeys.forEach((key) => {
       if (this.sounds[key]) {
-        this.sounds[key].volume = vol;
+        this.sounds[key].volume = effectiveVol;
       }
     });
   }
 
-  // 💥 2. دالة تحديث حجم صوت كافة المؤثرات الصوتية (الفردية والـ Pools)
-  setSfxVolume(vol) {
-    // أ) تحديث الأصوات الفردية التي ليست موسيقى
+  // تحديث أصوات المؤثرات المسجلة حالياً
+  updateSfxVolumes() {
+    const effectiveVol = this.getEffectiveVolume("sfx");
+
     Object.keys(this.sounds).forEach((key) => {
       if (!this.musicKeys.includes(key)) {
-        this.sounds[key].volume = vol;
+        this.sounds[key].volume = effectiveVol;
       }
     });
 
-    // ب) تحديث جميع المسبحات الصوتية (Pools)
     Object.keys(this.poolSounds).forEach((key) => {
       if (this.poolSounds[key]) {
-        this.poolSounds[key].setVolume(vol);
+        this.poolSounds[key].setVolume(effectiveVol);
       }
     });
   }
 
-  // 🔄 3. دالة تطبيق إعدادات الصوت المخزنة بلمسة واحدة عند بدء اللعبة
-  applyInitialVolumes(musicVol, sfxVol) {
-    this.setMusicVolume(musicVol);
-    this.setSfxVolume(sfxVol);
+  // تحديث كل الأصوات
+  updateAllVolumes() {
+    this.updateMusicVolumes();
+    this.updateSfxVolumes();
   }
 
-  // 👇 تبقى بقية الدوال كما هي تماماً دون أي تغيير لتجنب كسر اللعبة!
+  // 🔄 3. دالة تطبيق إعدادات الصوت المخزنة عند بدء اللعبة
+  applyInitialVolumes(musicVol, sfxVol, masterVol = 80) {
+    this.masterVolume = masterVol > 1 ? masterVol / 100 : masterVol;
+    this.musicVolume = musicVol > 1 ? musicVol / 100 : musicVol;
+    this.sfxVolume = sfxVol > 1 ? sfxVol / 100 : sfxVol;
+
+    this.updateAllVolumes();
+  }
+
+  // -------------------------------------------------------------
+  // بقية الدوال كما هي تماماً
+  // -------------------------------------------------------------
   play(name, loop, forceRestart = false) {
     const audio = this.sounds[name];
     if (!audio) return;
     if (name !== "bg" || forceRestart) {
       audio.currentTime = 0;
-    } 
+    }
     audio.play().catch(() => {});
     audio.loop = loop;
-  } 
+  }
 
   pause(name) {
     const audio = this.sounds[name];
@@ -86,8 +138,3 @@ class AudioManager {
 }
 
 export const audioManager = new AudioManager();
-/*
-notes:
-1- لدينا نوعين من الاصوات في اللعبة, اصوات فردية وهي التي لا تتكرر بسرعة ,وأصوات متكررة بسرعة
-2- if (name !== "bg") sound.currentTime = 0; ==> تصفير كل الاصوات ما عدا الخلفية
-*/
