@@ -1,5 +1,6 @@
 import { audioManager } from "./SoundsSystem.js";
 import { assetsManager } from "../systems/AssetsManager.js";
+import { settingsManager } from "./settingsManager.js";
 
 export function initAllGameSounds() {
   // 🟢 أولاً: ربط الأصوات الفردية والموسيقى
@@ -23,4 +24,9 @@ export function initAllGameSounds() {
   // 🟢 ثانياً: ربط الأصوات المتكررة (Pools) بلمسة واحدة
   audioManager.registerPoolSound("fire", assetsManager.getSound("bulletPlayer"), 10);
   audioManager.registerPoolSound("EnemyWeapon", assetsManager.getSound("bulletEnemy"), 10);
+
+  audioManager.applyInitialVolumes(
+    settingsManager.getMusicVolume(),
+    settingsManager.getSfxVolume()
+  );
 }

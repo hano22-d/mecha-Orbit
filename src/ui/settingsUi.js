@@ -1,5 +1,6 @@
 import { stateManager } from "../core/state";
 import { settingsManager } from "../systems/settingsManager";
+import { audioManager } from "../systems/SoundsSystem";
 
 export class SettingsUI {
   constructor() {
@@ -11,7 +12,16 @@ export class SettingsUI {
 
     // عناصر التحكم بالمرحلة الأولى (FPS & Graphics)
     this.selectFps = document.getElementById("select-fps");
-    this.radioGraphics = document.querySelectorAll('input[name="graphics-quality"]');
+    this.radioGraphics = document.querySelectorAll(
+      'input[name="graphics-quality"]'
+    );
+
+    // 🔊 عناصر التحكم بالصوت (Audio Sliders & Values)
+    this.sliderMusic = document.getElementById("slider-music-volume");
+    this.valMusic = document.getElementById("val-music-volume");
+
+    this.sliderSfx = document.getElementById("slider-sfx-volume");
+    this.valSfx = document.getElementById("val-sfx-volume");
 
     // أزرار التبويبات والمحتويات (Tabs)
     this.tabButtons = document.querySelectorAll(".settings-tabs .tab-btn");
@@ -24,14 +34,16 @@ export class SettingsUI {
   init() {
     if (!this.overlay) return;
 
-    if(stateManager.stateOnchange(state => {
-        if (state === "loading" || state === "menu") {
-            this.hide()
-        }
-    }))
+    stateManager.stateOnchange((state) => {
+      if (state === "loading" || state === "menu") {
+        this.hide();
+      }
+    });
 
     // 🎯 تنشيط نظام التبويبات (Tabs Switching)
     this.initTabs();
+
+    this.initAudioSliders();
 
     // 🎯 ربط أزرار الإغلاق والحفظ والإعادة
     if (this.btnClose) {
@@ -73,6 +85,20 @@ export class SettingsUI {
     });
   }
 
+  // 🔊 2️⃣ ربط حركة السلايدر بتحديث نص النسبة المئوية (مثلاً: 80%) فوراً أثناء السحب
+  initAudioSliders() {
+    const bindSlider = (slider, valSpan) => {
+      if (slider && valSpan) {
+        slider.addEventListener("input", (e) => {
+          valSpan.textContent = `${e.target.value}%`;
+        });
+      }
+    };
+
+    bindSlider(this.sliderMusic, this.valMusic);
+    bindSlider(this.sliderSfx, this.valSfx);
+  }
+
   // 👁️ 2️⃣ إظهار شاشة الإعدادات وتحميل القيم الحالية
   show() {
     this.syncUIWithSettings(); // تزامن القيم الحالية من settingsManager مع عناصر الواجهة
@@ -103,6 +129,23 @@ export class SettingsUI {
     this.radioGraphics.forEach((radio) => {
       radio.checked = radio.value === currentGraphics;
     });
+
+    // 3. مزامنة مستويات الصوت والسلايدات
+    if (this.sliderMusic && this.valMusic) {
+      const musicVal = settingsManager.getMusicVolume
+        ? settingsManager.getMusicVolume()
+        : 80;
+      this.sliderMusic.value = musicVal;
+      this.valMusic.textContent = `${musicVal}%`;
+    }
+
+    if (this.sliderSfx && this.valSfx) {
+      const sfxVal = settingsManager.getSfxVolume
+        ? settingsManager.getSfxVolume()
+        : 80;
+      this.sliderSfx.value = sfxVal;
+      this.valSfx.textContent = `${sfxVal}%`;
+    }
   }
 
   // 💾 5️⃣ تطبيق وقراءة القيم من الواجهة وحفظها في SettingsManager
@@ -116,18 +159,44 @@ export class SettingsUI {
     }
 
     // حفظ خيار الجرافيكس
-    const selectedGraphics = Array.from(this.radioGraphics).find((r) => r.checked);
+    const selectedGraphics = Array.from(this.radioGraphics).find(
+      (r) => r.checked
+    );
     if (selectedGraphics) {
       settingsManager.setGraphicsQuality(selectedGraphics.value);
     }
 
-    console.log("✅ تم تطبيق وحفظ إعدادات الأداء والجرافيكس بنجاح!");
+    // حفظ خيارات الصوت في settingsManager
+    if (this.sliderMusic && settingsManager.setMusicVolume) {
+      settingsManager.setMusicVolume(Number(this.sliderMusic.value));
+    }
+    if (this.sliderSfx && settingsManager.setSfxVolume) {
+      settingsManager.setSfxVolume(Number(this.sliderSfx.value));
+    }
+
+    if (audioManager) {
+      // تمرير القيمة المحولة إلى 0..1 لـ audioManager
+      audioManager.setMusicVolume(settingsManager.settings.musicVolume);
+      audioManager.setSfxVolume(settingsManager.settings.sfxVolume);
+    }
   }
 
+  // 🔄 6️⃣ إعادة الإعدادات للافتراضي
   // 🔄 6️⃣ إعادة الإعدادات للافتراضي
   resetToDefaults() {
     settingsManager.setFpsLimit(60);
     settingsManager.setGraphicsQuality("high");
+
+    if (settingsManager.setMusicVolume) settingsManager.setMusicVolume(80); // 🎯 تم تعديلها إلى 80
+    if (settingsManager.setSfxVolume) settingsManager.setSfxVolume(80);     // 🎯 تم تعديلها إلى 80
+
+    // 🎯 تطبيق التغييرات فوراً على محرك الصوت
+    if (audioManager) {
+      audioManager.setMusicVolume(settingsManager.settings.musicVolume);
+      audioManager.setSfxVolume(settingsManager.settings.sfxVolume);
+    }
+
+    // 🎯 تحديث عناصر الواجهة والسلايدات بالقيم الجديدة
     this.syncUIWithSettings();
   }
 }
