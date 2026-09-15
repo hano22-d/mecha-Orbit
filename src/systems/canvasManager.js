@@ -1,8 +1,8 @@
-// src/systems/CanvasManager.js
-
+// الكانفاس الأساسي
 const myCanvas = document.getElementById("myCanvas"); // سنسميه لاحقاً gameCanvas ليكون أوضح
 const ctx = myCanvas.getContext("2d");
 
+// كانفاس الخلفية
 const bgCanvas = document.getElementById("backgroundCanvas");
 const bgCtx = bgCanvas.getContext("2d");
 
@@ -29,7 +29,7 @@ function resizeCanvas() {
   bgCanvas.logicalWidth = logicalWidth;
   bgCanvas.logicalHeight = logicalHeight;
 
-  // إصلاح النقطة القاتلة: ضبط معامل التكبير لكلا الكانفاسين!
+  // ضبط معامل التكبير لكلا الكانفاسين
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
