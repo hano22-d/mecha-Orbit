@@ -1,6 +1,9 @@
 import { assetsManager } from "../../systems/AssetsManager";
 import { PowerUp } from "../PowerUp";
 
+/* =========
+     الثواتب 
+   ======== */
 const SHIELD_DURATION = 5000; // مدة الدرع
 
 export class ShieldPowerUp extends PowerUp {
@@ -9,6 +12,9 @@ export class ShieldPowerUp extends PowerUp {
     this.image = assetsManager.getImage("sheildP");
   }
 
+  /* ==========
+      دالة التأثير
+     ========== */
   apply(player, gameTimer, game) {
     player.shieldEffect = true;
     game.shieldActive = true;
