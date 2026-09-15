@@ -1,6 +1,8 @@
 import { audioManager } from "../systems/SoundsSystem";
 
-//دالة عرض الانترو الكامل
+/* =======================
+    skip وزر intro دالة عرض 
+   ======================= */
 export function introUi(stateManager, intro) {
   const introDiv = document.getElementById("intro");
   const skipBtn = document.getElementById("skipBtn");
@@ -24,7 +26,10 @@ export function introUi(stateManager, intro) {
     }
   });
 }
-//دالة عرض الحوار
+
+/* ===============
+    دالة عرض الحوار
+   =============== */
 export function dialog(intro,stateManager) {
 
   const dialog1 = document.getElementById("dialog1");
