@@ -3,6 +3,9 @@ import { FastWeapon } from "../../weapons/FastWeapon";
 import { HeavyWeapon } from "../../weapons/HeavyWeapon";
 import { assetsManager } from "../../systems/AssetsManager";
 
+/* =========
+     الثوابت
+   ========= */
 const WEAPON_DURATION = 5000; // مدة السلاح الخارق
 
 export class WeaponPowerUp extends PowerUp {
@@ -11,6 +14,9 @@ export class WeaponPowerUp extends PowerUp {
     this.image = assetsManager.getImage("weaponP");
   }
 
+  /* ==========
+      دالة التأثير 
+     ========== */
   apply(player, gameTimer, game) {
     const weaponTypes = [FastWeapon, HeavyWeapon];
     const RandomWeaponClass = weaponTypes[Math.floor(Math.random() * weaponTypes.length)];
