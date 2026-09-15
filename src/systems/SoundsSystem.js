@@ -13,26 +13,32 @@ class AudioManager {
     this.sfxVolume = 0.8;
   }
 
-  // 🎯 دالة مساعدة لحساب حجم الصوت الفعلي المدموج مع الماستر
+  /* ================================
+      دالة حساب حجم الصوت المدمج مع الماستر 
+      =============================== */
   getEffectiveVolume(type) {
     if (type === "music") return this.masterVolume * this.musicVolume;
     if (type === "sfx") return this.masterVolume * this.sfxVolume;
     return this.masterVolume;
   }
 
-  // 1️⃣ تسجيل الأصوات الفردية الجاهزة وتطبيق الصوت الفعلي فوراً (يحل مشكلة التوقيت)
+  /* =====================
+      دالة تسجيل الأصوات الفردية
+     ===================== */
   registerSound(name, audioElement) {
     if (audioElement) {
       this.sounds[name] = audioElement;
 
-      // 🎯 تطبيق حجم الصوت فور التسجيل حسب نوع الصوت
+      // تطبيق حجم الصوت فور التسجيل حسب نوع الصوت
       const isMusic = this.musicKeys.includes(name);
       const effectiveVol = this.getEffectiveVolume(isMusic ? "music" : "sfx");
       this.sounds[name].volume = effectiveVol;
     }
   }
-
-  // 2️⃣ تسجيل الأصوات المتكررة (Pools) وتطبيق الصوت الفعلي فوراً
+  
+  /* =====================
+      دالة تسجيل الأصوات المتكررة
+     ===================== */
   registerPoolSound(name, audioElement, size = 10) {
     if (audioElement) {
       const pool = new PoolishSound(audioElement, size);
@@ -44,25 +50,33 @@ class AudioManager {
     }
   }
 
-  // 🔊 دالة تحديث الماستر فوليوم
+  /* ===================
+      دالة تحديث صوت الماستتر
+     =================== */
   setMasterVolume(vol) {
     this.masterVolume = vol > 1 ? vol / 100 : vol;
     this.updateAllVolumes();
   }
 
-  // 🎵 1. دالة تحديث حجم صوت الموسيقى
+  /* ========================
+     دالة تحديث حجم صوت الموسيقى
+     ======================== */
   setMusicVolume(vol) {
     this.musicVolume = vol > 1 ? vol / 100 : vol;
     this.updateMusicVolumes();
   }
 
-  // 💥 2. دالة تحديث حجم صوت كافة المؤثرات الصوتية
+  /* ====================
+     دالة تحديث المؤثرات الصوتية
+     ==================== */
   setSfxVolume(vol) {
     this.sfxVolume = vol > 1 ? vol / 100 : vol;
     this.updateSfxVolumes();
   }
 
-  // تحديث أصوات الموسيقى المسجلة حالياً
+  /* =======================
+      تحديث أصوات الموسيقى المسجلة 
+     ======================= */
   updateMusicVolumes() {
     const effectiveVol = this.getEffectiveVolume("music");
     this.musicKeys.forEach((key) => {
@@ -72,7 +86,9 @@ class AudioManager {
     });
   }
 
-  // تحديث أصوات المؤثرات المسجلة حالياً
+  /* =======================
+      تحديث أصوات المؤثرات المسجلة 
+     ======================= */
   updateSfxVolumes() {
     const effectiveVol = this.getEffectiveVolume("sfx");
 
@@ -89,13 +105,17 @@ class AudioManager {
     });
   }
 
-  // تحديث كل الأصوات
+  /* ==================
+       تحديث كل الأصوات 
+     ================== */
   updateAllVolumes() {
     this.updateMusicVolumes();
     this.updateSfxVolumes();
   }
 
-  // 🔄 3. دالة تطبيق إعدادات الصوت المخزنة عند بدء اللعبة
+  /* ===================================
+     دالة تطبيق إعدادات الصوت المخزنة عند بدء اللعبة
+     =================================== */
   applyInitialVolumes(musicVol, sfxVol, masterVol = 80) {
     this.masterVolume = masterVol > 1 ? masterVol / 100 : masterVol;
     this.musicVolume = musicVol > 1 ? musicVol / 100 : musicVol;
@@ -104,9 +124,12 @@ class AudioManager {
     this.updateAllVolumes();
   }
 
+  رء ءرويلظاما هي تماماً
   // -------------------------------------------------------------
-  // بقية الدوال كما هي تماماً
-  // -------------------------------------------------------------
+
+  /* ===================
+      دالة تشغيل الأصوات الفردية
+     =================== */
   play(name, loop, forceRestart = false) {
     const audio = this.sounds[name];
     if (!audio) return;
@@ -117,6 +140,9 @@ class AudioManager {
     audio.loop = loop;
   }
 
+  /* ===================
+      دالة إيقاف الأصوات الفردية
+     =================== */
   pause(name) {
     const audio = this.sounds[name];
     if (!audio) return;
@@ -124,12 +150,18 @@ class AudioManager {
     if (name !== "bg") audio.currentTime = 0;
   }
 
+  /* =========================
+     دالة التحكم بمستوى الأصوات الفردية
+     ========================= */
   volume(name, vol) {
     const audio = this.sounds[name];
     if (!audio) return;
     audio.volume = vol;
   }
 
+  /* ====================
+     دالة تشغيل الأصوات المتكررة
+     ==================== */
   poolPlay(name) {
     const pool = this.poolSounds[name];
     if (!pool) return;
