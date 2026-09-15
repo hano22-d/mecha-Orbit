@@ -29,11 +29,14 @@ export class Dodger extends Enemy {
     
   }
 
+  /* ===========
+      دالة التحديث 
+     =========== */
   update(time, deltaTime, game, camera) {
     let closestBullet = null;
     let minDistance = Infinity;
 
-    //حساب مركز العدو الحقيقي (نقطة المنتصف بين أطراف الـ hitBox)
+    // حساب مركز العدو الحقيقي 
     const enemyCenterX = this.x + this.width / 2;
 
     for (let i = 0; i < game.bullets.length; i++) {
