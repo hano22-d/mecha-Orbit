@@ -4,6 +4,9 @@ import { SettingsUI } from "./settingsUi";
 
 export const settingsUI = new SettingsUI();
 
+/* ==================
+    Menu دالة إدارة واجهة
+   ================== */
 export function menu(stateManager, game) {
   const menu = document.getElementById("menu");
   const totalScore = document.getElementById("total-score");
@@ -45,7 +48,7 @@ export function menu(stateManager, game) {
 
   if (settingsBtn) {
     settingsBtn.addEventListener("click", () => {
-      settingsUI.show(); // فتح شاشة الإعدادات فور الضغط!
+      settingsUI.show(); // فتح شاشة الإعدادات فور الضغط
     });
   }
 }
@@ -54,7 +57,7 @@ export function menu(stateManager, game) {
 function enterFullScreen() {
   const element = document.documentElement;
 
-  // استخدام try catch لضمان عدم توقف اللعبة إذا رفض المتصفح الإذن
+  // استخدام try catch لضمان عدم توقف اللعبة إذا رفض المتصفح الاذن 
   try {
     if (element.requestFullscreen) {
         element.requestFullscreen();
