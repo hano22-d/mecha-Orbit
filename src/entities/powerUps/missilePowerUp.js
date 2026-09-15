@@ -18,6 +18,9 @@ export class MissilePowerUp extends PowerUp {
     ];
   }
 
+  /* ==========
+      دالة التأثير 
+     ========== */
   apply(player, gameTimer, game) {
     player.missileCount++;
   }
