@@ -12,15 +12,15 @@ export class TouchButton {
     this.image = imageSrc
     this.isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
-    // 🎨 متغيرات الشفافية
+    // متغيرات الشفافية
     this.opacity = 0.5;
     this.fadeTimer = 0;
     this.delayDuration = 1000;
 
-    // ✨ زاوية دوران شريط اللمعان
+    // زاوية دوران شريط اللمعان
     this.shineAngle = 0;
 
-    // 🔵 تحديد لون اللمعان الليزري بناءً على نوع الزر
+    // تحديد لون اللمعان الليزري بناءً على نوع الزر
     if (this.type === "SHOOT") {
       this.glowColor = "rgba(0, 212, 255, 1)";
     } else if (this.type === "MISSILE") {
@@ -30,6 +30,9 @@ export class TouchButton {
     }
   }
 
+  /* ===============
+      دالة التحقق من النقر
+     =============== */
   checkTouch(touchX, touchY) {
     const dx = touchX - this.x;
     const dy = touchY - this.y;
@@ -45,6 +48,9 @@ export class TouchButton {
     return false;
   }
 
+  /* ===========
+      دالة التحديث
+     ============ */
   update(deltaTime) {
     let targetOpacity = 0.5;
     if (this.isPressed) {
@@ -61,6 +67,9 @@ export class TouchButton {
     this.shineAngle += deltaTime * 0.001;
   }
 
+  /* ==========
+       دالة الرسم
+     =========== */
   draw(ctx) {
     ctx.save();
 
