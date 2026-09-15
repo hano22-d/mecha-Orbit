@@ -4,7 +4,6 @@ import { Enemy } from "./Enemy";
 
 export class Chaser extends Enemy {
   constructor(config) {
-    // config يحتوي بالفعل على الـ canvas والـ x والـ y الممررين من محرك اللعبة الرئيسي
     super({
       ...config,
       baseWidth: 125,
@@ -22,6 +21,9 @@ export class Chaser extends Enemy {
     });
   }
 
+  /* ============
+      دالة التحديث
+     ============ */
   update(time, deltaTime, game, camera) {
     let dx = game.player.x - this.x;
     let dy = game.player.y - this.y;
