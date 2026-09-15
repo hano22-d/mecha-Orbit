@@ -16,6 +16,9 @@ export class PowerUp {
     ];
   }
 
+  /* ============
+      دالة التحديث
+     ============ */
   update() {
     this.y += this.speed;
 
@@ -25,6 +28,9 @@ export class PowerUp {
     }
 }
 
+  /* ====================
+     دالة الخروج من أبعاد الشاشة
+     ==================== */
 isOffScreen(canvas, camera) {
   const padding = 50;
   return (
