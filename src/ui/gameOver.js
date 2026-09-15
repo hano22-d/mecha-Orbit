@@ -15,12 +15,17 @@ class GameOverUi {
     this.overAccuracy = document.getElementById("overAccuracy");
     this.sectorProgress = document.getElementById("sectorProgress");
   }
-  //دالة التحديث الرئيسية
+  
+  /* ==================
+     دالة التحديث الرئيسية
+    ================== */
   update(game) {
     this.updateVar(game);
   }
 
-  // === main.js دالة إظهار وأخفاء شاشة الخسارة مع وظائف الازرار, توضع في === //
+/* ===================================
+   دالة إظهار وأخفاء شاشة الخسارة مع وظائف الازرار
+   =================================== */
   gameOver(stateManager,game) {
     stateManager.stateOnchange((state) => {
       if (state === "gameOver") {
@@ -55,8 +60,10 @@ class GameOverUi {
       stateManager.setState("menu");
     });
   }
-
-  // === Game دالة التحديث المتكرر لعناصر شاشة الخسارة, يوضع في === //
+  
+/* ==============================
+   دالة التحديث المتكرر لعناصر شاشة الخسارة
+   ============================== */
   updateVar(game) {
     this.overScore.textContent = game.score;
 
