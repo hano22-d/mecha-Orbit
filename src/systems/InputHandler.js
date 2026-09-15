@@ -12,17 +12,15 @@ export class InputsHandle {
       missileKey: false,
     };
 
-    // تفعيل أحداث الكيبورد
     this._setupKeyboardEvents();
 
-    // تفعيل أحداث اللمس للموبايل
     if (this.myCanvas) {
       this._setupTouchEvents();
     }
   }
 
   // ==========================================
-  // قسم الكيبورد
+  //         أحداث الكيبورد - Keyboard Events
   // ==========================================
   _setupKeyboardEvents() {
     window.addEventListener("keydown", (e) => {
@@ -61,7 +59,7 @@ export class InputsHandle {
   }
 
   // ==========================================
-  // قسم اللمس للموبايل
+  // أحداث الموبايل واللمس - Mobile Events and touch 
   // ==========================================
   _setupTouchEvents() {
     this.myCanvas.addEventListener(
@@ -86,7 +84,7 @@ export class InputsHandle {
 
     if (!this.touchButtons || this.touchButtons.length === 0) return;
 
-    // العثور على كائنات الجويستيك داخل المصفوفة للتحكم بهما بشكل خاص
+    // العثور على كائنات الجويستيك داخل المصفوفة للتحكم بهما
     const base = this.touchButtons.find((btn) => btn.type === "JOY_BASE");
     const knob = this.touchButtons.find((btn) => btn.type === "JOY_KNOB");
 
