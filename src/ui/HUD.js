@@ -18,11 +18,17 @@ export class Hud {
     this.countNumber = document.getElementById("count-number");
   }
 
+ /* ==================
+     دالة تحديث شاشة Hud
+    ================== */
   update(game, canvas) {
     this.healthBarChanged(game);
     this.updateScoreAndhealth(game);
   }
 
+/* =================
+    دالة إظهار شاشة Hud
+   ================= */
   showHud() {
     stateManager.stateOnchange((state) => {
       if (state === "playing") {
@@ -33,6 +39,9 @@ export class Hud {
     });
   }
 
+/* ===============
+     دالة إيقاف اللعب
+   =============== */
   toPauseState() {
     this.pauseBtn.addEventListener("click", () => {
       audioManager.pause("bg");
@@ -44,6 +53,9 @@ export class Hud {
     });
   }
 
+/* =====================
+   دالة إظهار شريط صحة الزعيم
+  ====================== */
   healthBarChanged(game) {
     if (game.bossStart) {
       this.enemyHealthBar.style.right = "-10%";
@@ -60,6 +72,9 @@ export class Hud {
     this.healthbar.style.transform = `scaleX(${healthRate})`;
   }
 
+/* ==================
+    دالة إظهار شريط السكور
+   ================== */
   showScoreBar(stateManager) {
     stateManager.stateOnchange((state) => {
       if (state === "playing") {
@@ -72,6 +87,9 @@ export class Hud {
     });
   }
 
+  /* ==================
+     دالة تحديثات واجهة السكور
+    ================== */
   updateScoreAndhealth(game) {
     // تحديث الـ score
     this.scoreValue.textContent = game.score;
