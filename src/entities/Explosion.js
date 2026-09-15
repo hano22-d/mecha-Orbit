@@ -36,11 +36,11 @@ export class Explosion {
     this.currentFrame = 0;
     this.frameTimer = 0;
     
-    // 👈 2. تعديل زمن وسلوك الفريمات بناءً على الجودة
+    // تعديل زمن وسلوك الفريمات بناءً على الجودة
     const quality = settingsManager.getGraphicsQuality();
     if (quality === "low") {
       this.frameInterval = 60; // تسريع زمن نهاية الانفجار لتوفير الفريمات
-      this.frameStep = 2;      // قفز فريمين كل مرة (توفير 50% من عمليات الرسم)
+      this.frameStep = 2;      // قفز فريمين كل مرة
     } else if (quality === "medium") {
       this.frameInterval = 50; 
       this.frameStep = 1;
@@ -52,6 +52,9 @@ export class Explosion {
     this.finished = false;
   }
 
+  /* =====================
+      دالة تحميل فريمات الانفجارات
+     ===================== */
   static _preloadAssets() {
     if (!Explosion.assetsLoaded) {
       Explosion.enemyFrames = Array.from({ length: 10 }, (_, i) => {
@@ -69,17 +72,22 @@ export class Explosion {
     }
   }
 
+  /* ====================
+      دالة جلب الفريمات المطلوبة
+     ==================== */
   _getFramesCount() {
     if (this.type === "player") return Explosion.playerFrames.length;
     if (this.type === "xilosVex") return Explosion.xilosFrames.length;
     return Explosion.enemyFrames.length;
   }
 
+  /* ============
+      دالة التحديث 
+     ============ */
   update(deltaTime) {
     this.life += deltaTime;
     this.frameTimer += deltaTime;
 
-    // 👈 3. استخدام frameStep المخصص للجودة
     if (this.frameTimer > this.frameInterval) {
       this.currentFrame += this.frameStep; // القفز بناءً على الجودة (1 أو 2)
       this.frameTimer = 0;
@@ -90,6 +98,9 @@ export class Explosion {
     }
   }
 
+  /* ==============
+      دالة تلاشي الانفجار
+     ============== */
   isDone() {
     return this.finished || this.life > this.maxLife;
   }
