@@ -1,3 +1,6 @@
+/* =========
+     الثوابت 
+   ========= */
 const BUFFER_ZONE = 200; // المنطقة العازلة خارج حدود الشاشة لتوليد النجوم
 const TWINKLE_SPEED = 0.05; // سرعة وميض وتغير لمعان النجوم
 
@@ -22,7 +25,9 @@ export class Background {
     this.init();
   }
 
-// ========== دالة توليد التدرج اللوني للخلفية السوداء ========= //
+/* ============================ 
+    دالة توليد التدرج اللوني للخلفية السوداء
+   ============================ */
   _initSpaceGradient() {
     const ctx = this.canvas.getContext("2d");
     this.spaceGradient = ctx.createLinearGradient(0, 0, 0, this.canvas.logicalHeight);
@@ -30,7 +35,9 @@ export class Background {
     this.spaceGradient.addColorStop(1, "#000000"); // أسود مطلق في الأسفل
   }
 
-// ============ دالة توليد النجوم =========== //
+/* ============
+   دالة توليد النجوم
+   ============ */
   init() {
     for (let layer of this.layers) {
       for (let i = 0; i < layer.starCount; i++) {
@@ -44,7 +51,9 @@ export class Background {
     }
   }
 
-  // ========= دالة اعادة تدوير النجوم ========== //
+  /* =================
+      دالة اعادة تدوير النجوم 
+     ================= */
   _recycleStarIfOutOfBounds(star) {
     const isPastBottom = star.y > this.camera.y + this.canvas.logicalHeight + BUFFER_ZONE;
     const isPastTop    = star.y < this.camera.y - BUFFER_ZONE;
@@ -57,6 +66,9 @@ export class Background {
     }
   }
 
+  /* =============
+       دالة التحديث
+     ============= */
   update() {
     //اذا لم تكن هناك قيمة للكاميرا في الفريم السابق, نجعل الفريم السابق هو نفسه الحالي
     const prevCamX = this.previousCameraX !== null ? this.previousCameraX : this.camera.x;
@@ -75,7 +87,6 @@ export class Background {
         star.x += cameraDeltaX * layer.movementSpeed;
         star.y += cameraDeltaY * layer.movementSpeed;
 
-        //تغير الشفافية
         star.opacity += (Math.random() - 0.5) * TWINKLE_SPEED;
 
         // إعادة تدوير النجوم الخارجة عن نطاق الكاميرا
@@ -87,12 +98,14 @@ export class Background {
     this.previousCameraX = this.camera.x;
     this.previousCameraY = this.camera.y;
   }
+
+  /* ==========
+      دالة الرسم
+     ========== */
   draw(ctx, camera) {
-    // رسم الخلفية المتدرجة مرة واحدة
     ctx.fillStyle = this.spaceGradient;
     ctx.fillRect(0, 0, this.canvas.logicalWidth, this.canvas.logicalHeight);
   
-    // رسم النجوم المجمع لكل طبقة
     for (let layer of this.layers) {
       ctx.beginPath();
 
