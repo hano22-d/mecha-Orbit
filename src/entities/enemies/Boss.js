@@ -44,7 +44,7 @@ export class Boss {
       }  
     ];
 
-    // 🟢 جلب صورة رصاصة الزعيم من الذاكرة مباشرة
+    // جلب صورة رصاصة الزعيم
     this.imgBullet = assetsManager.getImage("bossW");
     this.color = "red";
     this.speed = 0.06;
@@ -52,21 +52,20 @@ export class Boss {
     this.hit = false;
     this.bulletDamage = 30;
 
-    // تهيئة التدرج الدائري (الهالة الضوئية) مرة واحدة فقط
+    // تهيئة التدرج الدائري
     this.bossGlowGradient = null;
     this._initGlowGradient(canvas);
 
-    // 🟢 سحب الأصول الجاهزة وتخزينها كمتغيرات ساكنة (Static)
+    // جلب الصور وتخزينها بشكل ساكن
     if (!Boss.imagesPreloaded) {
       
-      // 1️⃣ جلب فريمات الحركة الأساسية للزعيم
+      // جلب فريمات الحركة الأساسية للزعيم
       Boss.baseFrames = [
         assetsManager.getImage("bossFrame1"),
         assetsManager.getImage("bossFrame2")
       ];
-
-      // 2️⃣ جلب فريمات الضرر من الذاكرة تِبعاً لمفاتيحك الجديدة (explosionB)
-      // مصفوفتك القديمة كانت تحتوي على 24 فريم، والآن لدينا 17 فريم من نوع B
+      
+      // فريمات الضرر
       Boss.damageFrames = Array.from({ length: 17 }, (_, i) => {
         const key = `explosionB${i + 1}`;
         return assetsManager.getImage(key);
@@ -88,9 +87,10 @@ export class Boss {
     };
   }
 
-  // دالة مخصصة لبناء التدرج المحلي الثابت (مركزه 0,0) لمرة واحدة فقط
+  /* =========
+      دالة التدرج 
+     ========= */
   _initGlowGradient(canvas) {
-    // نستخدم السياق الافتراضي المؤقت لبناء التدرج
     const tempCtx = canvas.getContext("2d");
     this.bossGlowGradient = tempCtx.createRadialGradient(0, 0, 10, 0, 0, 300);
     this.bossGlowGradient.addColorStop(0, "rgba(255, 68, 0, 0.35)");
@@ -98,6 +98,9 @@ export class Boss {
     this.bossGlowGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
   }
 
+  /* ============
+       دالة التحديث 
+     ============ */
   update(time, deltaTime, game) {
     if (!this.alive) return;
 
@@ -137,13 +140,16 @@ export class Boss {
     UpdateAnimationFrame(this.bossDamageFrameSettings, Boss.damageFrames, deltaTime);
   }
 
+  /* =========
+      دالة الرسم
+     ========= */
   draw(ctx, camera) {
     if (!this.alive) return;
 
     const centerX = Math.round(this.x + this.width / 2 - camera.x);
     const centerY = Math.round(this.y + this.height / 2 - camera.y);
 
-    // 🔥 الخطوة 2: رسم الهالة الضوئية باستخدام التدرج المخزن (Cache) وبأعلى كفاءة رسومية لكرت الشاشة
+    // رسم الهالة الضوئية باستخدام التدرج
     ctx.save();
     ctx.translate(centerX, centerY); // الانتقال لمركز الزعيم
     ctx.fillStyle = this.bossGlowGradient; // استدعاء التدرج الجاهز فوراً
@@ -152,7 +158,7 @@ export class Boss {
     ctx.fill();
     ctx.restore();
 
-    // 🎨 رسم فريم جسم الزعيم الحالي
+    // رسم فريم جسم الزعيم الحالي
     const frame = Boss.baseFrames[this.bossFrameSettings.currentFrame];
     const drawX = Math.round(this.x - camera.x);
     const drawY = Math.round(this.y - camera.y);
@@ -161,7 +167,7 @@ export class Boss {
       ctx.drawImage(frame, drawX, drawY, this.width, this.height);
     }
 
-    // 💨 رسم تأثيرات أعمدة الدخان والنيران عند هبوط نقاط الحياة عن 50%
+    // رسم تأثيرات أعمدة الدخان والنيران
     if (this.health < 150) {
       const frameDamage = Boss.damageFrames[this.bossDamageFrameSettings.currentFrame];
       
