@@ -1,4 +1,3 @@
-// كلاس شرارات الصاروخ المتجاوب
 export class Particle {
   constructor(x, y, missileAngle, scale = 1) {
     this.x = x;

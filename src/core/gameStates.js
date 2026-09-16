@@ -1,6 +1,6 @@
 // الحالات الرسمية للعبة
 let gameStates = {
-  loading: "loading", // 🟢 تمت الإضافة هنا كحالة أولى
+  loading: "loading",
   intro: "intro",
   menu: "menu",
   playing: "playing",
@@ -11,7 +11,6 @@ let gameStates = {
 
 export class StateManager {
   constructor() {
-    // 🟢 نبدأ اللعبة بحالة التحميل كحالة افتراضية
     this.current = gameStates.loading; 
     this.listeners = [];
   }

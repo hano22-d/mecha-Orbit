@@ -134,7 +134,7 @@ score Bar
   text-shadow: 0 0 10px var(--color-danger), 0 0 25px rgba(0, 200, 255, 0.7);
 }
 
-/* 🌀 تطبيق الثيم الأحمر المضيء على الدائرة */
+/* تطبيق الثيم الأحمر المضيء على الدائرة*/
 .hud-circle-wrapper.score-theme {
   border: 3px double rgba(255, 0, 85, 0.3);
   box-shadow: 0 0 15px rgba(255, 0, 85, 0.2),
@@ -151,7 +151,7 @@ score Bar
   border-top-color: var(--color-danger);
   border-bottom-color: var(--color-danger);
   box-shadow: 0 0 10px var(--color-danger);
-  animation: rotateRadar 4s linear infinite; /* يستعير نفس أنيميشن الدوران السابق */
+  animation: rotateRadar 4s linear infinite;
 }
 
 .hud-circle-wrapper.score-theme .hud-circle-inner {
@@ -160,7 +160,7 @@ score Bar
   background: var(--color-bg-overlay);
 }
 
-/* 💀 أيقونة الجمجمة مع تأثير النبض الغامض (Skull Breathe) */
+/* أيقونة الجمجمة مع تأثير النبض الغامض (Skull Breathe) */
 .skull-svg {
   width: 4rem;
   height: 4rem;
@@ -193,7 +193,7 @@ score Bar
   text-shadow: 0 0 5px rgba(255, 0, 85, 0.6);
 }
 
-/* 🎬 أنيميشن نبض الجمجمة الخاص */
+/* أنيميشن نبض الجمجمة */
 @keyframes skullPulse {
   0%,
   100% {
@@ -268,7 +268,6 @@ score Bar
 }
 
 /* لمعة الطاقة */
-
 .playerHealthBar::after {
   content: "";
 
@@ -348,7 +347,7 @@ score Bar
   user-select: none;
 }
 
-/* 🌀 تأثير الدائرة الحية والرادار */
+/* تأثير الدائرة الحية والرادار */
 .hud-circle-wrapper {
   width: 2.5rem;
   height: 2.5rem;
@@ -394,7 +393,7 @@ score Bar
   background: var(--color-bg-overlay);
 }
 
-/* 🚀 أيقونة الصاروخ النيوني مع تأثير النبض الخفيف (Pulse) */
+/* أيقونة الصاروخ النيوني مع تأثير النبض الخفيف (Pulse) */
 .missile-svg {
   width: 4rem;
   height: 4rem;
@@ -404,7 +403,7 @@ score Bar
   animation: missilePulse 2s ease-in-out infinite;
 }
 
-/* 📋 لوحة العداد الممتدة من الدائرة */
+/* لوحة العداد الممتدة من الدائرة */
 .hud-counter-plate {
   height: 4rem;
   padding: 0 var(--space-xxl) 0 4rem; /* إزاحة لليسار لتعويض تداخل الدائرة */
@@ -454,7 +453,7 @@ score Bar
   letter-spacing: 3px;
 }
 
-/* 🎬 الأنيميشن والحركات التفاعلية */
+/* الأنيميشن والحركات التفاعلية */
 
 /* دوران حواف الرادار الخارجي */
 @keyframes rotateRadar {

@@ -1,4 +1,3 @@
-// Game.js - النسخة المطهرة مع شاشة التحميل
 import { Player } from "../entities/player";
 import { Enemy } from "../entities/enemies/Enemy";
 import { Chaser } from "../entities/enemies/Chaser";
@@ -23,8 +22,6 @@ import { Rocks } from "../entities/rocks";
 import { gameOverUi } from "../ui/gameOver";
 import { TouchButton } from "../entities/ToucheButton";
 import { settingsManager } from "../systems/settingsManager";
-
-// 🟢 استيراد مدير الأصول المشترك
 import { LoadingScene } from "../ui/loading";
 import { assetsManager } from "../systems/AssetsManager";
 
@@ -39,7 +36,7 @@ export class Game {
     window.gameInstance = this;
     this.gameTimer = 0;
 
-    // 🛸 الكائنات الحركية (تجهيز المتغيرات فارغة، وسيتم إنشاؤها فور انتهاء التحميل)
+    // الكائنات الحركية
     this.player = null;
     this.background = null;
     this.boss = null;
@@ -88,7 +85,7 @@ export class Game {
     // مصفوفة تخزين الأزرار الافتراضية للموبايل
     this.touchButtons = [];
 
-    // معالجة الـ Resize بأمان
+    // معالجة الـ Resize
     this._resizeHandler = () => this.handleResize();
     window.addEventListener("resize", this._resizeHandler);
 
@@ -104,10 +101,16 @@ export class Game {
     this.loadingScene.start(this.myCanvas);
   }
 
+  /* ============================== 
+     دالة ضبط الابعاد حسب الشاشة
+     ============================== */
   destroy() {
     window.removeEventListener("resize", this._resizeHandler);
   }
 
+  /* ============================== 
+        دالة التحديث العامة
+     ============================== */
   update(input, time, deltaTime) {
     if (stateManager.getState() === "loading") return;
 
@@ -138,7 +141,7 @@ export class Game {
       this.player.weaponProgressEffect = 0;
     }
 
-    this.handleCameraAndBossPhase();
+    this.CameraAndBossPhase();
 
     // تحديث الخلفية واللاعب
     this.background.update(this.camera);
@@ -178,6 +181,9 @@ export class Game {
     hud.update(this, this.myCanvas);
   }
 
+  /* ============================== 
+       دالة الرسم العامة
+     ============================== */
   draw() {
     const isShaking = this.shake.power > 0;
 
@@ -194,12 +200,12 @@ export class Game {
     this.renderEnemyBatch(this.enemies, this.ctx, this.camera);
     this.player.draw(this.ctx, this.camera);
 
-    //  رسم الزعيم بأمان تام (فحص الـ null أولاً لمنع انهيار اللعبة)
+    // رسم الزعيم
     if (this.bossStart && this.boss && this.boss.alive) {
       this.boss.draw(this.ctx, this.camera);
     }
 
-    // رسم المقذوفات والعناصر على دفعات (Batch Rendering الفخم)
+    // رسم المقذوفات والعناصر على دفعات (Batch Rendering)
     this.renderSpriteBatch(this.bullets, this.ctx, this.camera);
     this.renderSpriteBatch(this.enemiesBullets, this.ctx, this.camera);
     this.renderSpriteBatch(this.powerUps, this.ctx, this.camera);
@@ -229,7 +235,9 @@ export class Game {
     this.drawFlash(this.ctx, this.myCanvas);
   }
 
-  // دالة إطلاق الرصاص
+  /* ======================
+      دالة إطلاق الرصاص
+     ======================*/
   spawnBulletPlayer(input, gameTimer) {
     if (!this.player.weapon || typeof this.player.weapon.shoot !== "function") {
       this.player.weapon = new NormalWeapon(this.player);
@@ -242,7 +250,9 @@ export class Game {
     }
   }
 
-  // دالة تحديث الرصاص
+  /* ======================== 
+       دالة تحديث الرصاص
+     ========================*/
   updateBullets(canvas, camera) {
     for (let i = this.bullets.length - 1; i >= 0; i--) {
       const bullet = this.bullets[i];
@@ -258,7 +268,10 @@ export class Game {
       }
     }
   }
-  //تابع توليد الاعداء
+
+  /* =====================
+     دالة توليد الاعداء
+     ===================== */
   spawnEnemy(gameTimer) {
     //زيادة نسب الاعداء المتطورين وسرعتهم حسب الزمن
     let normalWeight = 50;
@@ -346,7 +359,10 @@ export class Game {
       );
     }
   }
-  //دالة تحديث الاعداء
+
+  /* ====================== 
+     دالة  تحديث الاعداء
+     ====================== */
   updateEnemies(gameTimer, deltaTime, camera) {
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       const enemy = this.enemies[i];
@@ -364,11 +380,11 @@ export class Game {
 
     // زيادة معدل التوليد حسب خط الزمن
     if (gameTimer > 45000) {
-      this.enemyDelay = 1000; // تكثيف شديد قبل الزعيم
+      this.enemyDelay = 1000;
     } else if (gameTimer > 25000) {
-      this.enemyDelay = 1500; // صعوبة متوسطة
+      this.enemyDelay = 1500;
     } else {
-      this.enemyDelay = 2000; // البداية الهادئة
+      this.enemyDelay = 2000;
     }
 
     if (gameTimer - this.lastEnemy > this.enemyDelay && !this.bossStart) {
@@ -377,7 +393,9 @@ export class Game {
     }
   }
 
-  //دالة توليد رصاصات العدو
+  /* ============================== 
+     دالة توليد رصاصات العدو
+     ============================== */
   spawnEnemyBullets(enemy, player) {
     if (!this.player.alive) return;
 
@@ -417,7 +435,10 @@ export class Game {
 
     audioManager.poolPlay("EnemyWeapon");
   }
-  // دالة تحديث رصاصات العدو
+
+ /* ============================== 
+     دالة تحديث رصاصات العدو
+     ============================== */
   updateEnemyBullets(canvas, camera) {
     for (let i = this.enemiesBullets.length - 1; i >= 0; i--) {
       const bullet = this.enemiesBullets[i];
@@ -434,7 +455,9 @@ export class Game {
     }
   }
 
-  //دالة توليد المكافات
+  /* ======================
+     دالة توليد المكافات
+     ====================== */
   spawnPoweUp() {
     const types = [MissilePowerUp, WeaponPowerUp, HealthPowerUp, ShieldPowerUp];
     const randomType = types[Math.floor(Math.random() * types.length)];
@@ -458,7 +481,9 @@ export class Game {
     );
   }
 
-  //تحديث المكافات
+  /* ========================
+     دالة تحديث المكافات
+     ======================== */
   updatePowerUp(gameTimer) {
     for (let i = this.powerUps.length - 1; i >= 0; i--) {
       const powerup = this.powerUps[i];
@@ -490,7 +515,9 @@ export class Game {
     }
   }
 
-  // توليد الانفجارات
+  /* =======================
+      دالة توليد الانفجارات
+     ======================= */
 spawnExplosion(target, typeName) {
   if (!target) return;
 
@@ -554,6 +581,9 @@ spawnExplosion(target, typeName) {
     }
   }
 
+  /* ========================
+      دالة تحديث الصواريخ
+     ======================== */
   updateMissile(input, time, deltaTime) {
     this.spawnMissile(input, time, deltaTime);
 
@@ -579,13 +609,16 @@ spawnExplosion(target, typeName) {
     }
   }
 
+  /* =========================
+      دالة إدارة التصادمات
+     ========================= */
   handleCollisions(gameTimer) {
-    // 🛸 [قسم الزعيم]: يتم فحصه فقط وحصرياً إذا كان الزعيم موجوداً وحياً في الذاكرة
+    // [قسم الزعيم]: يتم فحصه فقط وحصرياً إذا كان الزعيم موجوداً وحياً في الذاكرة
     if (this.boss && this.boss.alive) {
       const bossHitBoxes = this.boss.hitBox || this.boss.htiBox;
 
       if (bossHitBoxes) {
-        // 1️⃣ تصادم الزعيم مع رصاص اللاعب
+        // تصادم الزعيم مع رصاص اللاعب
         for (let i = this.bullets.length - 1; i >= 0; i--) {
           const bullet = this.bullets[i];
           if (!bullet) continue;
@@ -608,7 +641,7 @@ spawnExplosion(target, typeName) {
           }
         }
 
-        // 2️⃣ تصادم الزعيم مع صواريخ اللاعب
+        // تصادم الزعيم مع صواريخ اللاعب
         for (let i = this.missile.length - 1; i >= 0; i--) {
           const missile = this.missile[i];
           if (!missile || !missile.alive) continue;
@@ -637,13 +670,13 @@ spawnExplosion(target, typeName) {
           }
         }
       }
-    } // 👈 نهاية كتل شرط الزعيم بأمان! المعالج سيكمل الآن للأسفل دائماً
+    }
 
     // ==========================================
-    // 🎮 [قسم اللعب العام والأعداء والصخور العادية]
+    // [قسم اللعب العام والأعداء والصخور العادية]
     // ==========================================
 
-    // 1️⃣ تصادم الأعداء مع رصاص اللاعب
+    // تصادم الأعداء مع رصاص اللاعب
     for (let i = this.bullets.length - 1; i >= 0; i--) {
       const bullet = this.bullets[i];
       if (!bullet) continue;
@@ -700,7 +733,7 @@ spawnExplosion(target, typeName) {
       }
     }
 
-    // 2️⃣ تصادم اللاعب مع الأعداء
+    // تصادم اللاعب مع الأعداء
     if (this.player.alive) {
       const playerBoxes = this.player.hitBox;
 
@@ -761,7 +794,7 @@ spawnExplosion(target, typeName) {
       }
     }
 
-    // 3️⃣ تصادم الـ powerUps مع اللاعب
+    // تصادم الـ powerUps مع اللاعب
     if (this.player.alive) {
       const playerBoxes = this.player.hitBox;
 
@@ -793,7 +826,7 @@ spawnExplosion(target, typeName) {
       }
     }
 
-    // 4️⃣ تصادم اللاعب مع رصاصات العدو
+    // تصادم اللاعب مع رصاصات العدو
     if (this.player.alive) {
       const playerBoxes = this.player.hitBox;
 
@@ -845,7 +878,7 @@ spawnExplosion(target, typeName) {
       }
     }
 
-    // 5️⃣ تصادم الأعداء مع الصواريخ الموجّهة
+    // تصادم الأعداء مع الصواريخ الموجّهة
     for (let i = this.missile.length - 1; i >= 0; i--) {
       const missile = this.missile[i];
       if (!missile || !missile.alive) continue;
@@ -900,7 +933,7 @@ spawnExplosion(target, typeName) {
       }
     }
 
-    // 6️⃣ تصادم اللاعب مع الصخور
+    // تصادم اللاعب مع الصخور
     if (this.player.alive) {
       const playerBoxes = this.player.hitBox;
 
@@ -960,7 +993,7 @@ spawnExplosion(target, typeName) {
       }
     }
 
-    // 7️⃣ تصادم رصاصات اللاعب مع الصخور
+    // تصادم رصاصات اللاعب مع الصخور
     for (let i = this.bullets.length - 1; i >= 0; i--) {
       const bullet = this.bullets[i];
       if (!bullet) continue;
@@ -1001,20 +1034,20 @@ spawnExplosion(target, typeName) {
     }
   }
 
+  /* ==========================
+      دالة حالة موت الزعيم
+     ========================== */
   triggerBossDefeat() {
     this.boss.alive = false;
 
     if (typeof this.boss.delete === "function") this.boss.delete();
 
-    // توليد انفجار مركزي سينمائي للزعيم
     this.spawnExplosion(this.boss, "xilosVex");
 
-    // تشغيل أصوات الانفجار الملحمية
     audioManager.play("explotionXilos1");
 
-    // تأخير الانتقال لشاشة الفوز بأمان
+    // تأخير الانتقال لشاشة الفوز
     setTimeout(() => {
-      // التأكد من أن اللاعب ما زال حياً ولم يمت مع الزعيم في نفس اللحظة
       if (!this.player.alive || this.player.health <= 0) return;
 
       stateManager.setState("win");
@@ -1025,6 +1058,9 @@ spawnExplosion(target, typeName) {
     }, 2000);
   }
 
+  /* ======================
+     دالة زيادة النقود
+     ====================== */
   updateCredits(enemy) {
     if (enemy.color === "red") {
       this.credits++;
@@ -1036,7 +1072,10 @@ spawnExplosion(target, typeName) {
       this.credits += 4;
     }
   }
-  // 🔄 دالة تفريغ الكائنات وإعادة التعيين الآمنة بنسبة 100%
+
+  /* ===================================== 
+     داة تفريغ الكائنات وإعادة التعيين
+     ===================================== */
   reset() {
     this.gameTimer = 0;
     this.score = 0;
@@ -1044,7 +1083,7 @@ spawnExplosion(target, typeName) {
     this.bulletsFired = 0;
     this.bulletsColision = 0;
 
-    // تفريغ كامل للمصفوفات لضمان عدم تسريب كائنات من الجيم السابق
+    // تفريغ كامل للمصفوفات
     this.bullets = [];
     this.enemies = [];
     this.enemiesBullets = [];
@@ -1061,7 +1100,6 @@ spawnExplosion(target, typeName) {
     this.bossStart = false;
     this.bossMusicPlayed = false;
 
-    // 🛡️ التطهير الجذري للزعيم: نعيده إلى null لتبدأ الدورة الزمنية للعبة بشكل نقي تماماً
     this.boss = null;
 
     this.bossArenaX = 0;
@@ -1099,33 +1137,38 @@ spawnExplosion(target, typeName) {
     }
   }
 
-  // 🫨 اهتزاز الشاشة
+  /* ===================== 
+     داة اهنزاز الشاشة
+     ===================== */
   triggerShacke(power, duration) {
     this.shake.power = power;
     this.shake.duration = duration;
   }
 
-  // 💥 توليد الحطام المتناثر عند تدمير الأعداء
-// 💥 توليد الحطام المتناثر عند تدمير الأعداء بناءً على جودة الجرافيكس
+/* ======================
+      دالة توليد الحطام
+     ===================== */
 spawnDebris(enemy) {
   if (!enemy) return;
 
   const graphics = settingsManager.getGraphicsQuality();
 
-  // 1️⃣ في الوضع المنخفض (Low): إلغاء الشظايا تماماً لتوفير أعلى أداء
+  // في الوضع المنخفض (Low): إلغاء الشظايا تماماً لتوفير أعلى أداء
   if (graphics === "low") return;
 
-  // 2️⃣ في الوضع المتوسط (Medium): إظهار الشظايا بنسبة 50% فقط من الانفجارات
+  // في الوضع المتوسط (Medium): إظهار الشظايا بنسبة 50% فقط من الانفجارات
   if (graphics === "medium" && Math.random() > 0.5) return;
 
-  // 3️⃣ في الوضع العالي (High) أو الحالات المتبقية: إنشاء الشظية بكامل قوّتها
+  // في الوضع العالي (High) أو الحالات المتبقية: إنشاء الشظية بكامل قوّتها
   const enemyCenterX = enemy.x + enemy.width / 2;
   const enemyCenterY = enemy.y + enemy.height / 2;
 
   this.debris.push(new Debris(this.myCanvas, enemyCenterX, enemyCenterY));
 }
 
-  // 🪨 توليد الصخور العشوائية خارج حدود الكاميرا العلوية
+  /* ===================== 
+     دالة توليد الصخور
+     ===================== */
   spawnRocks(gameTimer) {
     if (gameTimer - this.lastRock > this.rockDelay && !this.bossStart) {
       const isMobile =
@@ -1146,24 +1189,29 @@ spawnDebris(enemy) {
     }
   }
 
-  // 🔄 تحديث الصخور بحلقات فور سريعة ومنخفضة التكلفة
+  /* ==================== 
+     دالة تحديث الصخور
+     ==================== */
   updateRocks(gameTimer, deltaTime) {
     this.spawnRocks(gameTimer);
 
-    // تم استبدال forEach بحلقة for تقليدية فائقة السرعة
     for (let i = 0; i < this.rocks.length; i++) {
       if (this.rocks[i]) this.rocks[i].update(deltaTime);
     }
   }
 
-  // 🔄 تحديث الحطام بحلقات فور سريعة
+  /* ==================== 
+     دالة تحديث الحطام
+     ==================== */
   updateDebris(deltaTime) {
     for (let i = 0; i < this.debris.length; i++) {
       if (this.debris[i]) this.debris[i].update(deltaTime);
     }
   }
 
-  // 🎨 رسم تأثير الفلاش الأبيض (مثلاً عند تلقي ضرر قوي)
+  /* ============================= 
+     دالة رسم تأثير الفلاش الابيض
+     ============================= */
   drawFlash(ctx, canvas) {
     if (this.flash.alpha <= 0) return;
 
@@ -1174,14 +1222,17 @@ spawnDebris(enemy) {
     ctx.restore();
   }
 
-  handleCameraAndBossPhase() {
+  /* ==============================================
+    دالة ضبط  الكاميرا لوضع حلبة المعركة الاخيرة
+     =============================================== */
+  CameraAndBossPhase() {
     if (this.bossStart) {
       // إذا بدأت مواجهة الزعيم ولم نثبت الحلبة بعد
       if (!this.bossArenaX) {
         this.bossArenaX = this.camera.x;
         this.bossArenaY = this.camera.y;
 
-        // 🛡️ جدار حماية لمنع الانهيار: نتحقق من وجود الزعيم أولاً قبل حساب أبعاده وموقعه
+        // نتحقق من وجود الزعيم أولاً قبل حساب أبعاده وموقعه
         if (this.boss) {
           this.boss.x =
             this.bossArenaX +
@@ -1214,7 +1265,7 @@ spawnDebris(enemy) {
     }
   }
 
-  // 📱 2️⃣ دالة الاستجابة عند تغير أبعاد الكانفاس (مثل قلب الهاتف أو تغيير حجم المتصفح)
+  // دالة الاستجابة عند تغير أبعاد الكانفاس (مثل قلب الهاتف أو تغيير حجم المتصفح)
 handleResize() {
   // إجبار اللاعب على إعادة فحص حدوده فوراً بناءً على الأبعاد الجديدة بشرط أن يكون حياً
   if (this.player && this.player.alive) {
@@ -1228,8 +1279,7 @@ handleResize() {
     this.initTouchControls();
   }
 
-  // 🟢 الإضافة الذهبية الجديدة:
-  // إذا كانت شاشة التحميل موجودة ولم تبدأ بعد، نأمرها بالتحقق والبدء فوراً بمجرد تدوير الشاشة!
+  // بدء تحميل البيانات بمجرد قلب الهاتف
   if (this.loadingScene && typeof this.loadingScene.start === "function") {
     this.loadingScene.start(this.myCanvas);
   }
@@ -1426,7 +1476,7 @@ handleResize() {
       }
     }
 
-    // 🛸 ممر رسم الحطام المجمع المطهّر
+    // ممر رسم الحطام المجمع المطهّر
     if (this.debris.length > 0) {
       const debLen = this.debris.length;
       for (let i = 0; i < debLen; i++) {
@@ -1436,7 +1486,7 @@ handleResize() {
         ctx.save();
         ctx.globalAlpha = deb.alpha;
 
-        // 🟢 التعديل الجوهري: القراءة مباشرة من المصفوفة الساكنة لكلاس الشظايا
+        // التعديل الجوهري: القراءة مباشرة من المصفوفة الساكنة لكلاس الشظايا
         let frame = Debris.frames[deb.currentDebris];
         const renderX = Math.round(deb.x - camera.x - deb.offsetX);
         const renderY = Math.round(deb.y - camera.y - deb.offsetY);

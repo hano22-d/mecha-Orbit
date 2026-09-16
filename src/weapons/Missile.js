@@ -41,7 +41,7 @@ export class Missile {
     if (this.target === null) {
       let minDistance = Infinity;
 
-      // أ) فحص الأعداء العاديين في المصفوفة بالحلقة السريعة
+      // فحص الأعداء العاديين في المصفوفة بالحلقة السريعة
       const len = enemies.length;
       for (let i = 0; i < len; i++) {
         if (!enemies[i] || enemies[i].alive === false) continue;
@@ -69,12 +69,12 @@ export class Missile {
       }
     }
 
-    // 2️⃣ تصفير الهدف إذا مات
+    // تصفير الهدف إذا مات
     if (this.target && this.target.alive === false) {
       this.target = null;
     }
 
-    // 3️⃣ نظام التوجيه الذكي وملاحقة الهدف الحالي
+    // نظام التوجيه الذكي وملاحقة الهدف الحالي
     if (this.target !== null) {
       const dxTarget = this.target.x - this.x;
       const dyTarget = this.target.y - this.y;

@@ -19,7 +19,7 @@ export class Debris {
 
     this.alpha = 1;
 
-    // تحميل الصور بشكل ساكن وآمن من الذاكرة الرام
+    //تحميل الصور
     Debris._preloadAssets();
 
     this.currentDebris = 0;
@@ -28,7 +28,7 @@ export class Debris {
     this.finished = false;
   }
 
-  // 🟢 دالة داخلية مطهرة لجلب الصور الجاهزة فوراً دون طلبات شبكة
+  // دالة لجلب الصور الجاهزة
   static _preloadAssets() {
     if (!Debris.assetsLoaded) {
       // جلب الصور من الذاكرة بناءً على مفاتيحها بترتيب الضرر التنازلي
@@ -39,7 +39,6 @@ export class Debris {
       ];
 
       Debris.assetsLoaded = true;
-      console.log("💥 تم ربط فريمات الشظايا بنجاح من الذاكرة!");
     }
   }
 
@@ -57,7 +56,7 @@ export class Debris {
       this.finished = true;
     }
 
-    // تأثير التلاشي التدريجي (Fade Out) للشظايا لتأثير بصري احترافي
+    // تأثير التلاشي التدريجي للشظايا لتأثير بصري احترافي
     this.alpha = Math.max(0, this.alpha - 0.02);
   }
 }

@@ -2,13 +2,10 @@ import { Weapon } from "./Weapon";
 import { Bullet } from "../entities/Bullet";
 import { assetsManager } from "../systems/AssetsManager";
 
-// 🛑 قمنا بحذف السطر القديم من هنا لمنع جلبه قبل اكتمال التحميل
-
 export class NormalWeapon extends Weapon {
   constructor(...arg) {
     super(...arg);
-    // 🟢 نجلب الصورة هنا داخل الباني (Constructor) 
-    // لأن الباني لا يُستدعى إلا بعد انتهاء شاشة التحميل وبدء اللعبة، مما يضمن وجود الصورة!
+
     this.image = assetsManager.getImage("normalW");
   }
 
@@ -28,14 +25,14 @@ export class NormalWeapon extends Weapon {
     const centerX = this.owner.x;
     const centerY = this.owner.y;
 
-    // الحسابات المحلية النسبية المعتمدة على حجم الطائرة الحالي (متجاوب بالفعل)
+    // الحسابات المحلية النسبية المعتمدة على حجم الطائرة الحالي
     const localX = this.owner.width / 2 - this.owner.width / 12;
     const localY = -(this.owner.height / 10);
 
-    // 📱 فحص الشاشة المتجاوب للرصاصة
+    // فحص الشاشة المتجاوب للرصاصة
     const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
-    // جعل حجم الرصاصة ديناميكياً (اللابتوب: 5x20 | الموبايل: 2.5x10)
+    // جعل حجم الرصاصة ديناميكياً
     const bulletW = isMobile ? 2.5 : 5;
     const bulletH = isMobile ? 10 : 20;
 
@@ -53,7 +50,7 @@ export class NormalWeapon extends Weapon {
         velocityY: velocityY,
         width: bulletW,
         height: bulletH,
-        image: this.image, // 🟢 ستمرر الصورة الآن ككائن HTMLImageElement سليم تماماً!
+        image: this.image,
         damage: 10,
         angle: fireAngle,
       })

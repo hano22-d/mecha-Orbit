@@ -21,7 +21,7 @@ const FLAME_ANIMATION_INTERVAL = 40;
 const WEAPON_ARC_LINE_WIDTH = 6;
 
 export class Player {
-  // 💾 تخزين الصور بشكل ساكن (Static) لحماية الذاكرة وتسريع إعادة التشغيل
+  // تخزين الصور مرة واحدة وبشكل ساكن
   static planeImg = null;
   static missileImage = null;
   static shieldFrames = [];
@@ -74,27 +74,26 @@ export class Player {
     this.fireframeSettings = { currentFrame: 0, frameInterval: FLAME_ANIMATION_INTERVAL, frameTimer: 0 };
   }
 
+  //دالة تحميل الاصول
   _initAssets() {
     if (!Player.assetsLoaded) {
-      // 1️⃣ جلب صورة الصاروخ مباشرة عبر مفتاحها (ملاحظة: تأكد من تسجيل مفتاح "missile" في شاشة التحميل)
+     // جلب صورة الصاروخ
       Player.missileImage = assetsManager.getImage("missile");
 
-      // 2️⃣ جلب صورة الطائرة الأساسية
+      // جلب صورة الطائرة الأساسية
       Player.planeImg = assetsManager.getImage("playerShip");
 
-      // 3️⃣ جلب فريمات درع الحماية (Sheild) الـ 11 الجاهزة من الذاكرة
-      // قمنا بتعديل الـ Loop ليبدأ من 1 إلى 11 ليتطابق مع المفاتيح المرفوعة (sheildFrame1 إلى sheildFrame11)
+      // جلب فريمات الدرع
       Player.shieldFrames = Array.from({ length: 11 }, (_, i) => {
         return assetsManager.getImage(`sheildFrame${i + 1}`);
       });
 
-      // 4️⃣ جلب فريمات لهب المحرك (Fire) الثلاثة الجاهزة (fire1, fire2, fire3)
+      // جلب فريمات لهب المحرك
       Player.fireFrames = Array.from({ length: 3 }, (_, i) => {
         return assetsManager.getImage(`fire${i + 1}`);
       });
 
       Player.assetsLoaded = true;
-      console.log("🛸 تم ربط صور الطائرة وملحقاتها من الذاكرة بنجاح!");
     }
   }
 

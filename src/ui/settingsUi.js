@@ -4,7 +4,7 @@ import { audioManager } from "../systems/SoundsSystem";
 
 export class SettingsUI {
   constructor() {
-    // 1️⃣ عناصر الواجهة الأساسية
+    // عناصر الواجهة الأساسية
     this.overlay = document.getElementById("settings-overlay");
     this.btnClose = document.getElementById("btn-close-settings");
     this.btnSave = document.getElementById("btn-save-settings");
@@ -16,7 +16,7 @@ export class SettingsUI {
       'input[name="graphics-quality"]'
     );
 
-    // 🔊 عناصر التحكم بالصوت (Audio Sliders & Values)
+    // عناصر التحكم بالصوت (Audio Sliders & Values)
     this.sliderMusic = document.getElementById("slider-music-volume");
     this.valMusic = document.getElementById("val-music-volume");
 
@@ -40,12 +40,12 @@ export class SettingsUI {
       }
     });
 
-    // 🎯 تنشيط نظام التبويبات (Tabs Switching)
+    // تنشيط نظام التبويبات (Tabs Switching)
     this.initTabs();
 
     this.initAudioSliders();
 
-    // 🎯 ربط أزرار الإغلاق والحفظ والإعادة
+    // ربط أزرار الإغلاق والحفظ والإعادة
     if (this.btnClose) {
       this.btnClose.addEventListener("click", () => this.hide());
     }
@@ -67,7 +67,7 @@ export class SettingsUI {
     });
   }
 
-  // 🔄 1️⃣ التنقل بين التبويبات (Tabs)
+  // التنقل بين التبويبات (Tabs)
   initTabs() {
     this.tabButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -85,7 +85,7 @@ export class SettingsUI {
     });
   }
 
-  // 🔊 2️⃣ ربط حركة السلايدر بتحديث نص النسبة المئوية (مثلاً: 80%) فوراً أثناء السحب
+  // ربط حركة السلايدر بتحديث نص النسبة المئوية (مثلاً: 80%) فوراً أثناء السحب
   initAudioSliders() {
     const bindSlider = (slider, valSpan) => {
       if (slider && valSpan) {
@@ -99,7 +99,7 @@ export class SettingsUI {
     bindSlider(this.sliderSfx, this.valSfx);
   }
 
-  // 👁️ 2️⃣ إظهار شاشة الإعدادات وتحميل القيم الحالية
+  // إظهار شاشة الإعدادات وتحميل القيم الحالية
   show() {
     this.syncUIWithSettings(); // تزامن القيم الحالية من settingsManager مع عناصر الواجهة
     if (this.overlay) {
@@ -108,7 +108,7 @@ export class SettingsUI {
     }
   }
 
-  // 🙈 3️⃣ إخفاء شاشة الإعدادات
+  // إخفاء شاشة الإعدادات
   hide() {
     if (this.overlay) {
       this.overlay.style.display = "none";
@@ -116,7 +116,7 @@ export class SettingsUI {
     }
   }
 
-  // 🔄 4️⃣ تحديث عناصر الواجهة (Select/Radio) بالقيم المخزنة في الـ SettingsManager
+  // تحديث عناصر الواجهة (Select/Radio) بالقيم المخزنة في الـ SettingsManager
   syncUIWithSettings() {
     // 1. مزامنة الـ FPS
     const currentFps = settingsManager.getFpsLimit();
@@ -148,7 +148,7 @@ export class SettingsUI {
     }
   }
 
-  // 💾 5️⃣ تطبيق وقراءة القيم من الواجهة وحفظها في SettingsManager
+  // تطبيق وقراءة القيم من الواجهة وحفظها في SettingsManager
   applyAndSave() {
     // حفظ خيار الـ FPS
     if (this.selectFps) {
@@ -181,8 +181,7 @@ export class SettingsUI {
     }
   }
 
-  // 🔄 6️⃣ إعادة الإعدادات للافتراضي
-  // 🔄 6️⃣ إعادة الإعدادات للافتراضي
+  // إعادة الإعدادات الافتراضية
   resetToDefaults() {
     settingsManager.setFpsLimit(60);
     settingsManager.setGraphicsQuality("high");
@@ -190,13 +189,13 @@ export class SettingsUI {
     if (settingsManager.setMusicVolume) settingsManager.setMusicVolume(80); // 🎯 تم تعديلها إلى 80
     if (settingsManager.setSfxVolume) settingsManager.setSfxVolume(80);     // 🎯 تم تعديلها إلى 80
 
-    // 🎯 تطبيق التغييرات فوراً على محرك الصوت
+    // تطبيق التغييرات فوراً على محرك الصوت
     if (audioManager) {
       audioManager.setMusicVolume(settingsManager.settings.musicVolume);
       audioManager.setSfxVolume(settingsManager.settings.sfxVolume);
     }
 
-    // 🎯 تحديث عناصر الواجهة والسلايدات بالقيم الجديدة
+    // تحديث عناصر الواجهة والسلايدات بالقيم الجديدة
     this.syncUIWithSettings();
   }
 }

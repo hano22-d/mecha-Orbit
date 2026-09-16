@@ -32,22 +32,21 @@ function gameLoop(time) {
   const targetInterval = settingsManager.getTargetInterval();
 
   if (targetInterval === 0) {
-    // 🚀 حالة Unlimited: تنفيذ الرسم والتحديث مباشرة بدون تقييد
     renderAndUpdate(time, deltaTime);
   } else {
-    // ⏱️ حالة تحديد الإطارات (30, 60, 120 FPS)
+    // حالة تحديد الإطارات
     accumulatedTime += deltaTime;
 
     if (accumulatedTime >= targetInterval) {
       renderAndUpdate(time, accumulatedTime);
-      accumulatedTime %= targetInterval; // خصم الوقت المستهلك مع حفظ الباقي
+      accumulatedTime %= targetInterval;
     }
   }
 
   requestAnimationFrame(gameLoop);
 }
 
-// 🎯 دالة مساعدة تحتفظ بنفس منطق الرسم والتحديث الخاص بك تماماً
+// دالة التحديث والرسم
 function renderAndUpdate(time, deltaTime) {
   ctx.clearRect(0, 0, myCanvas.logicalWidth, myCanvas.logicalHeight);
 

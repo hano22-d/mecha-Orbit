@@ -1,5 +1,3 @@
-//Bullet Class
-
 const SCREEN_OFFBOUNDS_PADDING = 50; // مسافة امان للتاكد من خروج الرصاصة بالكامل من الشاشة قبل حذفها
 
 export class Bullet {

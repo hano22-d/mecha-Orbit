@@ -12,15 +12,15 @@ export class TouchButton {
     this.image = imageSrc
     this.isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
-    // 🎨 متغيرات الشفافية
+    // متغيرات الشفافية
     this.opacity = 0.5;
     this.fadeTimer = 0;
     this.delayDuration = 1000;
 
-    // ✨ زاوية دوران شريط اللمعان
+    // زاوية دوران شريط اللمعان
     this.shineAngle = 0;
 
-    // 🔵 تحديد لون اللمعان الليزري بناءً على نوع الزر
+    // تحديد لون اللمعان الليزري بناءً على نوع الزر
     if (this.type === "SHOOT") {
       this.glowColor = "rgba(0, 212, 255, 1)";
     } else if (this.type === "MISSILE") {

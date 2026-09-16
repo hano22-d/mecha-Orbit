@@ -69,25 +69,6 @@ export class Enemy {
       this.hit = false;
     }
   }
-  /*
-  draw(ctx, camera) {
-    if (!this.alive) return;
-    this._drawHealthBar(ctx, camera);
-    ctx.save();
-    if (this.hit) {
-      ctx.globalAlpha = 0.3 + Math.abs(Math.sin(Date.now() * 0.04)) * 0.5;
-    }
-    if (this.image) {
-      ctx.drawImage(
-        this.image,
-        this.x - camera.x,
-        this.y - camera.y,
-        this.width,
-        this.height
-      );
-    }
-    ctx.restore();
-  } */
 
   drawHealthBar(ctx, camera) {
     if (this.health >= this.maxHealth) return;

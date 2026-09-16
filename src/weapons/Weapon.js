@@ -5,6 +5,6 @@ export class Weapon {
     }
 
     shoot(bullets) {
-      // سيتم override لاحقاً
+      // عند الابناء override لاحقاً
     }
   }

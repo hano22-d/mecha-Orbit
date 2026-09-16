@@ -15,9 +15,9 @@ export class Shooter extends Enemy {
       imageElement: assetsManager.getImage("enemyShooter"),
       
       hitBoxRatio: [
-        { wRatio: 0.2,   hRatio: 0.771, oxRatio: 0.4,   oyRatio: 0.114 }, // المربع الرأسي الرئيسي (35/175, 135/175, 70/175, 20/175)
-        { wRatio: 0.314, hRatio: 0.171, oxRatio: 0.085, oyRatio: 0.428 }, // الجناح الأيسر العريض (55/175, 30/175, 15/175, 75/175)
-        { wRatio: 0.314, hRatio: 0.171, oxRatio: 0.6,   oyRatio: 0.428 }, // الجناح الأيمن العريض (55/175, 30/175, 105/175, 75/175)
+        { wRatio: 0.2,   hRatio: 0.771, oxRatio: 0.4,   oyRatio: 0.114 }, // المربع الرأسي الرئيسي
+        { wRatio: 0.314, hRatio: 0.171, oxRatio: 0.085, oyRatio: 0.428 }, // الجناح الأيسر العريض
+        { wRatio: 0.314, hRatio: 0.171, oxRatio: 0.6,   oyRatio: 0.428 }, // الجناح الأيمن العريض
       ],
     });
 

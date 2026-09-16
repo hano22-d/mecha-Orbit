@@ -3,7 +3,7 @@ import { assetsManager } from "../systems/AssetsManager.js";
 import { settingsManager } from "./settingsManager.js";
 
 export function initAllGameSounds() {
-  // 🟢 أولاً: ربط الأصوات الفردية والموسيقى
+  // ربط الأصوات الفردية والموسيقى
   audioManager.registerSound("bg", assetsManager.getSound("playingBgSound"));
   audioManager.registerSound("menuSound", assetsManager.getSound("menuSound"));
   audioManager.registerSound("winSound", assetsManager.getSound("winSound"));
@@ -21,7 +21,7 @@ export function initAllGameSounds() {
   audioManager.registerSound("dialog2", assetsManager.getSound("dialog2"));
   audioManager.registerSound("dialog3", assetsManager.getSound("dialog3"));
 
-  // 🟢 ثانياً: ربط الأصوات المتكررة (Pools) بلمسة واحدة
+  //ربط الأصوات المتكررة (Pools)
   audioManager.registerPoolSound("fire", assetsManager.getSound("bulletPlayer"), 10);
   audioManager.registerPoolSound("EnemyWeapon", assetsManager.getSound("bulletEnemy"), 10);
 

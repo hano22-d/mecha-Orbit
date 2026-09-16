@@ -10,7 +10,7 @@ export class Boss {
     this.alive = true;
     this.x = 0;
     this.y = 0;
-    
+
     const isMobile = canvas.logicalHeight < 500 || canvas.logicalWidth < 768;
 
     this.width = isMobile ? 100 : 200;
@@ -21,30 +21,33 @@ export class Boss {
     this.shootDelay = 2000;
 
     this.hitBox = [
-      { 
-        x: 0, y: 0, 
-        width: this.width * 0.4,       
-        height: this.height * 0.92,    
-        offsetX: this.width * 0.375,   
-        offsetY: this.height * 0.12    
-      }, 
-      { 
-        x: 0, y: 0, 
-        width: this.width * 0.9,       
-        height: this.height * 0.32,    
-        offsetX: this.width * 0.125,   
-        offsetY: this.height * 0.2     
-      }, 
-      { 
-        x: 0, y: 0, 
-        width: this.width * 0.55,      
-        height: this.height * 0.32,    
-        offsetX: this.width * 0.31,    
-        offsetY: this.height * 0.56    
-      }  
+      {
+        x: 0,
+        y: 0,
+        width: this.width * 0.4,
+        height: this.height * 0.92,
+        offsetX: this.width * 0.375,
+        offsetY: this.height * 0.12,
+      },
+      {
+        x: 0,
+        y: 0,
+        width: this.width * 0.9,
+        height: this.height * 0.32,
+        offsetX: this.width * 0.125,
+        offsetY: this.height * 0.2,
+      },
+      {
+        x: 0,
+        y: 0,
+        width: this.width * 0.55,
+        height: this.height * 0.32,
+        offsetX: this.width * 0.31,
+        offsetY: this.height * 0.56,
+      },
     ];
 
-    // 🟢 جلب صورة رصاصة الزعيم من الذاكرة مباشرة
+    // جلب صورة رصاصة الزعيم من الذاكرة
     this.imgBullet = assetsManager.getImage("bossW");
     this.color = "red";
     this.speed = 0.06;
@@ -52,21 +55,19 @@ export class Boss {
     this.hit = false;
     this.bulletDamage = 30;
 
-    // تهيئة التدرج الدائري (الهالة الضوئية) مرة واحدة فقط
+    // تهيئة التدرج الدائري مرة واحدة
     this.bossGlowGradient = null;
     this._initGlowGradient(canvas);
 
-    // 🟢 سحب الأصول الجاهزة وتخزينها كمتغيرات ساكنة (Static)
+    // تحميل الاصول الجاهزة
     if (!Boss.imagesPreloaded) {
-      
-      // 1️⃣ جلب فريمات الحركة الأساسية للزعيم
+      // جلب فريمات الحركة الأساسية للزعيم
       Boss.baseFrames = [
         assetsManager.getImage("bossFrame1"),
-        assetsManager.getImage("bossFrame2")
+        assetsManager.getImage("bossFrame2"),
       ];
 
-      // 2️⃣ جلب فريمات الضرر من الذاكرة تِبعاً لمفاتيحك الجديدة (explosionB)
-      // مصفوفتك القديمة كانت تحتوي على 24 فريم، والآن لدينا 17 فريم من نوع B
+      //جلب فريمات الضرر
       Boss.damageFrames = Array.from({ length: 17 }, (_, i) => {
         const key = `explosionB${i + 1}`;
         return assetsManager.getImage(key);
@@ -88,9 +89,8 @@ export class Boss {
     };
   }
 
-  // دالة مخصصة لبناء التدرج المحلي الثابت (مركزه 0,0) لمرة واحدة فقط
+  // دالة بناء التدرج المحلي الثابت لمرة واحدة فقط
   _initGlowGradient(canvas) {
-    // نستخدم السياق الافتراضي المؤقت لبناء التدرج
     const tempCtx = canvas.getContext("2d");
     this.bossGlowGradient = tempCtx.createRadialGradient(0, 0, 10, 0, 0, 300);
     this.bossGlowGradient.addColorStop(0, "rgba(255, 68, 0, 0.35)");
@@ -103,11 +103,14 @@ export class Boss {
 
     const targetY = game.camera.y + 50;
     if (this.y >= targetY) {
-      this.y = targetY; 
+      this.y = targetY;
 
       if (this.x < game.camera.x) {
         this.direction = 1;
-      } else if (this.x > game.camera.x + game.myCanvas.logicalWidth - this.width) {
+      } else if (
+        this.x >
+        game.camera.x + game.myCanvas.logicalWidth - this.width
+      ) {
         this.direction = -1;
       }
       this.x += this.speed * deltaTime * this.direction;
@@ -120,7 +123,10 @@ export class Boss {
       const dy = game.player.y - this.y;
       const distance = Math.hypot(dx, dy);
 
-      if (distance < this.attackRange && time - this.lastShoot > this.shootDelay) {
+      if (
+        distance < this.attackRange &&
+        time - this.lastShoot > this.shootDelay
+      ) {
         if (typeof game.spawnEnemyBullets === "function") {
           game.spawnEnemyBullets(this, game.player);
         }
@@ -134,7 +140,11 @@ export class Boss {
     }
 
     UpdateAnimationFrame(this.bossFrameSettings, Boss.baseFrames, deltaTime);
-    UpdateAnimationFrame(this.bossDamageFrameSettings, Boss.damageFrames, deltaTime);
+    UpdateAnimationFrame(
+      this.bossDamageFrameSettings,
+      Boss.damageFrames,
+      deltaTime
+    );
   }
 
   draw(ctx, camera) {
@@ -143,7 +153,7 @@ export class Boss {
     const centerX = Math.round(this.x + this.width / 2 - camera.x);
     const centerY = Math.round(this.y + this.height / 2 - camera.y);
 
-    // 🔥 الخطوة 2: رسم الهالة الضوئية باستخدام التدرج المخزن (Cache) وبأعلى كفاءة رسومية لكرت الشاشة
+    // رسم الهالة الضوئية
     ctx.save();
     ctx.translate(centerX, centerY); // الانتقال لمركز الزعيم
     ctx.fillStyle = this.bossGlowGradient; // استدعاء التدرج الجاهز فوراً
@@ -152,7 +162,7 @@ export class Boss {
     ctx.fill();
     ctx.restore();
 
-    // 🎨 رسم فريم جسم الزعيم الحالي
+    // رسم فريم جسم الزعيم الحالي
     const frame = Boss.baseFrames[this.bossFrameSettings.currentFrame];
     const drawX = Math.round(this.x - camera.x);
     const drawY = Math.round(this.y - camera.y);
@@ -161,20 +171,21 @@ export class Boss {
       ctx.drawImage(frame, drawX, drawY, this.width, this.height);
     }
 
-    // 💨 رسم تأثيرات أعمدة الدخان والنيران عند هبوط نقاط الحياة عن 50%
+    // رسم تأثيرات أعمدة الدخان والنيران عند هبوط نقاط الحياة عن 50%
     if (this.health < 150) {
-      const frameDamage = Boss.damageFrames[this.bossDamageFrameSettings.currentFrame];
-      
+      const frameDamage =
+        Boss.damageFrames[this.bossDamageFrameSettings.currentFrame];
+
       if (frameDamage) {
-        const smoke1X = Math.round(drawX + (this.width * 0.3));
-        const smoke1Y = Math.round(drawY - (this.height * 0.64));
+        const smoke1X = Math.round(drawX + this.width * 0.3);
+        const smoke1Y = Math.round(drawY - this.height * 0.64);
         ctx.drawImage(frameDamage, smoke1X, smoke1Y, this.width, this.height);
 
-        const smoke2X = Math.round(drawX - (this.width * 0.125));
-        const smoke2Y = Math.round(drawY - (this.height * 0.5));
+        const smoke2X = Math.round(drawX - this.width * 0.125);
+        const smoke2Y = Math.round(drawY - this.height * 0.5);
         ctx.drawImage(frameDamage, smoke2X, smoke2Y, this.width, this.height);
 
-        const smoke3X = Math.round(drawX + (this.width * 0.2));
+        const smoke3X = Math.round(drawX + this.width * 0.2);
         const smoke3Y = Math.round(drawY);
         const smoke3Width = this.width * 0.625;
         const smoke3Height = this.height * 0.7;

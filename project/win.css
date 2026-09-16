@@ -201,7 +201,7 @@
   animation: starPop 0.4s ease-in-out forwards;
 }
 
-/* أنيميشن خفيف تكتيكي عند ظهور النجوم */
+/* أنيميشن عند ظهور النجوم */
 @keyframes starPop {
   0% {
     transform: scale(0.5);

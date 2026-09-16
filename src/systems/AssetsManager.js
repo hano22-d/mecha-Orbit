@@ -10,7 +10,7 @@ export class AssetsManager {
     this.onCompleteCallback = null; // دالة نخبر بها اللعبة أن التحميل انتهى تماماً
   }
 
-  // 🟢 دالة التطهير والتصفير الجديدة لمنع تراكم الأصول أو التضارب عند إعادة التشغيل
+  // دالة التطهير والتصفير لمنع تراكم الأصول أو التضارب عند إعادة التشغيل
   reset() {
     this.images = {};
     this.sounds = {};
@@ -21,7 +21,7 @@ export class AssetsManager {
     console.log("🔄 تم إعادة تهيئة وتصفير مدير الأصول بنجاح.");
   }
 
-  // 1️⃣ دالة لتسجيل المسارات قبل بدء التحميل
+  // دالة لتسجيل المسارات قبل بدء التحميل
   queueImage(key, src) {
     this.images[key] = { src: src, item: null };
     this.totalAssets++;
@@ -32,7 +32,7 @@ export class AssetsManager {
     this.totalAssets++;
   }
 
-  // 2️⃣ دالة انطلاق عملية التحميل الفعلي لجميع الملفات في الخلفية
+  // دالة انطلاق عملية التحميل الفعلي لجميع الملفات في الخلفية
   startLoading(onProgress, onComplete) {
     this.onProgressCallback = onProgress;
     this.onCompleteCallback = onComplete;
@@ -49,7 +49,7 @@ export class AssetsManager {
       imgObj.item = new Image();
 
       imgObj.item.onload = () => {
-        imgObj.item.onload = null; // 🟢 تطهير: منع استدعاء الحدث مرة أخرى
+        imgObj.item.onload = null;
         imgObj.item.onerror = null;
         this._assetLoaded();
       };
@@ -68,9 +68,8 @@ export class AssetsManager {
       const soundObj = this.sounds[key];
       soundObj.item = new Audio();
 
-      // 🟢 تصفية فخ الـ oncanplaythrough المتكرر
       soundObj.item.oncanplaythrough = () => {
-        soundObj.item.oncanplaythrough = null; // 🟢 تطهير جذري: إفراغ المستمع فور الاستدعاء الأول
+        soundObj.item.oncanplaythrough = null;
         soundObj.item.onerror = null;
         this._assetLoaded();
       };
@@ -86,7 +85,7 @@ export class AssetsManager {
     }
   }
 
-  // 3️⃣ دالة داخلية تُستدعى فور نجاح تحميل أي ملف
+  // دالة نجاح عملية التحميل
   _assetLoaded() {
     this.loadedAssets++;
 
@@ -104,10 +103,10 @@ export class AssetsManager {
     this._checkCompletion();
   }
 
-  // دالة الطوارئ في حال فشل تحميل ملف (تمنع تعليق شاشة التحميل)
+  // دالة الطوارئ في حال فشل تحميل ملف
   _assetLoadError(key, src) {
     console.error(
-      `🚨 خطأ هندسي: فشل تحميل الملف البرمجي [${key}] من المسار: ${src}`
+      `خطأ هندسي: فشل تحميل الملف البرمجي [${key}] من المسار: ${src}`
     );
     this._assetLoaded();
   }
@@ -128,7 +127,7 @@ export class AssetsManager {
     }
   }
 
-  // 4️⃣ دالات جلب الأصول الجاهزة لاستخدامها داخل الكلاسات لاحقاً
+  // دالات جلب الأصول الجاهزة لاستخدامها داخل الكلاسات لاحقاً
   getImage(key) {
     return this.images[key]?.item || null;
   }

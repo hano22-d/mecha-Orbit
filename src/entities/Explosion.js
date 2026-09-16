@@ -36,7 +36,7 @@ export class Explosion {
     this.currentFrame = 0;
     this.frameTimer = 0;
     
-    // 👈 2. تعديل زمن وسلوك الفريمات بناءً على الجودة
+    // تعديل زمن وسلوك الفريمات بناءً على الجودة
     const quality = settingsManager.getGraphicsQuality();
     if (quality === "low") {
       this.frameInterval = 60; // تسريع زمن نهاية الانفجار لتوفير الفريمات
@@ -79,7 +79,7 @@ export class Explosion {
     this.life += deltaTime;
     this.frameTimer += deltaTime;
 
-    // 👈 3. استخدام frameStep المخصص للجودة
+    // استخدام frameStep المخصص للجودة
     if (this.frameTimer > this.frameInterval) {
       this.currentFrame += this.frameStep; // القفز بناءً على الجودة (1 أو 2)
       this.frameTimer = 0;
