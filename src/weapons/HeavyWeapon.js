@@ -8,6 +8,9 @@ export class HeavyWeapon extends Weapon {
     this.image = assetsManager.getImage("heavyW");
   }
 
+ /* ============= 
+       دالة الإطلاق
+    ============= */
   shoot(bullets, canvas) {
     // زاوية ميلان اللاعب
     let angle = this.owner.currentAngle || 0;
