@@ -5,10 +5,13 @@ import { assetsManager } from "../systems/AssetsManager";
 export class NormalWeapon extends Weapon {
   constructor(...arg) {
     super(...arg);
-
+    
     this.image = assetsManager.getImage("normalW");
   }
 
+  /* ============= 
+       دالة الإطلاق
+     ============= */
   shoot(bullets, canvas) {
     // زاوية ميلان اللاعب
     let angle = this.owner.currentAngle || 0;

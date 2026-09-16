@@ -47,7 +47,7 @@ export class Boss {
       },
     ];
 
-    // جلب صورة رصاصة الزعيم من الذاكرة
+    // جلب صورة رصاصة الزعيم
     this.imgBullet = assetsManager.getImage("bossW");
     this.color = "red";
     this.speed = 0.06;
@@ -55,19 +55,20 @@ export class Boss {
     this.hit = false;
     this.bulletDamage = 30;
 
-    // تهيئة التدرج الدائري مرة واحدة
+    // تهيئة التدرج الدائري
     this.bossGlowGradient = null;
     this._initGlowGradient(canvas);
 
-    // تحميل الاصول الجاهزة
+    // جلب الصور وتخزينها بشكل ساكن
     if (!Boss.imagesPreloaded) {
+      
       // جلب فريمات الحركة الأساسية للزعيم
       Boss.baseFrames = [
         assetsManager.getImage("bossFrame1"),
         assetsManager.getImage("bossFrame2"),
       ];
-
-      //جلب فريمات الضرر
+      
+      // فريمات الضرر
       Boss.damageFrames = Array.from({ length: 17 }, (_, i) => {
         const key = `explosionB${i + 1}`;
         return assetsManager.getImage(key);
@@ -89,7 +90,9 @@ export class Boss {
     };
   }
 
-  // دالة بناء التدرج المحلي الثابت لمرة واحدة فقط
+  /* ==============
+      دالة التدرج 
+     ============== */
   _initGlowGradient(canvas) {
     const tempCtx = canvas.getContext("2d");
     this.bossGlowGradient = tempCtx.createRadialGradient(0, 0, 10, 0, 0, 300);
@@ -98,6 +101,9 @@ export class Boss {
     this.bossGlowGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
   }
 
+  /* =================
+       دالة التحديث
+     ================= */
   update(time, deltaTime, game) {
     if (!this.alive) return;
 
@@ -147,13 +153,16 @@ export class Boss {
     );
   }
 
+  /* =============
+      دالة الرسم
+     ============= */
   draw(ctx, camera) {
     if (!this.alive) return;
 
     const centerX = Math.round(this.x + this.width / 2 - camera.x);
     const centerY = Math.round(this.y + this.height / 2 - camera.y);
 
-    // رسم الهالة الضوئية
+    // رسم الهالة الضوئية باستخدام التدرج
     ctx.save();
     ctx.translate(centerX, centerY); // الانتقال لمركز الزعيم
     ctx.fillStyle = this.bossGlowGradient; // استدعاء التدرج الجاهز فوراً
@@ -171,7 +180,7 @@ export class Boss {
       ctx.drawImage(frame, drawX, drawY, this.width, this.height);
     }
 
-    // رسم تأثيرات أعمدة الدخان والنيران عند هبوط نقاط الحياة عن 50%
+    // رسم تأثيرات أعمدة الدخان والنيران
     if (this.health < 150) {
       const frameDamage =
         Boss.damageFrames[this.bossDamageFrameSettings.currentFrame];

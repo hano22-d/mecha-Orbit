@@ -19,9 +19,13 @@ setupAudioAndEnvironment(stateManager);
 initAllGameUI(stateManager, game);
 // ======================== //
 
-let lastTime = 0;
-let accumulatedTime = 0; // 👈 الوقت التراكمي للتحكم بالفريمات
 
+let lastTime = 0;
+let accumulatedTime = 0; // الوقت التراكمي للتحكم بالفريمات
+
+  /* ============================
+     دالة حلقة اللعبة الرئيسية
+     ============================ */
 function gameLoop(time) {
   let deltaTime = time - lastTime;
   lastTime = time;
@@ -32,9 +36,10 @@ function gameLoop(time) {
   const targetInterval = settingsManager.getTargetInterval();
 
   if (targetInterval === 0) {
+    // حالة Unlimited: تنفيذ الرسم والتحديث مباشرة بدون تقييد
     renderAndUpdate(time, deltaTime);
   } else {
-    // حالة تحديد الإطارات
+    // حالة تحديد الإطارات (30, 60, 120 FPS)
     accumulatedTime += deltaTime;
 
     if (accumulatedTime >= targetInterval) {
@@ -46,7 +51,9 @@ function gameLoop(time) {
   requestAnimationFrame(gameLoop);
 }
 
-// دالة التحديث والرسم
+  /* ==================================
+       دالة تحديث ورسم محرك اللعبة 
+     ================================== */
 function renderAndUpdate(time, deltaTime) {
   ctx.clearRect(0, 0, myCanvas.logicalWidth, myCanvas.logicalHeight);
 

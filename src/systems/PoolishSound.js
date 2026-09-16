@@ -4,18 +4,21 @@ export class PoolishSound {
     this.index = 0;
     this.currentVolume = 1.0; // مستوى الصوت الحالي
 
-    // حماية لمنع الانهيار في حال عدم وجود الصوت لسبب معين
+    // حماية في حال عدم وجود الصوت
     if (!audioElement) {
       console.warn("⚠️ PoolishSound: تم تمرير كائن صوت فارغ!");
       return;
     }
 
     for (let i = 0; i < size; i++) {
-      // استنساخ الكائن المحمل مسبقاً في الذاكرة دون طلب شبكة جديد
+      // استنساخ الكائن المحمل مسبقاً في الذاكرة 
       this.pool.push(audioElement.cloneNode(true));
     }
   }
 
+  /* =============================
+      دالة التحكم بمستوى الصوت
+     ============================= */
   setVolume(vol) {
     this.currentVolume = vol;
     this.pool.forEach((sound) => {
@@ -23,6 +26,9 @@ export class PoolishSound {
     });
   }
 
+  /* ======================
+       دالة تشغيل الصوت
+     ====================== */
   play() {
     const sound = this.pool[this.index];
     if (sound) {

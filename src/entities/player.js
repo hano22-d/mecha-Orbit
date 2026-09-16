@@ -2,6 +2,9 @@ import { audioManager } from "../systems/SoundsSystem";
 import { UpdateAnimationFrame } from "../utils/helpers";
 import { assetsManager } from "../systems/AssetsManager";
 
+/* ==========
+     الثوابت 
+   ========== */
 const MAX_HEALTH = 100;
 const PLANE_WIDTH = 160;
 const PLANE_HEIGHT = 160;
@@ -21,7 +24,7 @@ const FLAME_ANIMATION_INTERVAL = 40;
 const WEAPON_ARC_LINE_WIDTH = 6;
 
 export class Player {
-  // تخزين الصور مرة واحدة وبشكل ساكن
+  // تخزين الصور مرة واحدة 
   static planeImg = null;
   static missileImage = null;
   static shieldFrames = [];
@@ -74,21 +77,19 @@ export class Player {
     this.fireframeSettings = { currentFrame: 0, frameInterval: FLAME_ANIMATION_INTERVAL, frameTimer: 0 };
   }
 
-  //دالة تحميل الاصول
+  /* ===================== 
+       دالة تحميل الصور 
+     ===================== */
   _initAssets() {
     if (!Player.assetsLoaded) {
-     // جلب صورة الصاروخ
       Player.missileImage = assetsManager.getImage("missile");
 
-      // جلب صورة الطائرة الأساسية
       Player.planeImg = assetsManager.getImage("playerShip");
 
-      // جلب فريمات الدرع
       Player.shieldFrames = Array.from({ length: 11 }, (_, i) => {
         return assetsManager.getImage(`sheildFrame${i + 1}`);
       });
 
-      // جلب فريمات لهب المحرك
       Player.fireFrames = Array.from({ length: 3 }, (_, i) => {
         return assetsManager.getImage(`fire${i + 1}`);
       });
@@ -97,6 +98,9 @@ export class Player {
     }
   }
 
+  /* ================ 
+      دالة التحديث
+     ================ */
   update(keys, deltaTime, bossStart, camera, canvas) {
     if (!this.alive) return;
 
@@ -127,6 +131,9 @@ export class Player {
     this.currentAngle = this.velocityX * TILT_SENSITIVITY;
   }
 
+  /* =======================
+     دالة تحديث الصناديق
+     ======================= */
   _updateHitBoxes() {
     const len = this.hitBox.length;
     for (let i = 0; i < len; i++) {
@@ -135,6 +142,9 @@ export class Player {
     }
   }
 
+  /* ===============================
+     دالة حصر الطائرة ضمن الشاشة
+     =============================== */
   _constrainMovement(camera, canvas) {
     const viewWidth = canvas.logicalWidth;
     const viewHeight = canvas.logicalHeight;
@@ -151,6 +161,9 @@ export class Player {
     }
   }
 
+  /* =====================
+     دالة تحديث الشظايا
+     ===================== */
   _updateTrailEffect(deltaTime) {
     this.trailTimer += deltaTime;
     const leftWingOffset = this.width * 0.0625;
@@ -169,6 +182,9 @@ export class Player {
     this.trail = this.trail.filter((p) => p.alpha > 0);
   }
 
+  /* ===========================
+     دالة تحديث وميض الإصابة 
+     =========================== */
   _updateHitFlash(deltaTime) {
     if (this.hit) {
       this.hitTimer += deltaTime;
@@ -178,6 +194,9 @@ export class Player {
     }
   }
 
+  /* =============
+      دالة الرسم 
+     ============= */
   draw(ctx, camera) {
     if (!this.alive) return;
 
@@ -230,6 +249,9 @@ export class Player {
     this._drawWeaponProgressBar(ctx, camera);
   }
 
+  /* =====================
+      دالة رسم الشظايا
+     ===================== */
   _drawTrail(ctx, camera) {
     const trailLen = this.trail.length;
     for (let i = 0; i < trailLen; i++) {
@@ -243,6 +265,9 @@ export class Player {
     ctx.globalAlpha = 1;
   }
 
+  /* ========================================================
+     دالة رسم الموضع الأولي للصواريخ (على أجنحة الطائرة)
+     ======================================================== */
   _drawEquippedMissiles(ctx) {
     if (!Player.missileImage) return;
     const missileW = Math.round(this.width * 0.3125);
@@ -259,6 +284,9 @@ export class Player {
     }
   }
 
+  /* ======================
+     دالة رسم لهب المحرك
+     ====================== */
   _drawThrusterFlames(ctx) {
     const frame = Player.fireFrames[this.fireframeSettings.currentFrame];
     if (!frame) return;
@@ -276,6 +304,9 @@ export class Player {
     ctx.drawImage(frame, rightFlameX, flameY, flameWidth, flameHeight);
   }
 
+  /* ===================
+      دالة رسم الدرع 
+     =================== */
   _drawShield(ctx, camera) {
     if (this.shieldEffect) {
       const frame = Player.shieldFrames[this.shieldFrameSettings.currentFrame];
@@ -290,6 +321,9 @@ export class Player {
     }
   }
 
+  /* ========================
+     دالة رسم تأثير السلاح
+     ======================== */
   _drawWeaponProgressBar(ctx, camera) {
     if (!this.weaponEffect) return;
   
@@ -310,6 +344,9 @@ export class Player {
     ctx.restore();
   }
 
+  /* ====================
+      دالة إطلاق الرصاص
+     ==================== */
   canShoot(keys, gameTimer) {
     if (keys.space && gameTimer - this.lastShoot > this.shootDelay) {
       this.lastShoot = gameTimer;
@@ -318,6 +355,9 @@ export class Player {
     return false;
   }
 
+  /* ======================
+      دالة إطلاق الصواريخ
+     ====================== */
   canShootMissile(keys, deltaTime) {
     this.lastShootMissile += deltaTime;
     if (keys.missileKey && this.lastShootMissile > this.shootMissileDelay) {
@@ -328,12 +368,18 @@ export class Player {
     return false;
   }
 
+  /* ====================
+      دالة زيادة الصحة
+     ====================*/
   heal(amount) {
     this.health = Math.min(MAX_HEALTH, this.health + amount);
     this.healthEffect = true;
     setTimeout(() => (this.healthEffect = false), 2000);
   }
 
+  /* ======================
+     دالة الضرر (الإصابة)
+     ====================== */
   takeDamage(enemy) {
     this.health -= enemy.damage;
     this.hit = true;
@@ -343,11 +389,17 @@ export class Player {
     audioManager.play("damageSound");
   }
 
+  /* ==================
+      دالة موت اللاعب
+     ================== */
   delete() {
     this.alive = false;
     audioManager.play("playerExp");
   }
 
+  /* ======================================================
+     دالة إرسال إحداثيات الصواريخ الأولية لكلاس الصاروخ
+     ====================================================== */
   getMissileLaunchPositions() {
     const angle = -Math.PI / 2 + this.velocityX * MISSILE_TILT_SENSITIVITY;
     const cos = Math.cos(angle);

@@ -1,5 +1,8 @@
 import { audioManager } from "../systems/SoundsSystem";
 
+/* ==================================
+    Pause دالة إدارة واجهة التوقف 
+   ================================== */
 export function pauseMenu(stateManager, game) {
   const pauseMenu = document.getElementById("pause");
   const resumeGame = document.getElementById("resumeGame");

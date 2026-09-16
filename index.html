@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!--css استيراد ملفات-->
     <link rel="stylesheet" href="project/style.css" />
     <link rel="stylesheet" href="project/menu.css" />
     <link rel="stylesheet" href="project/hud.css" />
@@ -11,10 +13,10 @@
     <link rel="stylesheet" href="project/gameOver.css" />
     <link rel="stylesheet" href="project/pause.css" />
     <link rel="stylesheet" href="project/loading.css" />
-    <link rel="stylesheet" href="project/settings.css">
+    <link rel="stylesheet" href="project/settings.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!--خط اللعبة لاساسي-->
+    <!--خطوط اللعبة-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -29,7 +31,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
-    <title>mecha-orbit</title>
+    <title>Mecha-Orbit</title>
   </head>
   <body>
     <div class="gameContainer">
@@ -64,7 +66,7 @@
         <div class="dialogDiv">
           <div class="crt-overlay"></div>
 
-          <!-- 🟢 عناصر واجهة شاشة الطائرة (HUD Elements) -->
+          <!--عناصر واجهة شاشة الطائرة (HUD Elements)-->
           <div class="hud-header">
             <div class="hud-comms">
               <span class="signal-icon">⚡ COMMS OK</span>
@@ -77,7 +79,7 @@
             <div class="hud-rec"><span class="blink-dot"></span> LIVE FEED</div>
           </div>
 
-          <!-- 🟢 الرادار الدائري النابض -->
+          <!--الرادار الدائري النابض-->
           <div class="hud-radar-container">
             <div class="radar-circle">
               <div class="radar-sweep"></div>
@@ -479,7 +481,7 @@
           </div>
         </div>
       </div>
-   
+
       <!-- Settings -->
       <div id="settings-overlay" class="settings-overlay">
         <div class="settings-modal">
@@ -495,10 +497,10 @@
             </button>
           </header>
 
-          <!-- Navigation Tabs -->
+          <!--Navigation Tabs-->
           <nav class="settings-tabs">
             <button class="tab-btn active" data-tab="tab-graphics">
-              <span>🎮 GRAPHICS & FPS</span>
+              <span>GRAPHICS & FPS</span>
             </button>
             <button class="tab-btn" data-tab="tab-audio">
               <span>🔊 AUDIO & SOUND</span>
@@ -571,7 +573,7 @@
             </section>
 
             <!-- ========================================== -->
-            <!-- TAB 2: AUDIO & SOUND -->
+            <!-- TAB 2: AUDIO & SOUND  -->
             <!-- ========================================== -->
             <section id="tab-audio" class="tab-content">
               <!-- Music Volume -->
@@ -670,7 +672,6 @@
           </footer>
         </div>
       </div>
-      
     </div>
     <script type="module" src="project/main.js"></script>
   </body>

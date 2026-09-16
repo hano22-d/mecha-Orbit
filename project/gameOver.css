@@ -5,8 +5,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--color-bg-dark); /* خلفية سوداء مائلة للاحمرار العسكري */
-  backdrop-filter: var(--layer-blur); /* تضبيب اللعبة بالخلفية لشعور الموت */
+  background: var(--color-bg-dark); 
+  backdrop-filter: var(--layer-blur);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,7 +59,7 @@
   position: relative;
   z-index: 5;
   background: rgba(20, 5, 5, 0.9);
-  border: 2px solid var(--color-danger); /* بوردر قرمزي مشع للتهديد */
+  border: 2px solid var(--color-danger);
   box-shadow: var(--shadow-glow-danger);
   padding: var(--space-xxl) var(--space-xxl);
   border-radius: var( --radius-standard);
@@ -121,7 +121,7 @@
 }
 
 .text-orange {
-  color: var(--color-secondary); /* الحفاظ على هويتك البرتقالية للرقم القياسي */
+  color: var(--color-secondary);
 }
 
 /* شريط تقدم القطاع الفضائي */
@@ -147,12 +147,11 @@
     90deg,
     var(--color-secondary),
     var(--color-danger)
-  ); /* دمج البرتقالي مع الأحمر */
+  );
   box-shadow: 0 0 10px var(--color-danger);
   transition: width 1.5s cubic-bezier(0.1, 0.8, 0.2, 1);
 }
 
-/* 🕹️ أزرار سايبر مضلعة موحدة الحواف تبعا لهويتك البصرية */
 .game-over-controls {
   display: flex;
   gap: var(--space-lg);
@@ -208,7 +207,8 @@
 .text {
   display: block;
 }
-/* الأنيميشن التكتيكي للنبض القرمزي */
+
+/* الأنيميشن للنبض القرمزي */
 @keyframes crimsonPulse {
   0% {
     text-shadow: 0 0 10px rgba(255, 51, 51, 0.6);

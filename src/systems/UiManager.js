@@ -5,7 +5,9 @@ import { gameOverUi } from "../ui/gameOver";
 import { win } from "../ui/win";
 import { introUi } from "../ui/introUi";
 
-//دالة تشغيل UI
+/* ==============================
+    دالة تشغيل توابع الواجهة
+   ============================== */
 export function initAllGameUI(stateManager, game) {
   menu(stateManager, game);
   pauseMenu(stateManager, game);

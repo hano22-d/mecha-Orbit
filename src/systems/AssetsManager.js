@@ -1,7 +1,7 @@
 export class AssetsManager {
   constructor() {
-    this.images = {}; // لتخزين كائنات الصور الجاهزة
-    this.sounds = {}; // لتخزين كائنات الأصوات الجاهزة
+    this.images = {}; // تخزين كائنات الصور الجاهزة
+    this.sounds = {}; // تخزين كائنات الأصوات الجاهزة
 
     this.totalAssets = 0; // إجمالي الملفات المطلوب تحميلها
     this.loadedAssets = 0; // عدد الملفات التي تحمّلت بنجاح
@@ -10,7 +10,9 @@ export class AssetsManager {
     this.onCompleteCallback = null; // دالة نخبر بها اللعبة أن التحميل انتهى تماماً
   }
 
-  // دالة التطهير والتصفير لمنع تراكم الأصول أو التضارب عند إعادة التشغيل
+  /* ===========================================
+     دالة التصفير لمنع تراكم أو تضارب الأصول
+     =========================================== */
   reset() {
     this.images = {};
     this.sounds = {};
@@ -18,26 +20,32 @@ export class AssetsManager {
     this.loadedAssets = 0;
     this.onProgressCallback = null;
     this.onCompleteCallback = null;
-    console.log("🔄 تم إعادة تهيئة وتصفير مدير الأصول بنجاح.");
   }
 
-  // دالة لتسجيل المسارات قبل بدء التحميل
+  /* =============================================
+      دالة تسجيل مسارات الصور قبل بدء التحميل
+     ============================================= */
   queueImage(key, src) {
     this.images[key] = { src: src, item: null };
     this.totalAssets++;
   }
-
+  
+  /* =============================================
+     دالة تسجيل مسارات الأصوات قبل بدء التحميل
+     ============================================= */
   queueSound(key, src) {
     this.sounds[key] = { src: src, item: null };
     this.totalAssets++;
   }
 
-  // دالة انطلاق عملية التحميل الفعلي لجميع الملفات في الخلفية
+  /* ===========================
+      دالة بدء عملية التحميل 
+     =========================== */
   startLoading(onProgress, onComplete) {
     this.onProgressCallback = onProgress;
     this.onCompleteCallback = onComplete;
 
-    // إذا لم يكن هناك ملفات أصلاً، ننهي التحميل فوراً بأمان
+    // إنهاء التحميل في حال عدم وجود أصول
     if (this.totalAssets === 0) {
       this._checkCompletion();
       return;
@@ -49,7 +57,7 @@ export class AssetsManager {
       imgObj.item = new Image();
 
       imgObj.item.onload = () => {
-        imgObj.item.onload = null;
+        imgObj.item.onload = null; // منع استدعاء الحدث مرة أخرى
         imgObj.item.onerror = null;
         this._assetLoaded();
       };
@@ -60,7 +68,7 @@ export class AssetsManager {
         this._assetLoadError(key, imgObj.src);
       };
 
-      imgObj.item.src = imgObj.src; // هنا يبدأ المتصفح بالتحميل الفعلي
+      imgObj.item.src = imgObj.src;
     }
 
     // بدء تحميل الأصوات المسجلة
@@ -69,7 +77,7 @@ export class AssetsManager {
       soundObj.item = new Audio();
 
       soundObj.item.oncanplaythrough = () => {
-        soundObj.item.oncanplaythrough = null;
+        soundObj.item.oncanplaythrough = null; // إفراغ المستمع فور الاستدعاء الأول
         soundObj.item.onerror = null;
         this._assetLoaded();
       };
@@ -85,17 +93,19 @@ export class AssetsManager {
     }
   }
 
-  // دالة نجاح عملية التحميل
+  /* ========================
+      دالة نجاح تحميل ملف
+     ======================== */
   _assetLoaded() {
     this.loadedAssets++;
 
-    // حساب النسبة المئوية بدقة منطقية مع ضمان عدم تخطيها 100% كحماية إضافية
+    // حساب النسبة المئوية
     const calculatedPercentage = Math.round(
       (this.loadedAssets / this.totalAssets) * 100
     );
     const progressPercentage = Math.min(100, Math.max(0, calculatedPercentage));
 
-    // إرسال النسبة الحالية لدالة التحديث (شاشة الـ CSS)
+    // إرسال النسبة الحالية لدالة التحديث
     if (this.onProgressCallback) {
       this.onProgressCallback(progressPercentage);
     }
@@ -103,7 +113,9 @@ export class AssetsManager {
     this._checkCompletion();
   }
 
-  // دالة الطوارئ في حال فشل تحميل ملف
+  /* ======================
+     دالة فشل تحميل ملف
+     ====================== */
   _assetLoadError(key, src) {
     console.error(
       `خطأ هندسي: فشل تحميل الملف البرمجي [${key}] من المسار: ${src}`
@@ -111,7 +123,9 @@ export class AssetsManager {
     this._assetLoaded();
   }
 
-  // التحقق من وصول نسبة التحميل إلى مرحلة النهاية الآمنة
+  /* =====================================
+     دالة التحقق من اكتمال تحميل الأصول
+     ===================================== */
   _checkCompletion() {
     const completionRate = this.loadedAssets / this.totalAssets;
 
@@ -127,7 +141,9 @@ export class AssetsManager {
     }
   }
 
-  // دالات جلب الأصول الجاهزة لاستخدامها داخل الكلاسات لاحقاً
+  /* ==================================================
+     دالتي جلب الأصول الجاهزة بعد التحميل لاستخدامها
+     ================================================== */
   getImage(key) {
     return this.images[key]?.item || null;
   }

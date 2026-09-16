@@ -1,5 +1,8 @@
 import { audioManager } from "./SoundsSystem";
 
+/* ====================================
+    دالة إدارة بعض العمليات الأساسية
+   ==================================== */
 export function setupAudioAndEnvironment(stateManager) {
   
   // 1. مراقبة تغيير الحالات لتشغيل الأصوات المناسبة
@@ -17,7 +20,7 @@ export function setupAudioAndEnvironment(stateManager) {
     }
   });
 
-  // 2. حل مشكلة تفادي حظر المتصفح عند أول تفاعل
+  // 2. تفادي حظر المتصفح للموسيقى عند أول تفاعل
   const startMenuMusic = () => {
     if (stateManager.getState() === "menu") {
       audioManager.play("menuSound");

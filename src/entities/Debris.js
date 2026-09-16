@@ -19,7 +19,6 @@ export class Debris {
 
     this.alpha = 1;
 
-    //تحميل الصور
     Debris._preloadAssets();
 
     this.currentDebris = 0;
@@ -28,10 +27,12 @@ export class Debris {
     this.finished = false;
   }
 
-  // دالة لجلب الصور الجاهزة
+  /* ===================
+      دالة جلب الصور
+     =================== */
   static _preloadAssets() {
     if (!Debris.assetsLoaded) {
-      // جلب الصور من الذاكرة بناءً على مفاتيحها بترتيب الضرر التنازلي
+      
       Debris.frames = [
         assetsManager.getImage("debris3"), // الأكثر تضرراً
         assetsManager.getImage("debris2"),
@@ -41,7 +42,10 @@ export class Debris {
       Debris.assetsLoaded = true;
     }
   }
-
+ 
+  /* =================
+       دالة التحديث
+     ================= */
   update(deltaTime) {
     this.debrisTimer += deltaTime;
 
@@ -56,7 +60,7 @@ export class Debris {
       this.finished = true;
     }
 
-    // تأثير التلاشي التدريجي للشظايا لتأثير بصري احترافي
+    // تأثير التلاشي التدريجي
     this.alpha = Math.max(0, this.alpha - 0.02);
   }
 }

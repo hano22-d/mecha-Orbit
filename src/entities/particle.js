@@ -19,12 +19,15 @@ export class Particle {
     this.color = colors[Math.floor(Math.random() * colors.length)];
   }
 
+  /* =================
+       دالة التحديث
+     ================= */
   update() {
     this.x += this.velocityX;
     this.y += this.velocityY;
     this.alpha -= this.decay;
 
-    // تقليص الحجم تدريجياً بشكل متناسب
+    // تقليص الحجم تدريجياً 
     if (this.size > 0.05) this.size -= 0.05;
   }
 }

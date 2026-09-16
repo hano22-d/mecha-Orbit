@@ -41,6 +41,9 @@ export class Rocks {
     ];
   }
 
+  /* =================
+       دالة التحديث
+     ================= */
   update(deltaTime) {
     this.y += this.speed * deltaTime;
     this.angle += this.rotationSpeed * deltaTime;

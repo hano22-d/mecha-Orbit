@@ -8,9 +8,9 @@
   will-change: transform, opacity;
 }
 
-/*=================================
+/*============================================
    تنسيقات شريط صحة العدو الكبير (الزعيم)
- ===================================*/
+ =============================================*/
  .enemyHealthBar {
   width: 25%;
   display: flex;
@@ -399,15 +399,15 @@ score Bar
   height: 4rem;
   filter: drop-shadow(0 0 8px var(--color-primary))
     drop-shadow(0 0 15px var(--color-primary));
-  transform: rotate(-45deg); /* إمالة الصاروخ تماماً مثل الصورة */
+  transform: rotate(-45deg); /*إمالة الصاروخ */
   animation: missilePulse 2s ease-in-out infinite;
 }
 
 /* لوحة العداد الممتدة من الدائرة */
 .hud-counter-plate {
   height: 4rem;
-  padding: 0 var(--space-xxl) 0 4rem; /* إزاحة لليسار لتعويض تداخل الدائرة */
-  margin-left: -2.8rem; /* سحب اللوحة تحت الدائرة تماماً */
+  padding: 0 var(--space-xxl) 0 4rem; 
+  margin-left: -2.8rem;
   display: flex;
   align-items: center;
   position: relative;
@@ -453,8 +453,6 @@ score Bar
   letter-spacing: 3px;
 }
 
-/* الأنيميشن والحركات التفاعلية */
-
 /* دوران حواف الرادار الخارجي */
 @keyframes rotateRadar {
   0% {
@@ -478,6 +476,9 @@ score Bar
   }
 }
 
+/* =====================================
+            Responsive Mobile
+   ===================================== */
 @media (max-width: 950px) {
   .scoreBar {
     top: 0.5rem;

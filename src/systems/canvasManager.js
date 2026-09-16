@@ -1,6 +1,8 @@
-const myCanvas = document.getElementById("myCanvas");
+// الكانفاس الأساسي
+const myCanvas = document.getElementById("myCanvas"); // سنسميه لاحقاً gameCanvas ليكون أوضح
 const ctx = myCanvas.getContext("2d");
 
+// كانفاس الخلفية
 const bgCanvas = document.getElementById("backgroundCanvas");
 const bgCtx = bgCanvas.getContext("2d");
 

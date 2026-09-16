@@ -214,6 +214,10 @@
   }
 }
 
+
+/* =====================================
+            Responsive Mobile
+   ===================================== */
 @media (max-width: 950px) {
   .winHeader h1 {
     font-size: var(--font-size-sub);

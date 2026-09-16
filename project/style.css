@@ -1,3 +1,7 @@
+/* =====================================
+            ملف التنسيقات العام
+   ===================================== */
+
 html,
 body {
   margin: 0;
@@ -16,20 +20,20 @@ canvas {
   top: 0;
   left: 0;
 
-  /* تفعيل الفلاتر الصلبة لكرت الشاشة لمنع التغبش نهائياً عند تمطيط الصور الصغيرة والنجوم */
+  /* تفعيل الفلاتر الصلبة لكرت الشاشة لمنع التغبش عند تمطيط الصور الصغيرة والنجوم */
   image-rendering: -moz-crisp-edges;         /* Firefox */
   image-rendering: -webkit-crisp-edges;      /* Safari/Chrome old */
   image-rendering: pixelated;                 /* Chrome/Webkit New */
   image-rendering: crisp-edges;               /* Standard */
   
-  /* تسريع الرسوميات وتحويل العبء إلى كرت الشاشة (GPU Acceleration) لإنهاء البطء */
+  /* تسريع الرسوميات */
   transform: translateZ(0);
   backface-visibility: hidden;
 }
 
 #backgroundCanvas {
   z-index: 1;
-  background-color: #000; /* الخلفية السوداء الأساسية للكون */
+  background-color: #000;
 }
 
 #myCanvas {
@@ -38,15 +42,13 @@ canvas {
   pointer-events: auto; 
 }
 
-
-
 img:not([src]), img[src=""] {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* بشكل افتراضي: الرسالة مخفية تماماً */
+/* رسالة بدء اللعب والتحويل للوضع الافقي */
 #orientation-warning {
   display: none;
   position: fixed;
@@ -54,8 +56,8 @@ img:not([src]), img[src=""] {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #35240f; /* لون مستقبلي غامق متناسق مع اللعبة */
-  z-index: 9999; /* للتأكد من أنها فوق الكانفاس وفوق كل شيء */
+  background-color: #35240f; 
+  z-index: 9999;
   color: #fff;
   justify-content: center;
   align-items: center;
@@ -84,7 +86,7 @@ color: #9be8ff;
 
 @media (orientation: portrait) and (max-width: 1024px) {
   #orientation-warning {
-    display: flex; /* تظهر الرسالة فوراً وتغطي الشاشة */
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -105,17 +107,17 @@ color: #9be8ff;
 }
 
 /* ==========================================================================
-   MECHA-ORBIT ULTIMATE DESIGN SYSTEM (DESIGN TOKENS)
+                     التنسيقات العامة والثيم
    ========================================================================== */
 
 :root {
-  --color-bg-dark: #050a0f; /* الخلفية الأساسية العميقة للكون */
+  --color-bg-dark: #050a0f;
   --color-bg-overlay: rgba(
     6,
     15,
     23,
     0.9
-  ); /* خلفية الصناديق والشاشات المنبثقة */
+  );
 
   --color-primary: #00d9ff; /* الأزرق النيون الفاتح (السيان الأساسي للـ HUD والمحركات) */
   --color-secondary: #ffb359; /* الذهبي الملوكي التكتيكي (للترقيات والتميز) */
@@ -173,7 +175,7 @@ color: #9be8ff;
 }
 
 /* ==========================================================================
-   نظام التجاوب لشاشات الموبايل والواجهات الذكية
+            نظام التجاوب لشاشات الموبايل والواجهات الذكية
    ========================================================================== */
    @media screen and (max-width: 900px) and (max-height: 500px) {
     :root {
@@ -203,7 +205,7 @@ color: #9be8ff;
 
 
 /* ==========================================================================
-    GLOBAL ELEMENT STYLES (تنسيقات العناصر المركزية)
+            GLOBAL ELEMENT STYLES (تنسيقات العناصر المركزية)
    ========================================================================== */
 h1,
 h2,

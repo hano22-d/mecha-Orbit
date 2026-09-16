@@ -30,17 +30,17 @@ export class IntroScene {
     this.playerScale = 0.05;
     this.targetScale = 1.0; 
 
-    // إنشاء التدرج اللوني مرة واحدة
+    // إنشاء التدرج اللوني
     this.spaceGradient = null;
     this._initGradient();
 
-    // جلب الصور والفريمات
+    // جلب الأصول المسرعة من الذاكرة
     if (!IntroScene.imagesPreloaded) {
       
-      // جلب صورة الطائرة الأساسية 
+      // جلب صورة الطائرة الأساسية
       IntroScene.planeImage = assetsManager.getImage("playerShip");
 
-      // جلب فريمات لهب المحرك الثلاثة
+      // جلب فريمات لهب المحرك
       IntroScene.fireFrames = Array.from({ length: 3 }, (_, i) => {
         return assetsManager.getImage(`fire${i + 1}`);
       });
@@ -68,13 +68,18 @@ export class IntroScene {
     };
   }
 
-  // دالة إنشاء التدرج اللوني عند بدء المشهد أو تحديث أبعاد الكانفاس
+  /* ====================================================================
+  دالة إنشاء التدرج اللوني عند بدء المشهد أو تحديث أبعاد الكانفاس
+  ======================================================================= */
   _initGradient() {
     this.spaceGradient = this.ctx.createLinearGradient(0, 0, 0, this.canvasHeight);
     this.spaceGradient.addColorStop(0, "#000010");
     this.spaceGradient.addColorStop(1, "#000000");
   }
 
+  /* =====================
+      دالة توليد النجوم 
+     ===================== */
   initStars() {
     this.stars = [];
     const starCount = this.isMobile ? 80 : 150;
@@ -88,6 +93,9 @@ export class IntroScene {
     }
   }
 
+  /* =================
+       دالة التحديث
+     ================= */
   update(deltaTime) {
     this.timer += deltaTime;
 
@@ -95,7 +103,7 @@ export class IntroScene {
     if (this.canvasWidth !== this.canvas.logicalWidth || this.canvasHeight !== this.canvas.logicalHeight) {
       this.canvasWidth = this.canvas.logicalWidth;
       this.canvasHeight = this.canvas.logicalHeight;
-      this._initGradient(); // تحديث أبعاد التدرج لكي لا يتمطط رسومياً
+      this._initGradient();
     }
 
     this.isMobile = this.canvasHeight < 500 || this.canvasWidth < 768;
@@ -141,8 +149,10 @@ export class IntroScene {
     }
   }
 
+  /* ==============
+       دالة الرسم
+     ============== */
   draw() {
-    // استدعاء التدرج
     this.ctx.fillStyle = this.spaceGradient;
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
@@ -157,6 +167,7 @@ export class IntroScene {
 
     const starLen = this.stars.length;
 
+    // رسم هالة التوهج خلف النجوم 
     this.ctx.strokeStyle = `rgba(46, 154, 255, ${0.4 * glowFactor})`;
     this.ctx.lineWidth = 3.5;
     this.ctx.beginPath();
@@ -169,8 +180,9 @@ export class IntroScene {
     }
     this.ctx.stroke();
 
+    // رسم النجوم الحادة فوق التوهج
     this.ctx.strokeStyle = `rgba(255, 255, 255, ${starAlpha})`;
-    this.ctx.lineWidth = 1.5; // خط أنحف بالمنتصف
+    this.ctx.lineWidth = 1.5;
     this.ctx.beginPath();
     for (let i = 0; i < starLen; i++) {
       const star = this.stars[i];
@@ -181,7 +193,7 @@ export class IntroScene {
     }
     this.ctx.stroke();
 
-    // حساب حجم وموقع طائرة اللاعب بشكل تفاعلي مقرب هندسياً
+    // حساب حجم وموقع طائرة اللاعب
     const currentWidth = Math.round(this.planeBaseWidth * this.playerScale);
     const currentHeight = Math.round(this.planeBaseHeight * this.playerScale);
 
@@ -195,7 +207,7 @@ export class IntroScene {
       this.ctx.drawImage(IntroScene.planeImage, drawPlayerX, drawPlayerY, currentWidth, currentHeight);
     }
 
-    // حساب حجم ومواقع لهب المحركات المزدوجة المتناسقة نسبياً
+    // حساب حجم ومواقع لهب المحركات المزدوجة
     const currentFireWidth = Math.round((this.isMobile ? 9 : 18) * this.playerScale);
     const currentFireHeight = Math.round((this.isMobile ? 20 : 40) * this.playerScale);
     const frame = IntroScene.fireFrames[this.fireframeSettings.currentFrame];

@@ -7,6 +7,9 @@ export class HealthPowerUp extends PowerUp {
     this.image = assetsManager.getImage("healthP");
   }
 
+  /* ================
+      دالة التأثير 
+     ================ */
   apply(player, gameTimer, game) {
     player.heal(10);
     game.flash.alpha = 0.5;

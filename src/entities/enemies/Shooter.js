@@ -1,8 +1,6 @@
 import { assetsManager } from "../../systems/AssetsManager";
 import { Enemy } from "./Enemy";
 
-
-//shooter Enemy class
 export class Shooter extends Enemy {
   constructor(config) {
     super({
@@ -29,6 +27,9 @@ export class Shooter extends Enemy {
     this.imgBullet = assetsManager.getImage("enemyW");
   }
 
+  /* =================
+       دالة التحديث
+     ================= */
   update(time, deltaTime, game, camera) {
     let dx = game.player.x - this.x;
     let dy = game.player.y - this.y;

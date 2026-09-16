@@ -1,5 +1,8 @@
 import { assetsManager } from "../../systems/AssetsManager";
 
+/* =========
+     الثواتب 
+   ======== */
 const HEALTH_BAR_HEIGHT = 5;
 
 export class Enemy {
@@ -58,6 +61,9 @@ export class Enemy {
     this.bulletDamage = bulletDamage;
   }
 
+  /* =================
+       دالة التحديث
+     ================= */
   update(gameTimer, deltaTime, game, camera) {
     this.y += this.speed * deltaTime;
     for (let box of this.hitBox) {
@@ -70,6 +76,32 @@ export class Enemy {
     }
   }
 
+  /* ============
+     دالة الرسم 
+     ============ */
+  /*
+  draw(ctx, camera) {
+    if (!this.alive) return;
+    this._drawHealthBar(ctx, camera);
+    ctx.save();
+    if (this.hit) {
+      ctx.globalAlpha = 0.3 + Math.abs(Math.sin(Date.now() * 0.04)) * 0.5;
+    }
+    if (this.image) {
+      ctx.drawImage(
+        this.image,
+        this.x - camera.x,
+        this.y - camera.y,
+        this.width,
+        this.height
+      );
+    }
+    ctx.restore();
+  } */
+
+  /* ===========================
+     دالة رسم شريط صحة العدو 
+    ============================ */
   drawHealthBar(ctx, camera) {
     if (this.health >= this.maxHealth) return;
     const healthRate = Math.max(0, this.health / this.maxHealth);
@@ -85,6 +117,9 @@ export class Enemy {
     ctx.strokeRect(barX, barY, barWidth, HEALTH_BAR_HEIGHT);
   }
 
+  /* ==============================
+     دالة الخروج من أبعاد الشاشة
+     ============================== */
   isOffScreen(canvas, camera) {
     let padding = 100;
     return (

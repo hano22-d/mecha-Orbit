@@ -21,6 +21,9 @@ export class Chaser extends Enemy {
     });
   }
 
+  /* ============
+      دالة التحديث
+     ============ */
   update(time, deltaTime, game, camera) {
     let dx = game.player.x - this.x;
     let dy = game.player.y - this.y;

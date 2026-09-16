@@ -30,6 +30,9 @@ export class TouchButton {
     }
   }
 
+  /* =========================
+      دالة التحقق من النقر
+     ========================= */
   checkTouch(touchX, touchY) {
     const dx = touchX - this.x;
     const dy = touchY - this.y;
@@ -45,6 +48,9 @@ export class TouchButton {
     return false;
   }
 
+  /* ===============
+      دالة التحديث
+     =============== */
   update(deltaTime) {
     let targetOpacity = 0.5;
     if (this.isPressed) {
@@ -61,6 +67,9 @@ export class TouchButton {
     this.shineAngle += deltaTime * 0.001;
   }
 
+  /* ==============
+       دالة الرسم
+     ============== */
   draw(ctx) {
     ctx.save();
 

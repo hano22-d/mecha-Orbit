@@ -1,6 +1,9 @@
 import { audioManager } from "../systems/SoundsSystem";
 import { calculateStars, playerRank } from "../utils/helpers";
 
+/* ==========================
+    دالة إدارة شاشة الفوز 
+   ========================== */
 export function win(stateManager, game) {
   const win = document.getElementById("win");
   const btnMenu = document.getElementById("btnMenu");
@@ -28,6 +31,10 @@ export function win(stateManager, game) {
     }
   });
 }
+
+/* ====================================
+    دالة تحديث قيم عناصر شاشة الفوز
+   ==================================== */
 export function winUpdate(game) {
   //تحديث السكور في شاشة الفوز
   const winScore = document.getElementById("winScore");

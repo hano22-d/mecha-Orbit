@@ -9,7 +9,6 @@ export class LoadingScene {
 
     this.isStarted = false
 
-    // الإمساك بعناصر الـ HTML مرة واحدة فقط عند البناء
     this.progressBar = document.getElementById("progress-bar");
     this.loadingPercentage = document.getElementById("loading-percentage");
     this.loadingText = document.getElementById("loading-text");
@@ -22,9 +21,9 @@ export class LoadingScene {
       "Triangulating boss XilosVex coordinates...",
       "Initializing energy cores and optical shields...",
     ];
+    
     // قائمة الأصول المركزية الخاصة باللعبة
-
-    // مصفوفة البيانات المركزية لجميع صور اللعبة
+    // === الصور === //
     this.gameImages = [
       { key: "rock", src: "/assets/rock2.png" },
       { key: "playerShip", src: "/assets/player.png" },
@@ -305,6 +304,7 @@ export class LoadingScene {
       { key: "rank10-3", src: "/assets/UI/rankIcon/legend3.png" },
     ];
 
+    // === الأصوات === //
     this.gameSounds = [
       //backgrounds Sounds
       {
@@ -373,13 +373,16 @@ export class LoadingScene {
 
   }
 
+  /* ===============================
+    دالة بدء تسجيل الأصول وربطها
+     =============================== */
 start(canvas) {
   if (this.isStarted) return;
-  if (canvas.logicalWidth < 500) return;
+  if (canvas.logicalWidth < 500) return; // لمنع التحميل في الوضع العمودي
 
   this.isStarted = true;
 
-  // تصفير مدير الأصول تماماً لتجنب تراكم العدادات
+  // تصفير مدير الأصول لتجنب تراكم العدادات
   assetsManager.reset(); 
 
   // تسجيل الصور
@@ -411,7 +414,9 @@ start(canvas) {
   );
 }
 
-  // تحديث عناصر الـ HTML برمجياً بشكل مستقل وخارج كلاس الـ Game
+/* ==================================
+    دالة تحديث عناصر شاشة التحميل
+   ================================== */
   updateUI(percentage) {
     if (this.progressBar) this.progressBar.style.width = `${percentage}%`;
     if (this.loadingPercentage)
@@ -423,7 +428,10 @@ start(canvas) {
     else this.loadingText.innerText = this.hints[3];
   }
 
-  // إنهاء التحميل وإخفاء الشاشة
+  
+/* =====================================
+   دالة إنهاء التحميل وإخفاء الشاشة
+   ===================================== */
   finish() {
     try {
       if (typeof Explosion._preloadAssets === "function") {
@@ -452,7 +460,7 @@ start(canvas) {
       }, 800);
     }
 
-    // إرسال إشارة لكلاس اللعبة الرئيسي بأن كل شيء جاهز للانطلاق!
+    // إرسال إشارة لكلاس اللعبة الرئيسي بأن كل شيء جاهز للانطلاق
     if (this.onCompleteCallback) {
       this.onCompleteCallback();
     }

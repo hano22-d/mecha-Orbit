@@ -1,3 +1,6 @@
+/* ==========
+      الثوابت
+   ========== */
 const SCREEN_OFFBOUNDS_PADDING = 50; // مسافة امان للتاكد من خروج الرصاصة بالكامل من الشاشة قبل حذفها
 
 export class Bullet {
@@ -23,14 +26,20 @@ export class Bullet {
     this.image = image;
 
     this.damage = damage;
-    this.angle = angle; // تخزين زاوية ميلان الرصاصة
+    this.angle = angle; // زاوية ميلان الرصاصة
   }
 
+  /* =================
+       دالة التحديث
+     ================= */
   update() {
     this.x += this.velocityX;
     this.y += this.velocityY;
   }
-  
+
+  /* ==============================
+     دالة الخروج من حدود الشاشة
+     ============================== */
   isOffScreen(canvas, camera) {
     const isTooFarLeft = this.x < camera.x - SCREEN_OFFBOUNDS_PADDING;
     const isTooFarRight =
