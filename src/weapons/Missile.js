@@ -35,13 +35,16 @@ export class Missile {
     this.particles = [];
   }
 
+  /* =============
+       دالة التحديث 
+     ============= */
   update(deltaTime, enemies, bossTarget) {
     if (!this.alive) return;
 
     if (this.target === null) {
       let minDistance = Infinity;
 
-      // أ) فحص الأعداء العاديين في المصفوفة بالحلقة السريعة
+      // فحص الأعداء العاديين في المصفوفة
       const len = enemies.length;
       for (let i = 0; i < len; i++) {
         if (!enemies[i] || enemies[i].alive === false) continue;
@@ -61,7 +64,7 @@ export class Missile {
         const dyBoss = bossTarget.y - this.y;
         const distanceBoss = Math.hypot(dxBoss, dyBoss);
 
-        // إذا كان الزعيم أقرب من أي عدو عادي، يتتبعه الصاروخ فوراً!
+        // إذا كان الزعيم أقرب من أي عدو عادي، يتتبعه الصاروخ
         if (distanceBoss < minDistance) {
           this.target = bossTarget;
           minDistance = distanceBoss;
@@ -69,12 +72,12 @@ export class Missile {
       }
     }
 
-    // 2️⃣ تصفير الهدف إذا مات
+    // تصفير الهدف إذا مات
     if (this.target && this.target.alive === false) {
       this.target = null;
     }
 
-    // 3️⃣ نظام التوجيه الذكي وملاحقة الهدف الحالي
+    // نظام التوجيه الذكي وملاحقة الهدف الحالي
     if (this.target !== null) {
       const dxTarget = this.target.x - this.x;
       const dyTarget = this.target.y - this.y;
@@ -134,6 +137,9 @@ export class Missile {
     }
   }
 
+  /* ============
+        دالة الرسم
+      =========== */
   draw(ctx, camera, game) {
     if (!this.alive) return;
 
