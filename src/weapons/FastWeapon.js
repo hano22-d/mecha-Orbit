@@ -8,6 +8,9 @@ export class FastWeapon extends Weapon {
     this.image = assetsManager.getImage("fastW");
   }
 
+   /* ============= 
+       دالة الإطلاق
+    ============= */
   shoot(bullets, canvas) {
     // زاوية ميلان اللاعب
     let angle = this.owner.currentAngle || 0;
