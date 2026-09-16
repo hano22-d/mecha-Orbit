@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!--css استيراد ملفات--> 
     <link rel="stylesheet" href="project/style.css" />
     <link rel="stylesheet" href="project/menu.css" />
     <link rel="stylesheet" href="project/hud.css" />
@@ -14,7 +16,7 @@
     <link rel="stylesheet" href="project/settings.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!--خط اللعبة لاساسي-->
+    <!--خطوط اللعبة-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -30,7 +32,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
-    <title>mecha-orbit</title>
+    <title>Mecha-Orbit</title>
   </head>
   <body>
     <div class="gameContainer">
@@ -64,7 +66,7 @@
         <div class="dialogDiv">
           <div class="crt-overlay"></div>
 
-          <!-- 🟢 عناصر واجهة شاشة الطائرة (HUD Elements) -->
+          <!--عناصر واجهة شاشة الطائرة (HUD Elements)-->
           <div class="hud-header">
             <div class="hud-comms">
               <span class="signal-icon">⚡ COMMS OK</span>
@@ -77,7 +79,7 @@
             <div class="hud-rec"><span class="blink-dot"></span> LIVE FEED</div>
           </div>
 
-          <!-- 🟢 الرادار الدائري النابض -->
+          <!--الرادار الدائري النابض-->
           <div class="hud-radar-container">
             <div class="radar-circle">
               <div class="radar-sweep"></div>
@@ -496,10 +498,10 @@
             </button>
           </header>
 
-          <!-- 📑 Navigation Tabs -->
+          <!--Navigation Tabs-->
           <nav class="settings-tabs">
             <button class="tab-btn active" data-tab="tab-graphics">
-              <span>🎮 GRAPHICS & FPS</span>
+              <span>GRAPHICS & FPS</span>
             </button>
             <button class="tab-btn" data-tab="tab-audio">
               <span>🔊 AUDIO & SOUND</span>
@@ -509,10 +511,10 @@
             </button>
           </nav>
 
-          <!-- 📦 Modal Content Body -->
+          <!-- Modal Content Body -->
           <main class="settings-body">
             <!-- ========================================== -->
-            <!-- TAB 1: GRAPHICS & PERFORMANCE (شغال حالياً) -->
+            <!-- TAB 1: GRAPHICS & PERFORMANCE -->
             <!-- ========================================== -->
             <section id="tab-graphics" class="tab-content active">
               <!-- FPS Setting -->
@@ -572,7 +574,7 @@
             </section>
 
             <!-- ========================================== -->
-            <!-- TAB 2: AUDIO & SOUND (للمرحلة القادمة)       -->
+            <!-- TAB 2: AUDIO & SOUND  -->
             <!-- ========================================== -->
             <section id="tab-audio" class="tab-content">
               <!-- Music Volume -->
@@ -619,7 +621,7 @@
             </section>
 
             <!-- ========================================== -->
-            <!-- TAB 3: CONTROLS & BUTTONS (للمرحلة الثالثة) -->
+            <!-- TAB 3: CONTROLS & BUTTONS -->
             <!-- ========================================== -->
             <section id="tab-controls" class="tab-content">
               <div class="setting-row">
@@ -660,7 +662,7 @@
             </section>
           </main>
 
-          <!-- 🔻 Footer Actions Area -->
+          <!-- Footer Actions Area -->
           <footer class="settings-footer">
             <button id="btn-reset-settings" class="hud-btn danger">
               RESET ALL
