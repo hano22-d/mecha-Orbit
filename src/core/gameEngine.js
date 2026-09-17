@@ -361,7 +361,7 @@ export class Game {
   }
 
   /* ====================== 
-     دالة  تحديث الاعداء
+     دالة تحديث الاعداء
      ====================== */
   updateEnemies(gameTimer, deltaTime, camera) {
     for (let i = this.enemies.length - 1; i >= 0; i--) {
@@ -536,7 +536,10 @@ spawnExplosion(target, typeName) {
     new Explosion(this.myCanvas, targetCenterX, targetCenterY, typeName)
   );
 }
-
+  
+/* ====================== 
+     دالة  تحديث الانفجارات
+     ====================== */
   updateExplosion(deltaTime) {
     for (let i = this.explosions.length - 1; i >= 0; i--) {
       const explosion = this.explosions[i];
@@ -553,6 +556,9 @@ spawnExplosion(target, typeName) {
     }
   }
 
+  /* ====================== 
+     دالة توليد الصواريخ
+     ====================== */
   spawnMissile(input, time, deltaTime) {
     if (this.player.missileCount <= 0) return;
 
@@ -1074,7 +1080,7 @@ spawnExplosion(target, typeName) {
   }
 
   /* ===================================== 
-     داة تفريغ الكائنات وإعادة التعيين
+     دالة تفريغ الكائنات وإعادة التعيين
      ===================================== */
   reset() {
     this.gameTimer = 0;
@@ -1138,7 +1144,7 @@ spawnExplosion(target, typeName) {
   }
 
   /* ===================== 
-     داة اهنزاز الشاشة
+     دالة اهنزاز الشاشة
      ===================== */
   triggerShacke(power, duration) {
     this.shake.power = power;
@@ -1265,7 +1271,9 @@ spawnDebris(enemy) {
     }
   }
 
-  // دالة الاستجابة عند تغير أبعاد الكانفاس (مثل قلب الهاتف أو تغيير حجم المتصفح)
+  /* ============================== 
+     دالة الاستجابة عند تغير أبعاد الكانفاس
+     ============================== */
 handleResize() {
   // إجبار اللاعب على إعادة فحص حدوده فوراً بناءً على الأبعاد الجديدة بشرط أن يكون حياً
   if (this.player && this.player.alive) {
@@ -1285,7 +1293,9 @@ handleResize() {
   }
 }
 
-  //دالة توليد الازرار
+  /* ====================== 
+      دالة توليد الازرار
+     ====================== */
   initTouchControls() {
     this.touchButtons.length = 0;
 
