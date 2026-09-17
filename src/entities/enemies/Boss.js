@@ -53,7 +53,7 @@ export class Boss {
     this.speed = 0.06;
     this.health = 300;
     this.hit = false;
-    this.bulletDamage = 30;
+    this.bulletDamage = 10;
 
     // تهيئة التدرج الدائري
     this.bossGlowGradient = null;
