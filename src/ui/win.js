@@ -52,7 +52,7 @@ export function winUpdate(game) {
   winAccuracy.textContent = `${accuracyRate.toFixed(1)}%`;
 
   //حساب اداء اللاعب بعد الفوز
-  const winStars = document.getElementsByClassName("star");
+  const winStars = document.querySelectorAll("star");
   const currentStarsCount = calculateStars(
     accuracyRate,
     game.player.health,
