@@ -1,5 +1,5 @@
 export class PowerUp {
-  constructor(canvas, x, y, baseWidth = 30, baseHeight = 30, speed = 1) {
+  constructor(canvas, x, y, baseWidth = 30, baseHeight = 30, speed = 1.5) {
     this.alive = true;
     this.x = x;
     this.y = y;
