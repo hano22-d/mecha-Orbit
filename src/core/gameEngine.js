@@ -283,22 +283,22 @@ export class Game {
 
     // تعديل الأوزان صراحة حسب خط الزمن
     if (gameTimer > 240000) {
-      normalWeight = 5;
+      normalWeight = 10;
       chaserWeight = 20;
-      dodgerWeight = 20;
-      shooterWeight = 55;
+      dodgerWeight = 30;
+      shooterWeight = 40;
       speedUp = 0.03;
     } else if (gameTimer > 120000) {
-      normalWeight = 15;
+      normalWeight = 25;
       chaserWeight = 25;
       dodgerWeight = 25;
-      shooterWeight = 35;
+      shooterWeight = 25;
       speedUp = 0.02;
     } else if (gameTimer > 60000) {
-      normalWeight = 30;
-      chaserWeight = 30;
+      normalWeight = 40;
+      chaserWeight = 25;
       dodgerWeight = 20;
-      shooterWeight = 20;
+      shooterWeight = 15;
       speedUp = 0.01;
     }
     let totalWeight =
